@@ -8,13 +8,14 @@ final class HeaderSupplementaryView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(titleLabel)
-                titleLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-                NSLayoutConstraint.activate([
-                    titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-                    titleLabel.topAnchor.constraint(equalTo: topAnchor),
-                    titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-                ])
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 19)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
     }
     
     required init?(coder: NSCoder) {
