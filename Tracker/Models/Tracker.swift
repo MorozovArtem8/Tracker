@@ -2,18 +2,39 @@
 
 import UIKit
 
-enum DaysWeek: Int {
-    case Monday = 0
-    case Tuesday = 1
-    case Wednesday = 2
-    case Thursday = 3
-    case Friday = 4
-    case Saturday = 5
-    case Sunday = 6
+enum DaysWeek {
+    case Monday
+    case Tuesday
+    case Wednesday
+    case Thursday
+    case Friday
+    case Saturday
+    case Sunday
+    
+    init?(from string: String) {
+        switch string.lowercased() {
+        case "monday":
+            self = .Monday
+        case "tuesday":
+            self = .Tuesday
+        case "wednesday":
+            self = .Wednesday
+        case "thursday":
+            self = .Thursday
+        case "friday":
+            self = .Friday
+        case "saturday":
+            self = .Saturday
+        case "sunday":
+            self = .Sunday
+        default:
+            return nil
+        }
+    }
 }
 
 struct Tracker {
-    let id: String
+    let id: UUID
     let name: String
     let color: UIColor
     let emoji: String

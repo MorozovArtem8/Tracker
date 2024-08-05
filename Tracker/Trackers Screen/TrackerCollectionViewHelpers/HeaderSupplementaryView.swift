@@ -9,6 +9,7 @@ final class HeaderSupplementaryView: UICollectionReusableView {
         super.init(frame: frame)
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textColor = .black
         titleLabel.font = UIFont.boldSystemFont(ofSize: 19)
         
         NSLayoutConstraint.activate([

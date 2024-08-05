@@ -15,6 +15,9 @@ final class TabBarController: UITabBarController {
         
         let tabBarItem0 = configureNavigationController(rootViewController: trackerViewController, title: "Трекеры", image: UIImage(named: "TrackerIconNotActive"))
         let tabBarItem1 = configureNavigationController(rootViewController: statisticViewController, title: "Статистика", image: UIImage(named: "StatisticIconNotActive"))
+        tabBar.tintColor = UIColor("3772E7")
+        tabBar.unselectedItemTintColor = UIColor("AEAFB4")
+        tabBar.barTintColor = .white
         let tabBarSeparator = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 1))
         tabBarSeparator.backgroundColor = UIColor("AEAFB4")
         tabBar.addSubview(tabBarSeparator)
@@ -24,13 +27,22 @@ final class TabBarController: UITabBarController {
     private func configureNavigationController(rootViewController: UIViewController, title: String, image: UIImage?) -> UINavigationController {
         let navigationController = UINavigationController(rootViewController: rootViewController)
         navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationBar.barTintColor = .white
+        navigationController.navigationItem.largeTitleDisplayMode = .automatic
         navigationController.viewControllers.first?.navigationItem.title = title
         
-        let font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        let largeFont = UIFont.systemFont(ofSize: 34, weight: .bold)
         navigationController.navigationBar.largeTitleTextAttributes = [
-            NSAttributedString.Key.font: font,
+            NSAttributedString.Key.font: largeFont,
             NSAttributedString.Key.foregroundColor: UIColor("#1A1B22")
         ]
+        
+        let normalFont = UIFont.systemFont(ofSize: 17, weight: .semibold)
+                navigationController.navigationBar.titleTextAttributes = [
+                    NSAttributedString.Key.font: normalFont,
+                    NSAttributedString.Key.foregroundColor: UIColor("#1A1B22")
+                ]
+        
         navigationController.tabBarItem.title = title
         navigationController.tabBarItem.image = image ?? UIImage()
         

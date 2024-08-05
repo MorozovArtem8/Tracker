@@ -2,16 +2,23 @@
 
 import UIKit
 
+enum TrackerCellState {
+    case completion
+    case incompletion
+}
+
 final class TrackerCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "trackerCell"
     
-    let colorView: UIView = UIView()
-    let nameLabel: UILabel = UILabel()
-    let emojiView: UIView = UIView()
-    let emojiLabel: UILabel = UILabel()
+    weak var delegate: TrackerCollectionViewCellDelegate?
     
-    let plusButton: UIButton = UIButton()
-    let daysCountLabel: UILabel = UILabel()
+    private lazy var colorView: UIView = UIView()
+    private lazy var nameLabel: UILabel = UILabel()
+    private lazy var emojiView: UIView = UIView()
+    private lazy var emojiLabel: UILabel = UILabel()
+    
+    private let plusButton: UIButton = UIButton()
+    private var daysCountLabel: UILabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,12 +27,40 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        
+        colorView.backgroundColor = .clear
+        nameLabel.text = ""
+        emojiView.backgroundColor = .clear
+        plusButton.setBackgroundImage(nil, for: .normal)
+        daysCountLabel.text = nil
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func configureCell(name: String, emoji: String, color: UIColor, delegate: TrackerCollectionViewCellDelegate) {
+        self.nameLabel.text = name
+        self.emojiLabel.text = emoji
+        self.colorView.backgroundColor = color
+        self.plusButton.backgroundColor = color
+        self.delegate = delegate
+        
+    }
+    
+    func trackerStateChange(days: Int, state: TrackerCellState) {
+        switch state {
+            
+        case .completion:
+            daysCountLabel.text = "\(days) дней"
+            plusButton.setImage(UIImage(named: "Done"), for: .normal)
+            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
+        case .incompletion:
+            daysCountLabel.text = "\(days) дней"
+            plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
+        }
+    }
+    
 }
 
 //MARK: Configure UI
@@ -48,7 +83,7 @@ private extension TrackerCollectionViewCell {
         colorView.backgroundColor = UIColor("7994F5")
         colorView.layer.masksToBounds = true
         colorView.layer.cornerRadius = 16
-        colorView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner] 
+        colorView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         
         let colorViewHeight = self.frame.height / 1.64
         
@@ -67,6 +102,7 @@ private extension TrackerCollectionViewCell {
         plusButton.layer.cornerRadius = 17
         plusButton.tintColor = .white
         plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+        plusButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         contentView.addSubview(plusButton)
         
         NSLayoutConstraint.activate([
@@ -77,10 +113,13 @@ private extension TrackerCollectionViewCell {
         ])
     }
     
+    @objc func buttonTapped() {
+        delegate?.trackerCellDidTapPlus(self)
+    }
+    
     func configureDaysCountLabel() {
         contentView.addSubview(daysCountLabel)
         daysCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        daysCountLabel.text = "1 день"
         daysCountLabel.font = UIFont.systemFont(ofSize: 14)
         daysCountLabel.textColor = .black
         daysCountLabel.textAlignment = .left
