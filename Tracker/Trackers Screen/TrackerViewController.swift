@@ -3,10 +3,6 @@
 
 import UIKit
 
-protocol TrackerCollectionViewCellDelegate: AnyObject {
-    func trackerCellDidTapPlus(_ cell: TrackerCollectionViewCell)
-}
-
 class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate {
     
     private var categories: [TrackerCategory]
@@ -20,7 +16,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         self.visibleCategories = []
         self.completedTrackers = []
         
-        self.categories = [TrackerCategory(header: "Домашний уют", trackers: [Tracker(id: UUID(), name: "Погладить кота", color: UIColor.black, emoji: "😍", schedule: [.Monday])]), TrackerCategory(header: "Радостные мелочи", trackers: [Tracker(id: UUID(), name: "Укусить Кристину", color: UIColor("#9b59b6"), emoji: "🍑", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.red, emoji: "🥶", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.systemPink, emoji: "🏄🏾‍♂️", schedule: [.Monday])]), TrackerCategory(header: "Радостные мелочи", trackers: [Tracker(id: UUID(), name: "Name", color: UIColor.cyan, emoji: "🩲", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.green, emoji: "😀", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.brown, emoji: "✌️", schedule: [.Monday])])]
+        self.categories = [TrackerCategory(header: "Домашний уют", trackers: [Tracker(id: UUID(), name: "Погладить кота", color: UIColor.black, emoji: "😍", schedule: [.Monday, .Friday, .Sunday])]), TrackerCategory(header: "Радостные мелочи", trackers: [Tracker(id: UUID(), name: "Укусить Кристину", color: UIColor("#9b59b6"), emoji: "🍑", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.red, emoji: "🥶", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.systemPink, emoji: "🏄🏾‍♂️", schedule: [.Monday])]), TrackerCategory(header: "Радостные мелочи", trackers: [Tracker(id: UUID(), name: "Name", color: UIColor.cyan, emoji: "🩲", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.green, emoji: "😀", schedule: [.Monday]), Tracker(id: UUID(), name: "Name", color: UIColor.brown, emoji: "✌️", schedule: [.Monday])])]
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -50,52 +46,49 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         collectionView.reloadData()
     }
     
-    //MARK: Cell tap button plus func
-    func trackerCellDidTapPlus(_ cell: TrackerCollectionViewCell) {
-        
+    //MARK: Cell delegate func
+    func completeTracker(_ cell: TrackerCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {return}
-        if completedTrackers.isEmpty {
-            completedTrackers.append(TrackerRecord(trackerID: categories[indexPath.section].trackers[indexPath.row].id, dateOfCompletion: Date()))
-            cell.trackerStateChange(days: 1, state: .completion)
-            print(completedTrackers)
-            return
-            
-        }
+        completedTrackers.append(TrackerRecord(trackerID: categories[indexPath.section].trackers[indexPath.row].id, dateOfCompletion: Date()))
         
-        if checkCompletionCurrentTrackerToDay(id: categories[indexPath.section].trackers[indexPath.row].id) {
-            print("Ячейка есть")
-            let dellIndex = completedTrackers.firstIndex { trackerRecord in
-                trackerRecord.trackerID == categories[indexPath.section].trackers[indexPath.row].id && Calendar.current.isDate(Date(), inSameDayAs: trackerRecord.dateOfCompletion)
-            }
-            guard let dellIndex else {return}
-            completedTrackers.remove(at: dellIndex)
-            
-            let trackerCount = getCurrentTrackerCompletedCount(id: categories[indexPath.section].trackers[indexPath.row].id)
-            cell.trackerStateChange(days: trackerCount, state: .incompletion)
-            
-            
-        }else {
-            print("Ячейки нет")
-            completedTrackers.append(TrackerRecord(trackerID: categories[indexPath.section].trackers[indexPath.row].id, dateOfCompletion: Date()))
-            
-            let trackerCount = getCurrentTrackerCompletedCount(id: categories[indexPath.section].trackers[indexPath.row].id)
-            cell.trackerStateChange(days: trackerCount, state: .completion)
-        }
+        let trackerCount = getCurrentTrackerCompletedCount(id: categories[indexPath.section].trackers[indexPath.row].id)
+        let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: categories[indexPath.section].trackers[indexPath.row].id)
+        
+        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday)
         print(completedTrackers)
         
     }
     
+    func removeCompletedTracker(_ cell: TrackerCollectionViewCell) {
+        //Создаем indexPath и заодно проверяем что трекер под этим id действительно сегодня выполнен
+        guard let indexPath = collectionView.indexPath(for: cell),
+              checkCompletionCurrentTrackerToday(id: categories[indexPath.section].trackers[indexPath.row].id)
+        else {return}
+        let currentTrackerID = categories[indexPath.section].trackers[indexPath.row].id
+        
+        completedTrackers.removeAll { trackerRecord in
+            trackerRecord.trackerID == currentTrackerID && Calendar.current.isDate(Date(), inSameDayAs: trackerRecord.dateOfCompletion)
+        }
+        
+        let trackerCount = getCurrentTrackerCompletedCount(id: currentTrackerID)
+        let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: currentTrackerID)
+        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday)
+        print(completedTrackers)
+        
+    }
+
+    // Сколько раз(дней) трекер был выполнен
     private func getCurrentTrackerCompletedCount(id: UUID) -> Int {
-        completedTrackers.reduce(0) { partialResult, trackerRecord in
+        completedTrackers.reduce(0) { count, trackerRecord in
             if trackerRecord.trackerID == id {
-                return partialResult + 1
+                return count + 1
             }
-            return partialResult
+            return count
         }
         
     }
-    
-    private func checkCompletionCurrentTrackerToDay(id: UUID) -> Bool {
+    // Проверяет был ли трекер выполнен сегодня
+    private func checkCompletionCurrentTrackerToday(id: UUID) -> Bool {
         return completedTrackers.contains { tracker in
             tracker.trackerID == id && Calendar.current.isDate(Date(), inSameDayAs: tracker.dateOfCompletion)
         }
@@ -172,12 +165,12 @@ extension TrackerViewController: UICollectionViewDataSource {
         let cellColor = visibleCategories[indexPath.section].trackers[indexPath.row].color
         cell?.configureCell(name: cellName, emoji: cellEmoji, color: cellColor, delegate: self)
         
-        if checkCompletionCurrentTrackerToDay(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
+        if checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
             let trackerCount = getCurrentTrackerCompletedCount(id: categories[indexPath.section].trackers[indexPath.row].id)
-            cell?.trackerStateChange(days: trackerCount, state: .completion)
+            cell?.trackerStateChange(days: trackerCount, trackerCompletedToday: true)
         }else {
             let trackerCount = getCurrentTrackerCompletedCount(id: categories[indexPath.section].trackers[indexPath.row].id)
-            cell?.trackerStateChange(days: trackerCount, state: .incompletion)
+            cell?.trackerStateChange(days: trackerCount, trackerCompletedToday: false)
         }
         
         return cell ?? UICollectionViewCell()

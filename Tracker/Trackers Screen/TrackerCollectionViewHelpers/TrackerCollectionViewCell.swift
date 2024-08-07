@@ -2,9 +2,9 @@
 
 import UIKit
 
-enum TrackerCellState {
-    case completion
-    case incompletion
+protocol TrackerCollectionViewCellDelegate: AnyObject {
+    func completeTracker(_ cell: TrackerCollectionViewCell)
+    func removeCompletedTracker(_ cell: TrackerCollectionViewCell)
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -19,6 +19,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let plusButton: UIButton = UIButton()
     private var daysCountLabel: UILabel = UILabel()
+    private var trackerCompletedToday: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,23 +43,24 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         self.nameLabel.text = name
         self.emojiLabel.text = emoji
         self.colorView.backgroundColor = color
+        self.emojiView.backgroundColor = .white.withAlphaComponent(0.3)
         self.plusButton.backgroundColor = color
         self.delegate = delegate
         
     }
     
-    func trackerStateChange(days: Int, state: TrackerCellState) {
-        switch state {
-            
-        case .completion:
+    func trackerStateChange(days: Int, trackerCompletedToday: Bool) {
+        self.trackerCompletedToday = trackerCompletedToday
+        if trackerCompletedToday {
             daysCountLabel.text = "\(days) дней"
             plusButton.setImage(UIImage(named: "Done"), for: .normal)
             plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
-        case .incompletion:
+        }else {
             daysCountLabel.text = "\(days) дней"
             plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
             plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
         }
+        
     }
     
 }
@@ -114,7 +116,11 @@ private extension TrackerCollectionViewCell {
     }
     
     @objc func buttonTapped() {
-        delegate?.trackerCellDidTapPlus(self)
+        if trackerCompletedToday {
+            delegate?.removeCompletedTracker(self)
+        } else {
+            delegate?.completeTracker(self)
+        }
     }
     
     func configureDaysCountLabel() {
