@@ -147,7 +147,7 @@ private extension TrackerCollectionViewCell {
         emojiView.alpha = 30
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         emojiLabel.text = "❤️"
-        emojiLabel.font = .systemFont(ofSize: 14)
+        emojiLabel.font = .systemFont(ofSize: 12)
         
         NSLayoutConstraint.activate([
             emojiView.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 12),
@@ -165,7 +165,7 @@ private extension TrackerCollectionViewCell {
         colorView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.numberOfLines = 0
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 12)
         nameLabel.textColor = .white
         nameLabel.textAlignment = .left
         

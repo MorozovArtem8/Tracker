@@ -18,9 +18,8 @@ final class TabBarController: UITabBarController {
         tabBar.tintColor = UIColor("3772E7")
         tabBar.unselectedItemTintColor = UIColor("AEAFB4")
         tabBar.barTintColor = .white
-        let tabBarSeparator = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 1))
-        tabBarSeparator.backgroundColor = UIColor("AEAFB4")
-        tabBar.addSubview(tabBarSeparator)
+        tabBar.layer.borderWidth = 1
+        tabBar.layer.borderColor = UIColor("AEAFB4").cgColor
         setViewControllers([tabBarItem0, tabBarItem1], animated: true)
     }
     
