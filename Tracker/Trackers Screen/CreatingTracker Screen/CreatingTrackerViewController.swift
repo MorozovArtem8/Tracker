@@ -27,6 +27,7 @@ private extension CreatingTrackerViewController {
         addHabit.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         addHabit.layer.cornerRadius = 16
         addHabit.clipsToBounds = true
+        addHabit.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         notRegularEvent.translatesAutoresizingMaskIntoConstraints = false
         notRegularEvent.backgroundColor = UIColor("#1A1B22")
@@ -53,6 +54,16 @@ private extension CreatingTrackerViewController {
     }
     
     @objc func buttonTapped() {
-       
+        let creatingHabitViewController = CreatingHabitViewController()
+        
+        let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
+        
+        let textAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.black,
+            .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+        ]
+        navigationController.navigationBar.titleTextAttributes = textAttributes
+        present(navigationController, animated: true)
+        
     }
 }

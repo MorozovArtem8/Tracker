@@ -3,8 +3,7 @@
 import UIKit
 
 protocol TrackerCollectionViewCellDelegate: AnyObject {
-    func completeTracker(_ cell: TrackerCollectionViewCell)
-    func removeCompletedTracker(_ cell: TrackerCollectionViewCell)
+    func cellButtonDidTapped(_ cell: TrackerCollectionViewCell)
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -19,7 +18,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let plusButton: UIButton = UIButton()
     private var daysCountLabel: UILabel = UILabel()
-    private var trackerCompletedToday: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,19 +48,16 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     func trackerStateChange(days: Int, trackerCompletedToday: Bool) {
-        self.trackerCompletedToday = trackerCompletedToday
         if trackerCompletedToday {
             daysCountLabel.text = "\(days) дней"
             plusButton.setImage(UIImage(named: "Done"), for: .normal)
             plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
-        }else {
+        } else {
             daysCountLabel.text = "\(days) дней"
             plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
             plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
         }
-        
     }
-    
 }
 
 //MARK: Configure UI
@@ -70,7 +65,6 @@ private extension TrackerCollectionViewCell {
     func configureUI() {
         self.layer.masksToBounds = true
         self.layer.cornerRadius = 16
-        
         
         configureColorView()
         configurePlusButton()
@@ -116,11 +110,7 @@ private extension TrackerCollectionViewCell {
     }
     
     @objc func buttonTapped() {
-        if trackerCompletedToday {
-            delegate?.removeCompletedTracker(self)
-        } else {
-            delegate?.completeTracker(self)
-        }
+        delegate?.cellButtonDidTapped(self)
     }
     
     func configureDaysCountLabel() {

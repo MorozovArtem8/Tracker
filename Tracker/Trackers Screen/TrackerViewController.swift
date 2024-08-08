@@ -64,10 +64,18 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     }
     
     //MARK: Cell delegate func
+    func cellButtonDidTapped(_ cell: TrackerCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else {return}
+        // Проверяем был ли выполнен трекер сегодня
+        if !checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
+            completeTracker(cell)
+        } else {
+            removeCompletedTracker(cell)
+        }
+    }
+    
     func completeTracker(_ cell: TrackerCollectionViewCell) {
-        guard let indexPath = collectionView.indexPath(for: cell),
-              !checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-        else {return}
+        guard let indexPath = collectionView.indexPath(for: cell) else {return}
         completedTrackers.append(TrackerRecord(trackerID: visibleCategories[indexPath.section].trackers[indexPath.row].id, dateOfCompletion: Date()))
         
         let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
@@ -79,10 +87,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     }
     
     func removeCompletedTracker(_ cell: TrackerCollectionViewCell) {
-        //Создаем indexPath и заодно проверяем что трекер под этим id действительно сегодня выполнен
-        guard let indexPath = collectionView.indexPath(for: cell),
-              checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-        else {return}
+        guard let indexPath = collectionView.indexPath(for: cell) else {return}
         let currentTrackerID = visibleCategories[indexPath.section].trackers[indexPath.row].id
         
         completedTrackers.removeAll { trackerRecord in
