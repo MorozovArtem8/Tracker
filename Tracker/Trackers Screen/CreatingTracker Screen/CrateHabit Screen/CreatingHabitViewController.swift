@@ -4,10 +4,12 @@ import UIKit
 
 final class CreatingHabitViewController: UIViewController {
     
-    
-    
     private lazy var nameTrackerTextField = PaddedTextField()
     private lazy var tableView = UITableView()
+    
+    
+    private lazy var cancelButton = UIButton(type: .system)
+    private lazy var createButton = UIButton(type: .system)
     
     let tableViewData = ["Категория", "Рассписание"]
     
@@ -32,6 +34,10 @@ extension CreatingHabitViewController: UITableViewDataSource {
 }
 
 extension CreatingHabitViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             cell.layer.masksToBounds = true
@@ -60,6 +66,7 @@ private extension CreatingHabitViewController {
         
         configureNameTrackerTextField()
         configureTableView()
+        configureCancelButton()
     }
     
     func configureNameTrackerTextField() {
@@ -98,5 +105,50 @@ private extension CreatingHabitViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
+    }
+    
+    func configureCancelButton() {
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.setTitle("Отменить", for: .normal)
+        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        cancelButton.setTitleColor(UIColor("#F56B6C"), for: .normal)
+        cancelButton.layer.cornerRadius = 16
+        cancelButton.layer.borderWidth = 1
+        cancelButton.layer.borderColor = UIColor("#F56B6C").cgColor
+        cancelButton.clipsToBounds = true
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        
+        createButton.translatesAutoresizingMaskIntoConstraints = false
+        createButton.backgroundColor = UIColor("#AEAFB4")
+        createButton.setTitleColor(.white, for: .normal)
+        createButton.setTitle("Создать", for: .normal)
+        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        createButton.layer.cornerRadius = 16
+        createButton.clipsToBounds = true
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        
+        let stackView = UIStackView(arrangedSubviews: [cancelButton, createButton])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            cancelButton.heightAnchor.constraint(equalToConstant: 60),
+            createButton.heightAnchor.constraint(equalToConstant: 60),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    @objc func cancelButtonTapped() {
+        dismiss(animated: true)
+    }
+    
+    @objc func createButtonTapped() {
+        print(1)
+        
     }
 }

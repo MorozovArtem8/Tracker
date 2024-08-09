@@ -1,7 +1,10 @@
 //  Created by Artem Morozov on 25.07.2024.
 
-
 import UIKit
+
+protocol TrackerTypeSelectionDelegate: AnyObject {
+    func didSelectTrackerType(_ vc: UIViewController,trackerType: TrackerType)
+}
 
 class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate {
     
@@ -243,8 +246,27 @@ extension TrackerViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text ?? ""
     }
+}
+
+extension TrackerViewController: TrackerTypeSelectionDelegate {
+    func didSelectTrackerType(_ vc: UIViewController,trackerType: TrackerType) {
+        vc.dismiss(animated: true)
+        switch trackerType {
+        case .habit:
+            let creatingHabitViewController = CreatingHabitViewController()
+            let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
     
-    
+            let textAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+            ]
+            navigationController.navigationBar.titleTextAttributes = textAttributes
+            present(navigationController, animated: true)
+        
+        case .notRegularEvent:
+            print("Событие")
+        }
+    }
 }
 
 //MARK: Configure UI
@@ -283,7 +305,7 @@ private extension TrackerViewController {
         self.navigationItem.hidesSearchBarWhenScrolling = false
     }
     @objc func plusButtonTapped() {
-        let creatingTrackerViewController = CreatingTrackerViewController()
+        let creatingTrackerViewController = CreatingTrackerViewController(delegate: self)
         let navigationController = UINavigationController(rootViewController: creatingTrackerViewController)
         
         let textAttributes: [NSAttributedString.Key: Any] = [

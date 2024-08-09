@@ -2,9 +2,25 @@
 
 import UIKit
 
+enum TrackerType {
+    case habit
+    case notRegularEvent
+}
+
 final class CreatingTrackerViewController: UIViewController {
     private let addHabit: UIButton = UIButton()
     private let notRegularEvent: UIButton = UIButton()
+    
+    private weak var delegate: TrackerTypeSelectionDelegate?
+    
+    init(delegate: TrackerTypeSelectionDelegate) {
+        self.delegate = delegate
+        super .init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +43,7 @@ private extension CreatingTrackerViewController {
         addHabit.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         addHabit.layer.cornerRadius = 16
         addHabit.clipsToBounds = true
-        addHabit.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        addHabit.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
         
         notRegularEvent.translatesAutoresizingMaskIntoConstraints = false
         notRegularEvent.backgroundColor = UIColor("#1A1B22")
@@ -35,6 +51,7 @@ private extension CreatingTrackerViewController {
         notRegularEvent.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         notRegularEvent.layer.cornerRadius = 16
         notRegularEvent.clipsToBounds = true
+        notRegularEvent.addTarget(self, action: #selector(notRegularEventButtonTapped), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [addHabit, notRegularEvent])
         stackView.axis = .vertical
@@ -53,7 +70,11 @@ private extension CreatingTrackerViewController {
         ])
     }
     
-    @objc func buttonTapped() {
+    @objc func habitButtonTapped() {
+        delegate?.didSelectTrackerType(self, trackerType: .habit)
+    }
+    
+    @objc func notRegularEventButtonTapped() {
         let creatingHabitViewController = CreatingHabitViewController()
         
         let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
