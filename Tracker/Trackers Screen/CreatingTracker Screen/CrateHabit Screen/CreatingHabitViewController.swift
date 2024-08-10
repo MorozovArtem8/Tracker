@@ -36,17 +36,34 @@ extension CreatingHabitViewController: UITableViewDataSource {
 extension CreatingHabitViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        switch indexPath.row {
+        case 0:
+            print("Тут будет открытие экрана создания категории")
+        case 1:
+            let scheduleScreenViewController = ScheduleScreenViewController()
+            let navigationController = UINavigationController(rootViewController: scheduleScreenViewController)
+            
+            let textAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+            ]
+            navigationController.navigationBar.titleTextAttributes = textAttributes
+            present(navigationController, animated: true)
+        default:
+            print("Неизвестная ячейка")
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner] 
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
         
         if indexPath.row == tableViewData.count - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1000)
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
             cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]

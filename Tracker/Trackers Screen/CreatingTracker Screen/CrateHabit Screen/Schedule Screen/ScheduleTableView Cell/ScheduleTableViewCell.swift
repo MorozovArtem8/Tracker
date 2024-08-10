@@ -1,10 +1,11 @@
-//  Created by Artem Morozov on 08.08.2024.
+//  Created by Artem Morozov on 10.08.2024.
 
 import UIKit
 
-final class CreatingHabitTableViewCell: UITableViewCell {
-    static let reuseIdentifier = "TableViewCell"
+final class ScheduleTableViewCell: UITableViewCell {
+    static let reuseIdentifier = "ScheduleTableViewCellReuseIdentifier"
     private lazy var nameLabel = UILabel()
+    lazy var toggle = UISwitch()
     private lazy var stackView = UIStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -22,17 +23,15 @@ final class CreatingHabitTableViewCell: UITableViewCell {
 }
 
 //MARK: Configure UI
-private extension CreatingHabitTableViewCell {
+private extension ScheduleTableViewCell {
     func configureUI() {
-        configureNameLabelAndImage()
+        configureNameLabelAndToggle()
         self.backgroundColor = UIColor("#E6E8EB", alpha: 0.3)
     }
     
-    func configureNameLabelAndImage() {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "chevron.right")
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = UIColor("#AEAFB4")
+    func configureNameLabelAndToggle() {
+        toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.onTintColor = UIColor("#3772E7")
         
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +39,7 @@ private extension CreatingHabitTableViewCell {
         nameLabel.textColor = .black
         nameLabel.text = "12321421412"
         
-        stackView = UIStackView(arrangedSubviews: [nameLabel, imageView])
+        stackView = UIStackView(arrangedSubviews: [nameLabel, toggle])
         stackView.axis = .horizontal
         stackView.spacing = 10
         stackView.alignment = .center

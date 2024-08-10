@@ -2,14 +2,14 @@
 
 import UIKit
 
-enum DaysWeek {
-    case Monday
-    case Tuesday
-    case Wednesday
-    case Thursday
-    case Friday
-    case Saturday
-    case Sunday
+enum DaysWeek: String, CaseIterable {
+    case Monday = "Понедельник"
+    case Tuesday = "Вторник"
+    case Wednesday = "Среда"
+    case Thursday = "Четверг"
+    case Friday = "Пятница"
+    case Saturday = "Суббота"
+    case Sunday = "Воскресенье"
     
     init?(from string: String) {
         switch string.lowercased() {
