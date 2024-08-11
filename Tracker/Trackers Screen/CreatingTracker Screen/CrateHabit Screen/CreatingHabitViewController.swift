@@ -6,12 +6,27 @@ final class CreatingHabitViewController: UIViewController {
     
     private lazy var nameTrackerTextField = PaddedTextField()
     private lazy var tableView = UITableView()
-    
-    
     private lazy var cancelButton = UIButton(type: .system)
     private lazy var createButton = UIButton(type: .system)
     
-    let tableViewData = ["Категория", "Рассписание"]
+    private let delegate: CreateHabitDelegate?
+    
+    private var tableViewData: [CellData] = [CellData(title: "Категория"), CellData(title: "Расписание")]
+    
+    private var selectedDays: [DaysWeek] = [] {
+        didSet {
+            print(selectedDays)
+        }
+    }
+    
+    init(delegate: CreateHabitDelegate) {
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +43,7 @@ extension CreatingHabitViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: CreatingHabitTableViewCell.reuseIdentifier, for: indexPath)
         
         guard let creatingHabitTableViewCell = cell as? CreatingHabitTableViewCell else {return UITableViewCell()}
-        creatingHabitTableViewCell.configureCell(nameLabel: tableViewData[indexPath.row])
+        creatingHabitTableViewCell.configureCell(nameLabel: tableViewData[indexPath.row].title, subLabel: tableViewData[indexPath.row].subTitle)
         return creatingHabitTableViewCell
     }
 }
@@ -42,6 +57,13 @@ extension CreatingHabitViewController: UITableViewDelegate {
             print("Тут будет открытие экрана создания категории")
         case 1:
             let scheduleScreenViewController = ScheduleScreenViewController()
+            scheduleScreenViewController.completionHandler = { [weak self] data in
+                self?.selectedDays = data
+                //TODO: сделать функцию для конвертации массива дней недели в строку для отображения subTitle
+                self?.tableViewData[1].subTitle = "Вт, Cб"
+                self?.tableView.reloadData()
+            }
+            
             let navigationController = UINavigationController(rootViewController: scheduleScreenViewController)
             
             let textAttributes: [NSAttributedString.Key: Any] = [
@@ -165,7 +187,15 @@ private extension CreatingHabitViewController {
     }
     
     @objc func createButtonTapped() {
-        print(1)
-        
+        self.dismiss(animated: true)
+        delegate?.didCreateHabit(TrackerCategory(header: "Категория",
+                                                 trackers: [Tracker(
+                                                    id: UUID(),
+                                                    name: nameTrackerTextField.text ?? "",
+                                                    color: .gray,
+                                                    emoji: "📯",
+                                                    schedule: self.selectedDays)
+                                                 ]
+                                                ))
     }
 }

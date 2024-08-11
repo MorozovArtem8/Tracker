@@ -5,6 +5,7 @@ import UIKit
 final class CreatingHabitTableViewCell: UITableViewCell {
     static let reuseIdentifier = "CreatingHabitTableViewCellReuseIdentifier"
     private lazy var nameLabel = UILabel()
+    private lazy var subLabel = UILabel()
     private lazy var stackView = UIStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -16,8 +17,22 @@ final class CreatingHabitTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell(nameLabel: String) {
+    func configureCell(nameLabel: String, subLabel: String?) {
         self.nameLabel.text = nameLabel
+        guard let subLabel = subLabel else {
+            self.subLabel.text = nil
+            return
+        }
+        self.subLabel.text = subLabel
+    }
+    
+    func configureSubLabel(label: String?) {
+        guard let label = label else {
+            self.subLabel.text = nil
+            return
+        }
+        
+        self.subLabel.text = label
     }
 }
 
@@ -38,9 +53,19 @@ private extension CreatingHabitTableViewCell {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
         nameLabel.textColor = .black
-        nameLabel.text = "12321421412"
         
-        stackView = UIStackView(arrangedSubviews: [nameLabel, imageView])
+        subLabel.translatesAutoresizingMaskIntoConstraints = false
+        subLabel.font = UIFont.systemFont(ofSize: 13, weight: .light)
+        subLabel.textColor = UIColor("#AEAFB4")
+        
+        var labelsStackView = UIStackView()
+        labelsStackView = UIStackView(arrangedSubviews: [nameLabel, subLabel])
+        labelsStackView.axis = .vertical
+        labelsStackView.spacing = 2
+        labelsStackView.alignment = .leading
+        labelsStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackView = UIStackView(arrangedSubviews: [labelsStackView, imageView])
         stackView.axis = .horizontal
         stackView.spacing = 10
         stackView.alignment = .center

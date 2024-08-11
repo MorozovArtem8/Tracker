@@ -75,16 +75,6 @@ private extension CreatingTrackerViewController {
     }
     
     @objc func notRegularEventButtonTapped() {
-        let creatingHabitViewController = CreatingHabitViewController()
-        
-        let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
-        
-        let textAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.black,
-            .font: UIFont.systemFont(ofSize: 16, weight: .medium)
-        ]
-        navigationController.navigationBar.titleTextAttributes = textAttributes
-        present(navigationController, animated: true)
         
     }
 }

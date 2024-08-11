@@ -4,15 +4,26 @@ import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
     
+     var completionHandler: (([DaysWeek]) -> Void)?
+    
     private lazy var tableView = UITableView()
     private lazy var readyButton = UIButton(type: .system)
     
-    let tableViewData = DaysWeek.allCases
-    private var selectedDays: [DaysWeek] = [] {
-        didSet {
-            print(selectedDays)
+    private lazy var heightCell: CGFloat = {
+        let height = CGFloat(75)
+        let screenHeight = view.bounds.height
+        let navigationBarHeight = navigationController?.navigationBar.frame.height ?? 0
+        let buttonHeight = readyButton.frame.height
+        let availableHeight = screenHeight - navigationBarHeight - buttonHeight - 16 - 24 - 10
+        let potentialCellHeight = availableHeight / 7
+        if potentialCellHeight < height {
+            return CGFloat(potentialCellHeight)
         }
-    }
+        return height
+    }()
+    
+    let tableViewData = DaysWeek.allCases
+    private var selectedDays: [DaysWeek] = [] 
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +76,7 @@ extension ScheduleScreenViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        75
+        heightCell
     }
 }
 
@@ -99,7 +110,8 @@ private extension ScheduleScreenViewController {
     }
     
     @objc private func readyButtonTapped() {
-        
+        completionHandler?(selectedDays)
+        dismiss(animated: true, completion: nil)
     }
     
     func configureTableView() {
@@ -116,7 +128,7 @@ private extension ScheduleScreenViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            tableView.bottomAnchor.constraint(equalTo: readyButton.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: readyButton.topAnchor, constant: -10),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])

@@ -26,6 +26,7 @@
 		AC835BDC2C6387D200D38AF5 /* CreatingTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */; };
 		AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */; };
 		AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */; };
+		ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE87ED42C68AF6300CFB0DF /* CellData.swift */; };
 		ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFDF1F22C537C0500371272 /* TabBarController.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingTrackerViewController.swift; sourceTree = "<group>"; };
 		AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSupplementaryView.swift; sourceTree = "<group>"; };
+		ACE87ED42C68AF6300CFB0DF /* CellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellData.swift; sourceTree = "<group>"; };
 		ACFDF1F22C537C0500371272 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 				AC38BA9F2C5664D400463933 /* TrackerCategory.swift */,
 				AC38BAA12C56651900463933 /* TrackerRecord.swift */,
 				AC2DC72C2C5AA16C00D4FE7B /* GeomitricParams.swift */,
+				ACE87ED42C68AF6300CFB0DF /* CellData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */,
 				AC3AEE822C655341005A6A5F /* CreatingHabitViewController.swift in Sources */,
 				AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */,
+				ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */,
 				AC1497002C52F0A500BF80F8 /* SceneDelegate.swift in Sources */,
 				AC38BA9E2C56629D00463933 /* Tracker.swift in Sources */,
 			);
