@@ -30,7 +30,21 @@ final class CreatingNotRegularEventViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         self.hideKeyboardWhenTappedAround()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCreateButtonState), name: UITextField.textDidChangeNotification, object: nameTrackerTextField)
     }
+    
+   
+
+
+@objc private func updateCreateButtonState() {
+   if createButtonIsEnabled {
+       createButton.backgroundColor = .black
+       createButton.isEnabled = true
+   } else {
+       createButton.backgroundColor = UIColor("#AEAFB4")
+       createButton.isEnabled = false
+   }
+}
 }
 
 extension CreatingNotRegularEventViewController: UITableViewDataSource {
@@ -133,12 +147,12 @@ private extension CreatingNotRegularEventViewController {
         
         createButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.backgroundColor = UIColor("#AEAFB4")
-        createButton.isEnabled = false
         createButton.setTitleColor(.white, for: .normal)
         createButton.setTitle("Создать", for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.layer.cornerRadius = 16
         createButton.clipsToBounds = true
+        createButton.isEnabled = false
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [cancelButton, createButton])
@@ -163,7 +177,7 @@ private extension CreatingNotRegularEventViewController {
     
     @objc func createButtonTapped() {
         self.dismiss(animated: true)
-        delegate?.didCreateHabit(TrackerCategory(header: "Категория",
+        delegate?.didCreateHabit(TrackerCategory(header: "Категория Q",
                                                  trackers: [Tracker(
                                                     id: UUID(),
                                                     name: nameTrackerTextField.text ?? "",

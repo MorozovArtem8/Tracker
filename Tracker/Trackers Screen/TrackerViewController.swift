@@ -57,15 +57,23 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     private func updateVisibleCategories(from date: Date) {
         let dayOfWeek = DaysWeek(from: getDayOfWeek(from: date))
         
-        let filteredCategories = categories.filter { categories in
-            categories.trackers.contains {
-                $0.schedule.contains(where: {$0 == dayOfWeek})
-            }
-        }.map { category in
+        let filteredCategories = categories.compactMap { category in
             let filteredTrackers = category.trackers.filter { tracker in
-                tracker.schedule.contains(where: {$0 == dayOfWeek})
+                let matchesSchedule = tracker.schedule.contains(where: {$0 == dayOfWeek})
+                let firstCompletedTracker = completedTrackers.first { trackerRecord in
+                    trackerRecord.trackerID == tracker.id && tracker.schedule.isEmpty
+                }
+                
+                let currentStartOfDay = Calendar.current.startOfDay(for: currentDate)
+                let firstCompletedTrackerStartOfDay = Calendar.current.startOfDay(for: firstCompletedTracker?.dateOfCompletion ?? Date())
+                
+                // - Показываем трекеры расписание которых соответствует выбранному дню,
+                // - Выполненные трекеры (нерегулярные события (без расписания) показываем только для даты выполнения)
+                // - Пустые нерегулярные события которые еще не выполнены показываем для всех дней
+                
+                return matchesSchedule || (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) || (firstCompletedTracker == nil && tracker.schedule.isEmpty)
             }
-            return TrackerCategory(header: category.header, trackers: filteredTrackers)
+            return filteredTrackers.isEmpty ? nil : TrackerCategory(header: category.header, trackers: filteredTrackers)
         }
         
         displayStubForEmptyScrollView(displayStub: filteredCategories.count == 0)
@@ -100,7 +108,9 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
         let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
         
-        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday)
+        let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+        
+        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
         
     }
     
@@ -114,7 +124,9 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         
         let trackerCount = getCurrentTrackerCompletedCount(id: currentTrackerID)
         let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: currentTrackerID)
-        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday)
+        let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+        
+        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
         
     }
     
@@ -126,7 +138,6 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
             }
             return count
         }
-        
     }
     // Проверяет был ли трекер выполнен сегодня
     private func checkCompletionCurrentTrackerToday(id: UUID) -> Bool {
@@ -134,8 +145,6 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
             tracker.trackerID == id && Calendar.current.isDate(currentDate, inSameDayAs: tracker.dateOfCompletion)
         }
     }
-    
-    
     
     
     //MARK: UI Elements
@@ -209,11 +218,15 @@ extension TrackerViewController: UICollectionViewDataSource {
         if checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
             let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
             let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-            cell?.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday)
+            let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+            
+            cell?.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
         }else {
             let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
             let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-            cell?.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday)
+            let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+            
+            cell?.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
         }
         
         return cell ?? UICollectionViewCell()

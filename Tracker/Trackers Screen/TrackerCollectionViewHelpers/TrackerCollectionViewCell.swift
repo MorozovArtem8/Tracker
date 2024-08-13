@@ -47,16 +47,50 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
     }
     
-    func trackerStateChange(days: Int, trackerCompletedToday: Bool) {
-        if trackerCompletedToday {
-            daysCountLabel.text = "\(days) дней"
-            plusButton.setImage(UIImage(named: "Done"), for: .normal)
-            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
-        } else {
-            daysCountLabel.text = "\(days) дней"
-            plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
+    func trackerStateChange(days: Int, trackerCompletedToday: Bool, trackerType: TrackerType) {
+        switch trackerType {
+            
+        case .habit:
+            if trackerCompletedToday {
+                daysCountLabel.text = formateDays(days)
+                plusButton.setImage(UIImage(named: "Done"), for: .normal)
+                plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
+            } else {
+                daysCountLabel.text = formateDays(days)
+                plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+                plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
+            }
+        case .notRegularEvent:
+            if trackerCompletedToday {
+                daysCountLabel.text = "Выполнено"
+                plusButton.setImage(UIImage(named: "Done"), for: .normal)
+                plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
+            } else {
+                daysCountLabel.text = "Не выполнено"
+                plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+                plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
+            }
         }
+        
+       
+    }
+    
+    private func formateDays(_ days: Int) -> String {
+        let remainder10 = days % 10
+        let remainder100 = days % 100
+        
+        let suffix: String
+        if remainder100 >= 11 && remainder100 <= 14 {
+            suffix = "дней"
+        } else if remainder10 == 1 {
+            suffix = "день"
+        } else if remainder10 >= 2 && remainder10 <= 4 {
+            suffix = "дня"
+        } else {
+            suffix = "дней"
+        }
+        
+        return "\(days) \(suffix)"
     }
 }
 
