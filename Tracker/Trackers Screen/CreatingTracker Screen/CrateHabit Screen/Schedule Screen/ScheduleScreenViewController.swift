@@ -23,7 +23,16 @@ final class ScheduleScreenViewController: UIViewController {
     }()
     
     let tableViewData = DaysWeek.allCases
-    private var selectedDays: [DaysWeek] = [] 
+    private var selectedDays: [DaysWeek] = []
+    
+    init(selectedDays: [DaysWeek]) {
+        self.selectedDays = selectedDays
+        super .init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +50,9 @@ extension ScheduleScreenViewController: UITableViewDataSource {
         
         guard let scheduleTableViewCell = cell as? ScheduleTableViewCell else {return UITableViewCell()}
         scheduleTableViewCell.configureCell(nameLabel: tableViewData[indexPath.row].rawValue)
+        if selectedDays.contains(tableViewData[indexPath.row]) {
+            scheduleTableViewCell.toggle.isOn = true
+        }
         scheduleTableViewCell.toggle.addTarget(self, action: #selector(toggleSwitchChanged), for: .valueChanged)
         scheduleTableViewCell.toggle.tag = indexPath.row
         return scheduleTableViewCell

@@ -40,7 +40,7 @@ private extension CreatingTrackerViewController {
         addHabit.translatesAutoresizingMaskIntoConstraints = false
         addHabit.backgroundColor = UIColor("#1A1B22")
         addHabit.setTitle("Привычка", for: .normal)
-        addHabit.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        addHabit.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addHabit.layer.cornerRadius = 16
         addHabit.clipsToBounds = true
         addHabit.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
@@ -48,7 +48,7 @@ private extension CreatingTrackerViewController {
         notRegularEvent.translatesAutoresizingMaskIntoConstraints = false
         notRegularEvent.backgroundColor = UIColor("#1A1B22")
         notRegularEvent.setTitle("Нерегулярное cобытие", for: .normal)
-        notRegularEvent.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        notRegularEvent.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         notRegularEvent.layer.cornerRadius = 16
         notRegularEvent.clipsToBounds = true
         notRegularEvent.addTarget(self, action: #selector(notRegularEventButtonTapped), for: .touchUpInside)
@@ -75,6 +75,6 @@ private extension CreatingTrackerViewController {
     }
     
     @objc func notRegularEventButtonTapped() {
-        
+        delegate?.didSelectTrackerType(self, trackerType: .notRegularEvent)
     }
 }

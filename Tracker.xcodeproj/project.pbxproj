@@ -26,7 +26,9 @@
 		AC835BDC2C6387D200D38AF5 /* CreatingTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */; };
 		AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */; };
 		AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */; };
+		ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */; };
 		ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE87ED42C68AF6300CFB0DF /* CellData.swift */; };
+		ACF009372C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */; };
 		ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFDF1F22C537C0500371272 /* TabBarController.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,7 +54,9 @@
 		AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingTrackerViewController.swift; sourceTree = "<group>"; };
 		AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSupplementaryView.swift; sourceTree = "<group>"; };
+		ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HideKeyboardWhenTappedAround+Extension.swift"; sourceTree = "<group>"; };
 		ACE87ED42C68AF6300CFB0DF /* CellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellData.swift; sourceTree = "<group>"; };
+		ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingNotRegularEventViewController.swift; sourceTree = "<group>"; };
 		ACFDF1F22C537C0500371272 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,9 +118,9 @@
 		AC3AEE802C6552F2005A6A5F /* CrateHabit Screen */ = {
 			isa = PBXGroup;
 			children = (
+				AC3AEE812C655341005A6A5F /* CreatingHabitViewController.swift */,
 				AC59B1CA2C6773C700C656D7 /* Schedule Screen */,
 				AC3AEE872C655BC1005A6A5F /* CreatingHabitTableView Cell */,
-				AC3AEE812C655341005A6A5F /* CreatingHabitViewController.swift */,
 			);
 			path = "CrateHabit Screen";
 			sourceTree = "<group>";
@@ -159,6 +163,7 @@
 			children = (
 				AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */,
 				AC3AEE802C6552F2005A6A5F /* CrateHabit Screen */,
+				ACF009382C6AAFF200F7CAB2 /* CreatingNotRegularEvent Screen */,
 			);
 			path = "CreatingTracker Screen";
 			sourceTree = "<group>";
@@ -172,11 +177,20 @@
 			path = TrackerCollectionViewHelpers;
 			sourceTree = "<group>";
 		};
+		ACF009382C6AAFF200F7CAB2 /* CreatingNotRegularEvent Screen */ = {
+			isa = PBXGroup;
+			children = (
+				ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */,
+			);
+			path = "CreatingNotRegularEvent Screen";
+			sourceTree = "<group>";
+		};
 		ACFDF1F02C537BDB00371272 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				ACFDF1F12C537BEB00371272 /* UIElements */,
 				AC59DD842C538416005A8E6C /* Color+Extension.swift */,
+				ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -289,6 +303,8 @@
 				ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */,
 				AC1497002C52F0A500BF80F8 /* SceneDelegate.swift in Sources */,
 				AC38BA9E2C56629D00463933 /* Tracker.swift in Sources */,
+				ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */,
+				ACF009372C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

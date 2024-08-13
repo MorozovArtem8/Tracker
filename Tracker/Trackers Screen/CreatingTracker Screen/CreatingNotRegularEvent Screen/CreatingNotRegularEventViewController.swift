@@ -1,9 +1,8 @@
-//  Created by Artem Morozov on 08.08.2024.
+//  Created by Artem Morozov on 13.08.2024.
 
 import UIKit
 
-final class CreatingHabitViewController: UIViewController {
-    
+final class CreatingNotRegularEventViewController: UIViewController {
     private lazy var nameTrackerTextField = PaddedTextField()
     private lazy var tableView = UITableView()
     private lazy var cancelButton = UIButton(type: .system)
@@ -11,18 +10,11 @@ final class CreatingHabitViewController: UIViewController {
     
     private let delegate: CreateHabitDelegate?
     
-    private var tableViewData: [CellData] = [CellData(title: "Категория"), CellData(title: "Расписание")]
-    
-    private var selectedDays: [DaysWeek] = [] {
-        didSet {
-            updateCreateButtonState()
-        }
-    }
+    private var tableViewData: [CellData] = [CellData(title: "Категория")]
     
     private var createButtonIsEnabled: Bool {
         let nameTrackerTextFieldIsEmpty = nameTrackerTextField.text?.isEmpty ?? true
-        let selectedDaysIsEmpty = selectedDays.isEmpty
-        return !nameTrackerTextFieldIsEmpty && !selectedDaysIsEmpty
+        return !nameTrackerTextFieldIsEmpty
     }
     
     init(delegate: CreateHabitDelegate) {
@@ -34,29 +26,14 @@ final class CreatingHabitViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         self.hideKeyboardWhenTappedAround()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateCreateButtonState), name: UITextField.textDidChangeNotification, object: nameTrackerTextField)
-    }
-    
-   @objc private func updateCreateButtonState() {
-       if createButtonIsEnabled {
-           createButton.backgroundColor = .black
-           createButton.isEnabled = true
-       } else {
-           createButton.backgroundColor = UIColor("#AEAFB4")
-           createButton.isEnabled = false
-       }
     }
 }
 
-extension CreatingHabitViewController: UITableViewDataSource {
+extension CreatingNotRegularEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableViewData.count
     }
@@ -70,48 +47,22 @@ extension CreatingHabitViewController: UITableViewDataSource {
     }
 }
 
-extension CreatingHabitViewController: UITableViewDelegate {
+extension CreatingNotRegularEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         switch indexPath.row {
         case 0:
             print("Тут будет открытие экрана создания категории")
-        case 1:
-            let scheduleScreenViewController = ScheduleScreenViewController(selectedDays: selectedDays)
-            scheduleScreenViewController.completionHandler = { [weak self] data in
-                self?.selectedDays = data
-                //TODO: сделать функцию для конвертации массива дней недели в строку для отображения subTitle
-                //self?.tableViewData[1].subTitle = "Вт, Cб"
-                self?.tableView.reloadData()
-            }
-            
-            let navigationController = UINavigationController(rootViewController: scheduleScreenViewController)
-            
-            let textAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: UIColor.black,
-                .font: UIFont.systemFont(ofSize: 16, weight: .medium)
-            ]
-            navigationController.navigationBar.titleTextAttributes = textAttributes
-            present(navigationController, animated: true)
         default:
             print("Неизвестная ячейка")
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-            cell.layer.masksToBounds = true
-            cell.layer.cornerRadius = 16
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        }
-        
-        if indexPath.row == tableViewData.count - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1000)
-            cell.layer.masksToBounds = true
-            cell.layer.cornerRadius = 16
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        }
+        cell.layer.masksToBounds = true
+        cell.layer.cornerRadius = 16
+       
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -120,10 +71,10 @@ extension CreatingHabitViewController: UITableViewDelegate {
 }
 
 //MARK: Configure UI
-private extension CreatingHabitViewController {
+private extension CreatingNotRegularEventViewController {
     func configureUI() {
         view.backgroundColor = .white
-        self.title = "Новая привычка"
+        self.title = "Новое нерегулярное событие"
         
         configureNameTrackerTextField()
         configureTableView()
@@ -156,6 +107,7 @@ private extension CreatingHabitViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.isScrollEnabled = false
+        tableView.separatorStyle = .none
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
         view.addSubview(tableView)
@@ -217,7 +169,7 @@ private extension CreatingHabitViewController {
                                                     name: nameTrackerTextField.text ?? "",
                                                     color: .gray,
                                                     emoji: "📯",
-                                                    schedule: self.selectedDays)
+                                                    schedule: [])
                                                  ]
                                                 ))
     }

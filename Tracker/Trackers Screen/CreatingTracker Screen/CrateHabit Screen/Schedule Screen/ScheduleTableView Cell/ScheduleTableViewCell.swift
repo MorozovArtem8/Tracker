@@ -35,7 +35,7 @@ private extension ScheduleTableViewCell {
         
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         nameLabel.textColor = .black
         nameLabel.text = "12321421412"
         

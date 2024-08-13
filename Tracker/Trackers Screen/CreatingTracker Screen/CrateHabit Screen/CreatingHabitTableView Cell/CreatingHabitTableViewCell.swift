@@ -51,7 +51,7 @@ private extension CreatingHabitTableViewCell {
         
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         nameLabel.textColor = .black
         
         subLabel.translatesAutoresizingMaskIntoConstraints = false

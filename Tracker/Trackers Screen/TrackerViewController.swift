@@ -296,7 +296,15 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
             present(navigationController, animated: true)
         
         case .notRegularEvent:
-            print("Событие")
+            let creatingNotRegularEventViewController = CreatingNotRegularEventViewController(delegate: self)
+            let navigationController = UINavigationController(rootViewController: creatingNotRegularEventViewController)
+    
+            let textAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+            ]
+            navigationController.navigationBar.titleTextAttributes = textAttributes
+            present(navigationController, animated: true)
         }
     }
 }
