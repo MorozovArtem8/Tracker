@@ -67,11 +67,13 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
                 let currentStartOfDay = Calendar.current.startOfDay(for: currentDate)
                 let firstCompletedTrackerStartOfDay = Calendar.current.startOfDay(for: firstCompletedTracker?.dateOfCompletion ?? Date())
                 
+                return
                 // - Показываем трекеры расписание которых соответствует выбранному дню,
+                matchesSchedule || 
                 // - Выполненные трекеры (нерегулярные события (без расписания) показываем только для даты выполнения)
+                (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) || 
                 // - Пустые нерегулярные события которые еще не выполнены показываем для всех дней
-                
-                return matchesSchedule || (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) || (firstCompletedTracker == nil && tracker.schedule.isEmpty)
+                (firstCompletedTracker == nil && tracker.schedule.isEmpty)
             }
             return filteredTrackers.isEmpty ? nil : TrackerCategory(header: category.header, trackers: filteredTrackers)
         }

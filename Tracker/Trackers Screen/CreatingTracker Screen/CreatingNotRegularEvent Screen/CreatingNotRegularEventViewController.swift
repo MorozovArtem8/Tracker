@@ -33,18 +33,18 @@ final class CreatingNotRegularEventViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateCreateButtonState), name: UITextField.textDidChangeNotification, object: nameTrackerTextField)
     }
     
-   
-
-
-@objc private func updateCreateButtonState() {
-   if createButtonIsEnabled {
-       createButton.backgroundColor = .black
-       createButton.isEnabled = true
-   } else {
-       createButton.backgroundColor = UIColor("#AEAFB4")
-       createButton.isEnabled = false
-   }
-}
+    
+    
+    
+    @objc private func updateCreateButtonState() {
+        if createButtonIsEnabled {
+            createButton.backgroundColor = .black
+            createButton.isEnabled = true
+        } else {
+            createButton.backgroundColor = UIColor("#AEAFB4")
+            createButton.isEnabled = false
+        }
+    }
 }
 
 extension CreatingNotRegularEventViewController: UITableViewDataSource {
@@ -76,7 +76,7 @@ extension CreatingNotRegularEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 16
-       
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

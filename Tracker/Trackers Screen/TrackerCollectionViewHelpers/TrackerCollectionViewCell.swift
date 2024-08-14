@@ -71,8 +71,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
             }
         }
-        
-       
     }
     
     private func formateDays(_ days: Int) -> String {
