@@ -55,7 +55,7 @@ private extension CreatingHabitTableViewCell {
         nameLabel.textColor = .black
         
         subLabel.translatesAutoresizingMaskIntoConstraints = false
-        subLabel.font = UIFont.systemFont(ofSize: 13, weight: .light)
+        subLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         subLabel.textColor = UIColor("#AEAFB4")
         
         var labelsStackView = UIStackView()

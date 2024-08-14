@@ -54,6 +54,15 @@ final class CreatingHabitViewController: UIViewController {
            createButton.isEnabled = false
        }
     }
+    
+    private func getScheduleCellString(daysWeek: [DaysWeek]) -> String {
+        if daysWeek.count == 7 {
+            return "Каждый день"
+        }
+        let sortedDaysWeek = daysWeek.sorted()
+        let selectedDaysString = sortedDaysWeek.map {$0.getAbbreviatedName()}.joined(separator: ", ")
+        return selectedDaysString
+    }
 }
 
 extension CreatingHabitViewController: UITableViewDataSource {
@@ -82,7 +91,8 @@ extension CreatingHabitViewController: UITableViewDelegate {
             scheduleScreenViewController.completionHandler = { [weak self] data in
                 self?.selectedDays = data
                 //TODO: сделать функцию для конвертации массива дней недели в строку для отображения subTitle
-                //self?.tableViewData[1].subTitle = "Вт, Cб"
+                //Да! костыль!) подумаю как исправить)
+                self?.tableViewData[1].subTitle = self?.getScheduleCellString(daysWeek: data)
                 self?.tableView.reloadData()
             }
             
