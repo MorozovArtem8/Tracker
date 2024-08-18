@@ -26,7 +26,10 @@
 		AC835BDC2C6387D200D38AF5 /* CreatingTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */; };
 		AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */; };
 		AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */; };
+		ACB235612C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */; };
 		ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */; };
+		ACC7BAF02C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */; };
+		ACC7BAF22C6FF163007F35AE /* CreateTrackerCollectionCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7BAF12C6FF163007F35AE /* CreateTrackerCollectionCellData.swift */; };
 		ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE87ED42C68AF6300CFB0DF /* CellData.swift */; };
 		ACF009372C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */; };
 		ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFDF1F22C537C0500371272 /* TabBarController.swift */; };
@@ -54,7 +57,10 @@
 		AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingTrackerViewController.swift; sourceTree = "<group>"; };
 		AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSupplementaryView.swift; sourceTree = "<group>"; };
+		ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewColorCell.swift; sourceTree = "<group>"; };
 		ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HideKeyboardWhenTappedAround+Extension.swift"; sourceTree = "<group>"; };
+		ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewEmojiCell.swift; sourceTree = "<group>"; };
+		ACC7BAF12C6FF163007F35AE /* CreateTrackerCollectionCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionCellData.swift; sourceTree = "<group>"; };
 		ACE87ED42C68AF6300CFB0DF /* CellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellData.swift; sourceTree = "<group>"; };
 		ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingNotRegularEventViewController.swift; sourceTree = "<group>"; };
 		ACFDF1F22C537C0500371272 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -111,6 +117,7 @@
 				AC38BAA12C56651900463933 /* TrackerRecord.swift */,
 				AC2DC72C2C5AA16C00D4FE7B /* GeomitricParams.swift */,
 				ACE87ED42C68AF6300CFB0DF /* CellData.swift */,
+				ACC7BAF12C6FF163007F35AE /* CreateTrackerCollectionCellData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -118,9 +125,9 @@
 		AC3AEE802C6552F2005A6A5F /* CrateHabit Screen */ = {
 			isa = PBXGroup;
 			children = (
+				AC3AEE872C655BC1005A6A5F /* CreatingHabitTableView Cell */,
 				AC3AEE812C655341005A6A5F /* CreatingHabitViewController.swift */,
 				AC59B1CA2C6773C700C656D7 /* Schedule Screen */,
-				AC3AEE872C655BC1005A6A5F /* CreatingHabitTableView Cell */,
 			);
 			path = "CrateHabit Screen";
 			sourceTree = "<group>";
@@ -161,6 +168,7 @@
 		AC835BDA2C6387AE00D38AF5 /* CreatingTracker Screen */ = {
 			isa = PBXGroup;
 			children = (
+				ACC7BAEE2C6FEAB5007F35AE /* CreateTrackerCollectionViewCell */,
 				AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */,
 				AC3AEE802C6552F2005A6A5F /* CrateHabit Screen */,
 				ACF009382C6AAFF200F7CAB2 /* CreatingNotRegularEvent Screen */,
@@ -175,6 +183,15 @@
 				AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */,
 			);
 			path = TrackerCollectionViewHelpers;
+			sourceTree = "<group>";
+		};
+		ACC7BAEE2C6FEAB5007F35AE /* CreateTrackerCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */,
+				ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */,
+			);
+			path = CreateTrackerCollectionViewCell;
 			sourceTree = "<group>";
 		};
 		ACF009382C6AAFF200F7CAB2 /* CreatingNotRegularEvent Screen */ = {
@@ -208,8 +225,8 @@
 			isa = PBXGroup;
 			children = (
 				AC835BDA2C6387AE00D38AF5 /* CreatingTracker Screen */,
-				AC8861F52C5A934900569ABA /* TrackerCollectionViewHelpers */,
 				AC1497012C52F0A500BF80F8 /* TrackerViewController.swift */,
+				AC8861F52C5A934900569ABA /* TrackerCollectionViewHelpers */,
 			);
 			path = "Trackers Screen";
 			sourceTree = "<group>";
@@ -289,6 +306,7 @@
 				AC59B1CC2C6773DD00C656D7 /* ScheduleScreenViewController.swift in Sources */,
 				AC59DD852C538416005A8E6C /* Color+Extension.swift in Sources */,
 				AC38BAA02C5664D400463933 /* TrackerCategory.swift in Sources */,
+				ACC7BAF02C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift in Sources */,
 				ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */,
 				AC1496FE2C52F0A500BF80F8 /* AppDelegate.swift in Sources */,
 				AC3AEE862C655B2D005A6A5F /* CreatingHabitTableViewCell.swift in Sources */,
@@ -299,8 +317,10 @@
 				AC2DC72D2C5AA16C00D4FE7B /* GeomitricParams.swift in Sources */,
 				AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */,
 				AC3AEE822C655341005A6A5F /* CreatingHabitViewController.swift in Sources */,
+				ACC7BAF22C6FF163007F35AE /* CreateTrackerCollectionCellData.swift in Sources */,
 				AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */,
 				ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */,
+				ACB235612C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift in Sources */,
 				AC1497002C52F0A500BF80F8 /* SceneDelegate.swift in Sources */,
 				AC38BA9E2C56629D00463933 /* Tracker.swift in Sources */,
 				ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */,
