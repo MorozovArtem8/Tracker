@@ -11,11 +11,9 @@ protocol TrackerTypeSelectionDelegate: AnyObject {
 }
 
 class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate {
-    
     private var categories: [TrackerCategory]
     private var visibleCategories: [TrackerCategory]
     private var completedTrackers: [TrackerRecord]
-    
     private var currentDate = Date()
     
     private let geometricParams: GeometricParams
