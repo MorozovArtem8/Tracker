@@ -5,25 +5,22 @@ import CoreData
 
 final class TrackerStore {
     private let context: NSManagedObjectContext
-    private let uiColorMarshalling = UIColorMarshalling()
-    
-    convenience init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        self.init(context: context)
-    }
+    private let colorMarshalling = UIColorMarshalling()
     
     init(context: NSManagedObjectContext) {
         self.context = context
     }
     
-    func addNewTracker(_ tracker: Tracker) throws {
+    func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws {
         let trackerCoreData = TrackerCoreData(context: context)
+        
+        guard let encodeData = try? JSONEncoder().encode(tracker.schedule) else {return}
         
         trackerCoreData.name = tracker.name
         trackerCoreData.id = tracker.id
         trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
-        //trackerCoreData.schedule = tracker.schedule
-        try context.save()
+        trackerCoreData.color = colorMarshalling.hexString(from: tracker.color)
+        trackerCoreData.schedule = encodeData
+        trackerCoreData.category = category
     }
 }
