@@ -415,7 +415,7 @@ private extension CreatingHabitViewController {
     @objc func createButtonTapped() {
         self.dismiss(animated: true)
         
-        let header = "Категория 1"
+        let header = "Категория 2"
         let id = UUID()
         let schedule = selectedDays
         guard let name = nameTrackerTextField.text,

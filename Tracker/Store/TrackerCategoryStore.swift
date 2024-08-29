@@ -7,15 +7,24 @@ enum TrackerCategoryStoreError: Error {
     case decodingErrorInvalid
 }
 
+protocol TrackerCategoryStoreProtocol: AnyObject {
+    func getAllTrackerCategory() -> [TrackerCategory]
+    func addTrackerCategory(categoryHeader: String, tracker: Tracker)
+    func addTrackerCategory(categoryHeader: String)
+}
+
 final class TrackerCategoryStore: NSObject {
     private let colorMarshalling = UIColorMarshalling()
     private let context: NSManagedObjectContext
     var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>!
     
-    private lazy var trackerStore = TrackerStore(context: self.context)
+    weak var delegate: DataProviderDelegate?
     
-    init(context: NSManagedObjectContext) {
+    private lazy var trackerStore: TrackerStoreAddNewTrackerProtocol = TrackerStore(context: self.context)
+    
+    init(context: NSManagedObjectContext, delegate: DataProviderDelegate) {
         self.context = context
+        self.delegate = delegate
         super.init()
         setupFetchedResultsController()
     }
@@ -32,37 +41,63 @@ final class TrackerCategoryStore: NSObject {
         try? fetchedResultsController.performFetch()
     }
     
-//    var trackerCategories: [TrackerCategory] {
-//        guard let objects = self.fetchedResultsController.fetchedObjects,
-//              let trackerCategories = try? objects.map({ category in
-//                  try self.convertObjectInTrackerCategory(from: category)
-//              }) else {return []}
-//        return trackerCategories
-//    }
+    
+    
+    private func convertObjectInTrackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
+        guard let header = trackerCategoryCoreData.header else {
+            throw TrackerCategoryStoreError.decodingErrorInvalid
+        }
+        
+        guard let trackersSet = trackerCategoryCoreData.trackers as? Set<TrackerCoreData> else {
+            throw TrackerCategoryStoreError.decodingErrorInvalid
+        }
+        
+        do {
+            let trackers = try trackersSet.map{
+                guard let id = $0.id,
+                      let name = $0.name,
+                      let emoji = $0.emoji,
+                      let schedule = $0.schedule as? [DaysWeek] else {throw TrackerCategoryStoreError.decodingErrorInvalid}
+                
+                
+                let color = colorMarshalling.color(from: $0.color ?? "")
+                return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule )
+            }
+            return TrackerCategory(header: header, trackers: trackers)
+        }
+        
+    }
+}
+//MARK: TrackerCategoryStoreProtocole func
+extension TrackerCategoryStore: TrackerCategoryStoreProtocol {
+    func getAllTrackerCategory() -> [TrackerCategory] {
+        let trackerCategoryArray = fetchedResultsController.fetchedObjects?.compactMap {
+            do {
+                return try convertObjectInTrackerCategory(from: $0)
+            } catch {
+                return nil
+            }
+        }
+        return trackerCategoryArray!
+    }
     
     func addTrackerCategory(categoryHeader: String, tracker: Tracker) {
-        guard let categoryAlreadyExists = fetchedResultsController.fetchedObjects?.first(where: {$0.header == categoryHeader}) else {
-            let trackerCategory = TrackerCategoryCoreData(context: self.context)
-            trackerCategory.header = categoryHeader
-            do {
-                try trackerStore.addNewTracker(category: trackerCategory, tracker: tracker)
-                if context.hasChanges {
-                    do {
-                        try context.save()
-                        print("Сохранили контекст11111")
-                    } catch {
-                        context.rollback()
-                        let nserror = error as NSError
-                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                    }
-                }
-                print("Новая категория и трекер добавлены")
-            } catch {
-                print("Не удалось добавить трекер к категории")
-            }
+        //Если такая категория уже есть добавляем трекеры в имющуюся
+        if let categoryAlreadyExists = fetchedResultsController.fetchedObjects?.first(where: {$0.header == categoryHeader}) {
+            try? trackerStore.addNewTracker(category: categoryAlreadyExists, tracker: tracker)
             return
         }
-        print("Такая категория уже есть")
+        // Иначе создаем новую
+        let trackerCategory = TrackerCategoryCoreData(context: self.context)
+        trackerCategory.header = categoryHeader
+        try? context.save()
+        do {
+            try trackerStore.addNewTracker(category: trackerCategory, tracker: tracker)
+            print("Новая категория и трекер добавлены")
+        } catch {
+            print("Не удалось добавить трекер к категории")
+        }
+        return
         
     }
     
@@ -82,32 +117,11 @@ final class TrackerCategoryStore: NSObject {
         }
         
     }
-    
-    private func convertObjectInTrackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
-        guard let header = trackerCategoryCoreData.header else {
-            throw TrackerCategoryStoreError.decodingErrorInvalid
-        }
-        
-        guard let trackersSet = trackerCategoryCoreData.trackers as? Set<TrackerCoreData> else {
-            print("Ошибка тут")
-            throw TrackerCategoryStoreError.decodingErrorInvalid
-        }
-        
-        let trackers = trackersSet.map{
-            let id = $0.id
-            let name = $0.name
-            let color = colorMarshalling.color(from: $0.color!)
-            let emoji = $0.emoji
-            let schedule = try? JSONDecoder().decode([DaysWeek].self, from: $0.schedule as! Data)
-            
-            return Tracker(id: id!, name: name!, color: color, emoji: emoji!, schedule: schedule!)
-        }
-        return TrackerCategory(header: header, trackers: trackers)
-    }
 }
 
+//MARK: NSFetchedResultsControllerDelegate func
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        print(11)
+        delegate?.didUpdate()
     }
 }

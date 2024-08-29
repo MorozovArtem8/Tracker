@@ -3,7 +3,15 @@
 import UIKit
 import CoreData
 
-final class TrackerStore {
+protocol TrackerStoreAddNewTrackerProtocol: AnyObject {
+    func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws
+}
+
+protocol TrackerStoreGetTrackerCoreDataForIdProtocol: AnyObject {
+    func getTrackerCoreDataForId(id: UUID) -> TrackerCoreData?
+}
+
+final class TrackerStore: TrackerStoreAddNewTrackerProtocol, TrackerStoreGetTrackerCoreDataForIdProtocol {
     private let context: NSManagedObjectContext
     private let colorMarshalling = UIColorMarshalling()
     
@@ -14,13 +22,24 @@ final class TrackerStore {
     func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws {
         let trackerCoreData = TrackerCoreData(context: context)
         
-        guard let encodeData = try? JSONEncoder().encode(tracker.schedule) else {return}
-        
+        let schedule = tracker.schedule as NSObject
         trackerCoreData.name = tracker.name
         trackerCoreData.id = tracker.id
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.color = colorMarshalling.hexString(from: tracker.color)
-        trackerCoreData.schedule = encodeData
+        trackerCoreData.schedule = schedule
         trackerCoreData.category = category
+        try context.save()
+    }
+    
+    func getTrackerCoreDataForId(id: UUID) -> TrackerCoreData? {
+        let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        let trackers = try? context.fetch(fetchRequest)
+        let currentTracker = trackers?.first(where: {
+            $0.id == id
+        })
+        return currentTracker
     }
 }
+
+

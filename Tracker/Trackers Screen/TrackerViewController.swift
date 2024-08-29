@@ -1,7 +1,6 @@
 //  Created by Artem Morozov on 25.07.2024.
 
 import UIKit
-import CoreData
 
 protocol CreateHabitDelegate: AnyObject {
     func didCreateHabit(_ newTrackerCategory: TrackerCategory)
@@ -12,41 +11,20 @@ protocol TrackerTypeSelectionDelegate: AnyObject {
 }
 
 class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate {
-    private lazy var dataProvider =  DataProvider(delegate: self)
+    private lazy var dataProvider: DataProviderProtocol = DataProvider(delegate: self)
     
     private let colorMarshalling = UIColorMarshalling()
     
-    private var categories: [TrackerCategory]
-    private var visibleCategories: [TrackerCategory]
-    private var completedTrackers: [TrackerRecord]
+    private var categories: [TrackerCategory] = []
+    private var visibleCategories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
     private var currentDate = Date()
     
     private let geometricParams: GeometricParams
     
     init() {
-        
-        
         self.geometricParams =  GeometricParams(cellCount: 2,leftInset: 16,rightInset: 16,cellSpacing: 9) //Задаем параметры коллекции трекеров
-        self.visibleCategories = [] // Трекеры которые видны на экране вы данный момент
-        self.completedTrackers = []
-        
-        self.categories = [
-            TrackerCategory(header: "Категория 1", trackers: [
-                Tracker(id: UUID(), name: "Карточка 1", color: UIColor("#FD4C49"), emoji: "😍", schedule: [.Monday, .Friday, .Sunday])
-            ]),
-            TrackerCategory(header: "Категория 2", trackers: [
-                Tracker(id: UUID(), name: "Карточка 1", color: UIColor("#007BFA"), emoji: "🍑", schedule: [.Sunday]),
-                Tracker(id: UUID(), name: "Карточка 2", color: UIColor("#AD56DA"), emoji: "🥶", schedule: [.Monday]),
-                Tracker(id: UUID(), name: "Карточка 3", color: UIColor("#FF99CC"), emoji: "🏄🏾‍♂️", schedule: [.Tuesday])
-            ]),
-            TrackerCategory(header: "Категория 3", trackers: [
-                Tracker(id: UUID(), name: "Карточка 1", color: UIColor("#F6C48B"), emoji: "🩲", schedule: [.Monday, .Friday, .Sunday]),
-                Tracker(id: UUID(), name: "Карточка 2", color: UIColor("#F9D4D4"), emoji: "😀", schedule: [.Monday, .Friday, .Sunday]),
-                Tracker(id: UUID(), name: "Карточка 3", color: UIColor("#E66DD4"), emoji: "✌️", schedule: [.Monday, .Friday, .Sunday])
-            ])
-        ]
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -55,44 +33,15 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.completedTrackers = dataProvider.getAllRecords()
+        self.categories = dataProvider.getAllTrackerCategory()
         updateVisibleCategories(from: Date())
         configureUI()
-        
-//        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//        
-//        let arrayDaysWeek: [DaysWeek] = [.Monday, .Friday, .Sunday]
-//        guard let encodeData = try? JSONEncoder().encode(arrayDaysWeek) else {return}
-//        
-//        let trackerCategort = TrackerCategoryCoreData(context: context)
-//        trackerCategort.header = "412"
-//        let trackers = TrackerCoreData(context: context)
-//        trackers.name = "123"
-//        trackers.id = UUID()
-//        trackers.category = trackerCategort
-//        trackers.emoji = "1231221"
-//        trackers.schedule = encodeData
-//        trackers.color = colorMarshalling.hexString(from: UIColor("#FD4C49"))
-//        
-//        let trackers2 = TrackerCoreData(context: context)
-//        trackers2.name = "123"
-//        trackers2.id = UUID()
-//        trackers2.category = trackerCategort
-//        trackers2.emoji = "1231221"
-//        trackers2.schedule = encodeData
-//        trackers2.color = colorMarshalling.hexString(from: UIColor("#FD4C49"))
-//        trackerCategort.addToTrackers(trackers2)
-//        trackerCategort.addToTrackers(trackers)
-//        (UIApplication.shared.delegate as! AppDelegate).saveContext()
-//        let request = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
-//        let categories = try? context.fetch(request)
-//        categories?.forEach {
-//            print("\($0.name)  \\  \($0.emoji)")
-//        }
-        print(dataProvider.trackerCategoryStore.fetchedResultsController.fetchedObjects)
-        print(dataProvider.numberOfRowsInSection(0))
     }
     
     private func updateVisibleCategories(from date: Date) {
+        
         let dayOfWeek = DaysWeek(from: getDayOfWeek(from: date))
         
         let filteredCategories = categories.compactMap { category in
@@ -107,9 +56,9 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
                 
                 return
                 // - Показываем трекеры расписание которых соответствует выбранному дню,
-                matchesSchedule || 
+                matchesSchedule ||
                 // - Выполненные трекеры (нерегулярные события (без расписания) показываем только для даты выполнения)
-                (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) || 
+                (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) ||
                 // - Пустые нерегулярные события которые еще не выполнены показываем для всех дней
                 (firstCompletedTracker == nil && tracker.schedule.isEmpty)
             }
@@ -129,6 +78,9 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     //MARK: Cell delegate func
     func cellButtonDidTapped(_ cell: TrackerCollectionViewCell) {
+        guard Calendar.current.compare(Date(), to: currentDate, toGranularity: .day) != .orderedAscending else {return}
+        
+        completedTrackers = dataProvider.getAllRecords()
         guard let indexPath = collectionView.indexPath(for: cell) else {return}
         // Проверяем был ли выполнен трекер сегодня
         if !checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
@@ -143,30 +95,46 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         let currentDateIsNotFuture = Calendar.current.compare(Date(), to: currentDate, toGranularity: .day) != .orderedAscending
         guard let indexPath = collectionView.indexPath(for: cell),
               currentDateIsNotFuture else {return}
-        completedTrackers.append(TrackerRecord(trackerID: visibleCategories[indexPath.section].trackers[indexPath.row].id, dateOfCompletion: currentDate))
         
-        let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-        let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
+        let currentTracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+        let currentTrackerID = visibleCategories[indexPath.section].trackers[indexPath.row].id
         
-        let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
-        
-        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
+        do {
+            try dataProvider.addNewRecord(tracker: currentTracker, trackerRecord: TrackerRecord(trackerID: currentTrackerID, dateOfCompletion: currentDate))
+            completedTrackers = dataProvider.getAllRecords()
+            
+            let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
+            let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
+            let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+            
+            cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
+        }
+        catch {
+            print("Не удалось сохранить TrackerRecord")
+        }
         
     }
     
     func removeCompletedTracker(_ cell: TrackerCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {return}
+        
+        let currentTracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let currentTrackerID = visibleCategories[indexPath.section].trackers[indexPath.row].id
         
-        completedTrackers.removeAll { trackerRecord in
-            trackerRecord.trackerID == currentTrackerID && Calendar.current.isDate(currentDate, inSameDayAs: trackerRecord.dateOfCompletion)
+        do {
+            try dataProvider.removeRecord(tracker: currentTracker, trackerRecord: TrackerRecord(trackerID: currentTrackerID, dateOfCompletion: currentDate))
+            completedTrackers = dataProvider.getAllRecords()
+            
+            let trackerCount = getCurrentTrackerCompletedCount(id: currentTrackerID)
+            let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: currentTrackerID)
+            let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+            
+            cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
+        }
+        catch {
+            print("Не удалось удалить TrackerRecord")
         }
         
-        let trackerCount = getCurrentTrackerCompletedCount(id: currentTrackerID)
-        let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: currentTrackerID)
-        let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
-        
-        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
         
     }
     
@@ -311,27 +279,14 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 //MARK: UISearchResultsUpdating func
 extension TrackerViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let searchText = searchController.searchBar.text ?? ""
+        //let searchText = searchController.searchBar.text ?? ""
     }
 }
 
 extension TrackerViewController: CreateHabitDelegate {
     func didCreateHabit(_ newTrackerCategory: TrackerCategory) {
-        //print(newTrackerCategory)
-        if let index = categories.firstIndex(where: {$0.header == newTrackerCategory.header}) {
-            var newTrackers = categories[index].trackers
-            newTrackers.append(contentsOf: newTrackerCategory.trackers)
-            let newTrackerCategory = TrackerCategory(header: categories[index].header, trackers: newTrackers)
-            self.categories[index] = newTrackerCategory
-            updateVisibleCategories(from: currentDate)
-            try? dataProvider.addTracker(categoryHeader: newTrackerCategory.header, tracker: newTrackerCategory.trackers.first!)
-            print(dataProvider.trackerCategoryStore.fetchedResultsController.fetchedObjects)
-        }else {
-            var newCategories = categories
-            newCategories.append(newTrackerCategory)
-            categories = newCategories
-            updateVisibleCategories(from: currentDate)
-        }
+        guard let tracker = newTrackerCategory.trackers.first else {return}
+        dataProvider.addTracker(categoryHeader: newTrackerCategory.header, tracker: tracker)
     }
 }
 
@@ -342,18 +297,18 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
         case .habit:
             let creatingHabitViewController = CreatingHabitViewController(delegate: self)
             let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
-    
+            
             let textAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: UIColor.black,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
             ]
             navigationController.navigationBar.titleTextAttributes = textAttributes
             present(navigationController, animated: true)
-        
+            
         case .notRegularEvent:
             let creatingNotRegularEventViewController = CreatingNotRegularEventViewController(delegate: self)
             let navigationController = UINavigationController(rootViewController: creatingNotRegularEventViewController)
-    
+            
             let textAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: UIColor.black,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -367,7 +322,8 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
 //MARK: DataProviderDelegate
 extension TrackerViewController: DataProviderDelegate {
     func didUpdate() {
-        
+        self.categories = dataProvider.getAllTrackerCategory()
+        updateVisibleCategories(from: currentDate)
     }
     
 }

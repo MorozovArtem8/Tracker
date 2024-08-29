@@ -32,6 +32,7 @@
 		AC835BDC2C6387D200D38AF5 /* CreatingTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */; };
 		AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */; };
 		AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */; };
+		ACA8F9312C80755E00D4C572 /* CustomValueTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */; };
 		ACB235612C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */; };
 		ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */; };
 		ACC7BAF02C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */; };
@@ -69,6 +70,7 @@
 		AC835BDB2C6387D200D38AF5 /* CreatingTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingTrackerViewController.swift; sourceTree = "<group>"; };
 		AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSupplementaryView.swift; sourceTree = "<group>"; };
+		ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomValueTransformer.swift; sourceTree = "<group>"; };
 		ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewColorCell.swift; sourceTree = "<group>"; };
 		ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HideKeyboardWhenTappedAround+Extension.swift"; sourceTree = "<group>"; };
 		ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewEmojiCell.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				AC59DD842C538416005A8E6C /* Color+Extension.swift */,
 				AC80E5B72C752AE6005FB68B /* UIColorMarshaling.swift */,
 				ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */,
+				ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				ACC7BAF22C6FF163007F35AE /* CreateTrackerCollectionCellData.swift in Sources */,
 				AC80E5B82C752AE6005FB68B /* UIColorMarshaling.swift in Sources */,
 				AC80E5B42C75281A005FB68B /* TrackerCategoryStore.swift in Sources */,
+				ACA8F9312C80755E00D4C572 /* CustomValueTransformer.swift in Sources */,
 				AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */,
 				ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */,
 				ACB235612C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift in Sources */,

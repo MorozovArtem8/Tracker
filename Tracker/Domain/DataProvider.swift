@@ -8,16 +8,20 @@ protocol DataProviderDelegate: AnyObject {
 }
 
 protocol DataProviderProtocol {
-    var numberOfSections: Int { get }
-    func numberOfRowsInSection(_ section: Int) -> Int
-    func object(at: IndexPath) -> Tracker?
-    func addTracker(categoryHeader: String, tracker: Tracker) throws
-    func deleteTracker(at indexPath: IndexPath) throws
+    func addTracker(categoryHeader: String)
+    func addTracker(categoryHeader: String, tracker: Tracker)
+    
+    func getAllTrackerCategory() -> [TrackerCategory]
+    
+    func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws
+    func getAllRecords() -> [TrackerRecord]
+    func removeRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws
 }
 
 final class DataProvider: NSObject {
     
-    let trackerCategoryStore: TrackerCategoryStore
+    lazy var trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore(context: self.context, delegate: self.delegate!)
+    lazy var trackerRecordStore: TrackerRecordStoreProtocol = TrackerRecordStore()
     
     weak var delegate: DataProviderDelegate?
     private let context: NSManagedObjectContext
@@ -25,39 +29,40 @@ final class DataProvider: NSObject {
     init(delegate: DataProviderDelegate ,context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext) {
         self.context = context
         self.delegate = delegate
-        self.trackerCategoryStore = TrackerCategoryStore(context: self.context)
     }
     
 }
 
 // MARK: - DataProviderProtocol
 extension DataProvider: DataProviderProtocol {
-    var numberOfSections: Int {
-        trackerCategoryStore.fetchedResultsController.sections?.count ?? 0
+    func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws {
+        do {
+            try trackerRecordStore.addNewRecord(tracker: tracker, trackerRecord: trackerRecord)
+        }
     }
     
-    func numberOfRowsInSection(_ section: Int) -> Int {
-        guard let sections = trackerCategoryStore.fetchedResultsController.sections,
-              sections.indices.contains(section) else {return 0}
+    func getAllRecords() -> [TrackerRecord] {
+        guard let trackerRecords = trackerRecordStore.getAllRecords() else  {return []}
+        return trackerRecords
+    }
+    
+    func removeRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws {
+        do {
+            try trackerRecordStore.removeRecord(tracker: tracker, trackerRecord: trackerRecord)
+        }
         
-        let trackerCategoryCoreData = trackerCategoryStore.fetchedResultsController.object(at: IndexPath(row: 0, section: section))
-        //        trackerCategoryStore.addTrackerCategory(categoryHeader: "Дима")
-        //        print(trackerCategoryStore.trackerCategories)
-        return trackerCategoryCoreData.trackers?.count ?? 0
-        
     }
     
-    func object(at: IndexPath) -> Tracker? {
-        Tracker(id: UUID(), name: "a", color: UIColor(), emoji: "ds", schedule: [DaysWeek.Friday])
+    func addTracker(categoryHeader: String) {
+        trackerCategoryStore.addTrackerCategory(categoryHeader: categoryHeader)
     }
     
-    func addTracker(categoryHeader: String, tracker: Tracker) throws {
+    func addTracker(categoryHeader: String, tracker: Tracker) {
         trackerCategoryStore.addTrackerCategory(categoryHeader: categoryHeader, tracker: tracker)
-      
     }
     
-    func deleteTracker(at indexPath: IndexPath) throws {
-        
+    func getAllTrackerCategory() -> [TrackerCategory] {
+        trackerCategoryStore.getAllTrackerCategory()
     }
     
     
