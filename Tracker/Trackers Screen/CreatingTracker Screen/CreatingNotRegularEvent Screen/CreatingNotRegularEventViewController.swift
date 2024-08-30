@@ -79,6 +79,8 @@ final class CreatingNotRegularEventViewController: UIViewController {
     }
 }
 
+//MARK: UITableViewDataSource func
+
 extension CreatingNotRegularEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableViewData.count
@@ -92,6 +94,8 @@ extension CreatingNotRegularEventViewController: UITableViewDataSource {
         return creatingHabitTableViewCell
     }
 }
+
+//MARK: UITableViewDelegate func
 
 extension CreatingNotRegularEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -117,6 +121,7 @@ extension CreatingNotRegularEventViewController: UITableViewDelegate {
 }
 
 //MARK: CollectionView DataSource
+
 extension CreatingNotRegularEventViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? HeaderSupplementaryView
@@ -138,8 +143,6 @@ extension CreatingNotRegularEventViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-       
-        
         switch collectionViewData[indexPath.section].type {
         case .emoji(let emojis):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreateTrackerCollectionViewEmojiCell.identifier, for: indexPath) as? CreateTrackerCollectionViewEmojiCell else {return UICollectionViewCell()}
@@ -156,6 +159,7 @@ extension CreatingNotRegularEventViewController: UICollectionViewDataSource {
 }
 
 //MARK: CollectionView Deleage
+
 extension CreatingNotRegularEventViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch collectionViewData[indexPath.section].type {
@@ -190,15 +194,12 @@ extension CreatingNotRegularEventViewController: UICollectionViewDelegate {
             self.selectedColorIndexPath = indexPath
             cell.selectCell(select: true)
             self.selectedColor = color[indexPath.row]
-            
         }
     }
-    
 }
 
-
-
 //MARK: UICollectionViewFlowLayout func
+
 extension CreatingNotRegularEventViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 19)
@@ -224,6 +225,7 @@ extension CreatingNotRegularEventViewController: UICollectionViewDelegateFlowLay
 }
 
 //MARK: Configure UI
+
 private extension CreatingNotRegularEventViewController {
     func configureUI() {
         view.backgroundColor = .white
@@ -369,7 +371,7 @@ private extension CreatingNotRegularEventViewController {
         guard let name = nameTrackerTextField.text,
               let color = selectedColor,
               let emoji = selectedEmoji
-              
+                
         else {return}
         let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, schedule: [])])
         delegate?.didCreateHabit(trackerCategory)

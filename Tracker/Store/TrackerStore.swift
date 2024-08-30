@@ -3,22 +3,23 @@
 import UIKit
 import CoreData
 
-protocol TrackerStoreAddNewTrackerProtocol: AnyObject {
+protocol TrackerStoreProtocol: AnyObject {
     func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws
-}
-
-protocol TrackerStoreGetTrackerCoreDataForIdProtocol: AnyObject {
     func getTrackerCoreDataForId(id: UUID) -> TrackerCoreData?
 }
 
-final class TrackerStore: TrackerStoreAddNewTrackerProtocol, TrackerStoreGetTrackerCoreDataForIdProtocol {
+final class TrackerStore {
     private let context: NSManagedObjectContext
     private let colorMarshalling = UIColorMarshalling()
     
     init(context: NSManagedObjectContext) {
         self.context = context
     }
-    
+}
+
+//MARK: TrackerStoreProtocol func
+
+extension TrackerStore: TrackerStoreProtocol {
     func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws {
         let trackerCoreData = TrackerCoreData(context: context)
         
@@ -41,5 +42,3 @@ final class TrackerStore: TrackerStoreAddNewTrackerProtocol, TrackerStoreGetTrac
         return currentTracker
     }
 }
-
-

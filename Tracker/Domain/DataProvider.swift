@@ -8,10 +8,10 @@ protocol DataProviderDelegate: AnyObject {
 }
 
 protocol DataProviderProtocol {
-    func addTracker(categoryHeader: String)
+    func addTrackerCategory(categoryHeader: String)
     func addTracker(categoryHeader: String, tracker: Tracker)
     
-    func getAllTrackerCategory() -> [TrackerCategory]
+    func getAllTrackerCategory() -> [TrackerCategory]?
     
     func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws
     func getAllRecords() -> [TrackerRecord]
@@ -20,24 +20,35 @@ protocol DataProviderProtocol {
 
 final class DataProvider: NSObject {
     
-    lazy var trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore(context: self.context, delegate: self.delegate!)
-    lazy var trackerRecordStore: TrackerRecordStoreProtocol = TrackerRecordStore()
+    enum DataProviderError: Error {
+        case failedToInitializeContext
+    }
     
-    weak var delegate: DataProviderDelegate?
+    private lazy var trackerCategoryStore: TrackerCategoryStoreProtocol? = {
+        guard let delegate = delegate else {return nil}
+        trackerCategoryStore = TrackerCategoryStore(context: self.context, delegate: delegate)
+        return trackerCategoryStore
+        
+    }()
+    private lazy var trackerStore: TrackerStoreProtocol = TrackerStore(context: self.context)
+    private lazy var trackerRecordStore: TrackerRecordStoreProtocol = TrackerRecordStore(context: self.context)
+    
+    private weak var delegate: DataProviderDelegate?
     private let context: NSManagedObjectContext
     
-    init(delegate: DataProviderDelegate ,context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext) {
+    init(delegate: DataProviderDelegate) throws {
+        guard let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer?.viewContext else {throw DataProviderError.failedToInitializeContext}
         self.context = context
         self.delegate = delegate
     }
-    
 }
 
 // MARK: - DataProviderProtocol
+
 extension DataProvider: DataProviderProtocol {
     func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws {
-        do {
-            try trackerRecordStore.addNewRecord(tracker: tracker, trackerRecord: trackerRecord)
+        if let trackerCoreDataIsExist = trackerStore.getTrackerCoreDataForId(id: tracker.id) {
+            try? trackerRecordStore.addNewRecord(trackerCoreData: trackerCoreDataIsExist, trackerRecord: trackerRecord)
         }
     }
     
@@ -47,22 +58,42 @@ extension DataProvider: DataProviderProtocol {
     }
     
     func removeRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws {
-        do {
-            try trackerRecordStore.removeRecord(tracker: tracker, trackerRecord: trackerRecord)
-        }
-        
+        try trackerRecordStore.removeRecord(tracker: tracker, trackerRecord: trackerRecord)
     }
     
-    func addTracker(categoryHeader: String) {
+    func addTrackerCategory(categoryHeader: String) {
+        guard let trackerCategoryStore else {return}
         trackerCategoryStore.addTrackerCategory(categoryHeader: categoryHeader)
     }
     
     func addTracker(categoryHeader: String, tracker: Tracker) {
-        trackerCategoryStore.addTrackerCategory(categoryHeader: categoryHeader, tracker: tracker)
+        guard let trackerCategoryStore else {return}
+        //Если такая категория уже есть добавляем трекеры в имющуюся
+        if let categoryIsExist = trackerCategoryStore.checkCategoryExistence(categoryHeader: categoryHeader) {
+            do {
+                try trackerStore.addNewTracker(category: categoryIsExist, tracker: tracker)
+                print("Новая категория и трекер добавлены")
+            } catch {
+                print("Не удалось добавить трекер к категории")
+            }
+            return
+        } else {
+            // Иначе создаем новую
+            let trackerCategory = TrackerCategoryCoreData(context: self.context)
+            trackerCategory.header = categoryHeader
+            try? context.save()
+            do {
+                try trackerStore.addNewTracker(category: trackerCategory, tracker: tracker)
+                print("Новая категория и трекер добавлены")
+            } catch {
+                print("Не удалось добавить трекер к категории")
+            }
+        }
     }
     
-    func getAllTrackerCategory() -> [TrackerCategory] {
-        trackerCategoryStore.getAllTrackerCategory()
+    func getAllTrackerCategory() -> [TrackerCategory]? {
+        guard let trackerCategoryStore else {return nil}
+        return trackerCategoryStore.getAllTrackerCategory()
     }
     
     

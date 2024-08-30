@@ -6,7 +6,10 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    var persistentContainer: NSPersistentContainer?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        initializePersistentContainer()
         ValueTransformer.setValueTransformer(CustomValueTransformer(), forName: NSValueTransformerName("CustomValueTransformer"))
         return true
     }
@@ -27,17 +30,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - Core Data stack
     
-    lazy var persistentContainer: NSPersistentContainer = {
+    private func initializePersistentContainer() {
         let container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
-        return container
-    }()
+        self.persistentContainer = container
+    }
     
     func saveContext() {
+        guard let persistentContainer else {return}
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {

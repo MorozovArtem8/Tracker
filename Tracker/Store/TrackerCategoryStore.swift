@@ -8,40 +8,33 @@ enum TrackerCategoryStoreError: Error {
 }
 
 protocol TrackerCategoryStoreProtocol: AnyObject {
-    func getAllTrackerCategory() -> [TrackerCategory]
-    func addTrackerCategory(categoryHeader: String, tracker: Tracker)
+    func getAllTrackerCategory() -> [TrackerCategory]?
+    func checkCategoryExistence(categoryHeader: String) -> TrackerCategoryCoreData?
     func addTrackerCategory(categoryHeader: String)
 }
 
 final class TrackerCategoryStore: NSObject {
     private let colorMarshalling = UIColorMarshalling()
     private let context: NSManagedObjectContext
-    var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>!
+    private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData> = {
+        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.header, ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                  managedObjectContext: context,
+                                                                  sectionNameKeyPath: #keyPath(TrackerCategoryCoreData.header),
+                                                                  cacheName: nil)
+        fetchedResultsController.delegate = self
+        try? fetchedResultsController.performFetch()
+        return fetchedResultsController
+    }()
     
-    weak var delegate: DataProviderDelegate?
-    
-    private lazy var trackerStore: TrackerStoreAddNewTrackerProtocol = TrackerStore(context: self.context)
+    private weak var delegate: DataProviderDelegate?
     
     init(context: NSManagedObjectContext, delegate: DataProviderDelegate) {
         self.context = context
         self.delegate = delegate
-        super.init()
-        setupFetchedResultsController()
     }
-    
-    private func setupFetchedResultsController() {
-        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.header, ascending: true)]
-        
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                              managedObjectContext: self.context,
-                                                              sectionNameKeyPath: #keyPath(TrackerCategoryCoreData.header),
-                                                              cacheName: nil)
-        fetchedResultsController.delegate = self
-        try? fetchedResultsController.performFetch()
-    }
-    
-    
     
     private func convertObjectInTrackerCategory(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
         guard let header = trackerCategoryCoreData.header else {
@@ -65,12 +58,13 @@ final class TrackerCategoryStore: NSObject {
             }
             return TrackerCategory(header: header, trackers: trackers)
         }
-        
     }
 }
+
 //MARK: TrackerCategoryStoreProtocole func
+
 extension TrackerCategoryStore: TrackerCategoryStoreProtocol {
-    func getAllTrackerCategory() -> [TrackerCategory] {
+    func getAllTrackerCategory() -> [TrackerCategory]? {
         let trackerCategoryArray = fetchedResultsController.fetchedObjects?.compactMap {
             do {
                 return try convertObjectInTrackerCategory(from: $0)
@@ -78,27 +72,14 @@ extension TrackerCategoryStore: TrackerCategoryStoreProtocol {
                 return nil
             }
         }
-        return trackerCategoryArray!
+        return trackerCategoryArray
     }
     
-    func addTrackerCategory(categoryHeader: String, tracker: Tracker) {
-        //Если такая категория уже есть добавляем трекеры в имющуюся
+    func checkCategoryExistence(categoryHeader: String) -> TrackerCategoryCoreData? {
         if let categoryAlreadyExists = fetchedResultsController.fetchedObjects?.first(where: {$0.header == categoryHeader}) {
-            try? trackerStore.addNewTracker(category: categoryAlreadyExists, tracker: tracker)
-            return
+            return categoryAlreadyExists
         }
-        // Иначе создаем новую
-        let trackerCategory = TrackerCategoryCoreData(context: self.context)
-        trackerCategory.header = categoryHeader
-        try? context.save()
-        do {
-            try trackerStore.addNewTracker(category: trackerCategory, tracker: tracker)
-            print("Новая категория и трекер добавлены")
-        } catch {
-            print("Не удалось добавить трекер к категории")
-        }
-        return
-        
+        return nil
     }
     
     func addTrackerCategory(categoryHeader: String) {
@@ -115,11 +96,11 @@ extension TrackerCategoryStore: TrackerCategoryStoreProtocol {
         } catch {
             print("Не удалось сохранить категорию")
         }
-        
     }
 }
 
 //MARK: NSFetchedResultsControllerDelegate func
+
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         delegate?.didUpdate()

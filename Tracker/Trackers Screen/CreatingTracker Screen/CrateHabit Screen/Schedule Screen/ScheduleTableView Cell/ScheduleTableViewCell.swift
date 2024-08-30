@@ -4,8 +4,10 @@ import UIKit
 
 final class ScheduleTableViewCell: UITableViewCell {
     static let reuseIdentifier = "ScheduleTableViewCellReuseIdentifier"
-    private lazy var nameLabel = UILabel()
+    
     lazy var toggle = UISwitch()
+    
+    private lazy var nameLabel = UILabel()
     private lazy var stackView = UIStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -23,6 +25,7 @@ final class ScheduleTableViewCell: UITableViewCell {
 }
 
 //MARK: Configure UI
+
 private extension ScheduleTableViewCell {
     func configureUI() {
         configureNameLabelAndToggle()
@@ -52,8 +55,5 @@ private extension ScheduleTableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
-    
-        
-        
     }
 }
