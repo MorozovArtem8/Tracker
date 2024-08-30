@@ -37,7 +37,9 @@ final class DataProvider: NSObject {
     private let context: NSManagedObjectContext
     
     init(delegate: DataProviderDelegate) throws {
-        guard let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer?.viewContext else {throw DataProviderError.failedToInitializeContext}
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+              let context = appDelegate.persistentContainer?.viewContext else {throw DataProviderError.failedToInitializeContext}
+        
         self.context = context
         self.delegate = delegate
     }
@@ -95,6 +97,4 @@ extension DataProvider: DataProviderProtocol {
         guard let trackerCategoryStore else {return nil}
         return trackerCategoryStore.getAllTrackerCategory()
     }
-    
-    
 }
