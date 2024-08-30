@@ -93,6 +93,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
 }
 
 //MARK: Configure UI
+
 private extension TrackerCollectionViewCell {
     func configureUI() {
         self.layer.masksToBounds = true

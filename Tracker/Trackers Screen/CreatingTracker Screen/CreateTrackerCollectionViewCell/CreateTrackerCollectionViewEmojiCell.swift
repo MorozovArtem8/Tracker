@@ -10,7 +10,6 @@ final class CreateTrackerCollectionViewEmojiCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
-        
     }
     
     override func prepareForReuse() {
@@ -32,6 +31,7 @@ final class CreateTrackerCollectionViewEmojiCell: UICollectionViewCell {
 }
 
 //MARK: Configure UI
+
 private extension CreateTrackerCollectionViewEmojiCell {
     func configureUI() {
         self.layer.masksToBounds = true

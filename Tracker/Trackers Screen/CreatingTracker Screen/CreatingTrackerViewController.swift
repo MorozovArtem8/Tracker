@@ -29,6 +29,7 @@ final class CreatingTrackerViewController: UIViewController {
 }
 
 //MARK: Configure UI
+
 private extension CreatingTrackerViewController {
     func configureUI() {
         view.backgroundColor = .white

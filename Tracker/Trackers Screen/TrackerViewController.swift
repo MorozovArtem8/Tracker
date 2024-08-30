@@ -12,144 +12,6 @@ protocol TrackerTypeSelectionDelegate: AnyObject {
 
 class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate {
     
-    private var categories: [TrackerCategory]
-    private var visibleCategories: [TrackerCategory]
-    private var completedTrackers: [TrackerRecord]
-    
-    private var currentDate = Date()
-    
-    private let geometricParams: GeometricParams
-    
-    init() {
-        self.geometricParams =  GeometricParams(cellCount: 2,leftInset: 16,rightInset: 16,cellSpacing: 9) //Задаем параметры коллекции трекеров
-        self.visibleCategories = [] // Трекеры которые видны на экране вы данный момент
-        self.completedTrackers = []
-        
-        self.categories = [
-            TrackerCategory(header: "Категория 1", trackers: [
-                Tracker(id: UUID(), name: "Карточка 1", color: UIColor("#FD4C49"), emoji: "😍", schedule: [.Monday, .Friday, .Sunday])
-            ]),
-            TrackerCategory(header: "Категория 2", trackers: [
-                Tracker(id: UUID(), name: "Карточка 1", color: UIColor("#007BFA"), emoji: "🍑", schedule: [.Sunday]),
-                Tracker(id: UUID(), name: "Карточка 2", color: UIColor("#AD56DA"), emoji: "🥶", schedule: [.Monday]),
-                Tracker(id: UUID(), name: "Карточка 3", color: UIColor("#FF99CC"), emoji: "🏄🏾‍♂️", schedule: [.Tuesday])
-            ]),
-            TrackerCategory(header: "Категория 3", trackers: [
-                Tracker(id: UUID(), name: "Карточка 1", color: UIColor("#F6C48B"), emoji: "🩲", schedule: [.Monday, .Friday, .Sunday]),
-                Tracker(id: UUID(), name: "Карточка 2", color: UIColor("#F9D4D4"), emoji: "😀", schedule: [.Monday, .Friday, .Sunday]),
-                Tracker(id: UUID(), name: "Карточка 3", color: UIColor("#E66DD4"), emoji: "✌️", schedule: [.Monday, .Friday, .Sunday])
-            ])
-        ]
-        
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateVisibleCategories(from: Date())
-        configureUI()
-    }
-    
-    private func updateVisibleCategories(from date: Date) {
-        let dayOfWeek = DaysWeek(from: getDayOfWeek(from: date))
-        
-        let filteredCategories = categories.compactMap { category in
-            let filteredTrackers = category.trackers.filter { tracker in
-                let matchesSchedule = tracker.schedule.contains(where: {$0 == dayOfWeek})
-                let firstCompletedTracker = completedTrackers.first { trackerRecord in
-                    trackerRecord.trackerID == tracker.id && tracker.schedule.isEmpty
-                }
-                
-                let currentStartOfDay = Calendar.current.startOfDay(for: currentDate)
-                let firstCompletedTrackerStartOfDay = Calendar.current.startOfDay(for: firstCompletedTracker?.dateOfCompletion ?? Date())
-                
-                return
-                // - Показываем трекеры расписание которых соответствует выбранному дню,
-                matchesSchedule || 
-                // - Выполненные трекеры (нерегулярные события (без расписания) показываем только для даты выполнения)
-                (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) || 
-                // - Пустые нерегулярные события которые еще не выполнены показываем для всех дней
-                (firstCompletedTracker == nil && tracker.schedule.isEmpty)
-            }
-            return filteredTrackers.isEmpty ? nil : TrackerCategory(header: category.header, trackers: filteredTrackers)
-        }
-        
-        displayStubForEmptyScrollView(displayStub: filteredCategories.count == 0)
-        self.visibleCategories = filteredCategories
-        collectionView.reloadData()
-    }
-    
-    private func displayStubForEmptyScrollView(displayStub: Bool) {
-        emptyTrackerImage.isHidden = !displayStub
-        emptyTrackerLabel.isHidden = !displayStub
-        
-    }
-    
-    //MARK: Cell delegate func
-    func cellButtonDidTapped(_ cell: TrackerCollectionViewCell) {
-        guard let indexPath = collectionView.indexPath(for: cell) else {return}
-        // Проверяем был ли выполнен трекер сегодня
-        if !checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
-            completeTracker(cell)
-        } else {
-            removeCompletedTracker(cell)
-        }
-    }
-    
-    func completeTracker(_ cell: TrackerCollectionViewCell) {
-        //Тут проверяем является ли текущая дата меньше currentDate что бы не позволять пользователю отмечать будущие даты
-        let currentDateIsNotFuture = Calendar.current.compare(Date(), to: currentDate, toGranularity: .day) != .orderedAscending
-        guard let indexPath = collectionView.indexPath(for: cell),
-              currentDateIsNotFuture else {return}
-        completedTrackers.append(TrackerRecord(trackerID: visibleCategories[indexPath.section].trackers[indexPath.row].id, dateOfCompletion: currentDate))
-        
-        let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-        let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
-        
-        let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
-        
-        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
-        
-    }
-    
-    func removeCompletedTracker(_ cell: TrackerCollectionViewCell) {
-        guard let indexPath = collectionView.indexPath(for: cell) else {return}
-        let currentTrackerID = visibleCategories[indexPath.section].trackers[indexPath.row].id
-        
-        completedTrackers.removeAll { trackerRecord in
-            trackerRecord.trackerID == currentTrackerID && Calendar.current.isDate(currentDate, inSameDayAs: trackerRecord.dateOfCompletion)
-        }
-        
-        let trackerCount = getCurrentTrackerCompletedCount(id: currentTrackerID)
-        let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: currentTrackerID)
-        let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
-        
-        cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
-        
-    }
-    
-    // Сколько раз(дней) трекер был выполнен
-    private func getCurrentTrackerCompletedCount(id: UUID) -> Int {
-        completedTrackers.reduce(0) { count, trackerRecord in
-            if trackerRecord.trackerID == id {
-                return count + 1
-            }
-            return count
-        }
-    }
-    // Проверяет был ли трекер выполнен сегодня
-    private func checkCompletionCurrentTrackerToday(id: UUID) -> Bool {
-        return completedTrackers.contains { tracker in
-            tracker.trackerID == id && Calendar.current.isDate(currentDate, inSameDayAs: tracker.dateOfCompletion)
-        }
-    }
-    
-    
-    //MARK: UI Elements
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.contentInsetAdjustmentBehavior = .always
@@ -197,8 +59,163 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         label.text = "Что будем отслеживать?"
         return label
     }()
+    
+    private let colorMarshalling = UIColorMarshalling()
+    private var categories: [TrackerCategory] = []
+    private var visibleCategories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
+    private var currentDate = Date()
+    private lazy var dataProvider: DataProviderProtocol? = {
+        do {
+            try dataProvider = DataProvider(delegate: self)
+            return dataProvider
+        }
+        catch {
+            print("Не удалось инициализировать dataProvider")
+            return nil
+        }
+    }()
+    
+    private let geometricParams: GeometricParams
+    
+    init() {
+        self.geometricParams =  GeometricParams(cellCount: 2,leftInset: 16,rightInset: 16,cellSpacing: 9) //Задаем параметры коллекции трекеров
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        guard let dataProvider,
+            let categoryIsExists = dataProvider.getAllTrackerCategory() else {return}
+        
+        self.completedTrackers = dataProvider.getAllRecords()
+        self.categories = categoryIsExists
+        updateVisibleCategories(from: Date())
+        configureUI()
+    }
+    
+    private func updateVisibleCategories(from date: Date) {
+        
+        let dayOfWeek = DaysWeek(from: getDayOfWeek(from: date))
+        
+        let filteredCategories = categories.compactMap { category in
+            let filteredTrackers = category.trackers.filter { tracker in
+                let matchesSchedule = tracker.schedule.contains(where: {$0 == dayOfWeek})
+                let firstCompletedTracker = completedTrackers.first { trackerRecord in
+                    trackerRecord.trackerID == tracker.id && tracker.schedule.isEmpty
+                }
+                
+                let currentStartOfDay = Calendar.current.startOfDay(for: currentDate)
+                let firstCompletedTrackerStartOfDay = Calendar.current.startOfDay(for: firstCompletedTracker?.dateOfCompletion ?? Date())
+                
+                return
+                // - Показываем трекеры расписание которых соответствует выбранному дню,
+                matchesSchedule ||
+                // - Выполненные трекеры (нерегулярные события (без расписания) показываем только для даты выполнения)
+                (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) ||
+                // - Пустые нерегулярные события которые еще не выполнены показываем для всех дней
+                (firstCompletedTracker == nil && tracker.schedule.isEmpty)
+            }
+            return filteredTrackers.isEmpty ? nil : TrackerCategory(header: category.header, trackers: filteredTrackers)
+        }
+        
+        displayStubForEmptyScrollView(displayStub: filteredCategories.count == 0)
+        self.visibleCategories = filteredCategories
+        collectionView.reloadData()
+    }
+    
+    private func displayStubForEmptyScrollView(displayStub: Bool) {
+        emptyTrackerImage.isHidden = !displayStub
+        emptyTrackerLabel.isHidden = !displayStub
+        
+    }
+    
+    //MARK: Cell delegate func
+    
+    func cellButtonDidTapped(_ cell: TrackerCollectionViewCell) {
+        guard let dataProvider, Calendar.current.compare(Date(), to: currentDate, toGranularity: .day) != .orderedAscending else {return}
+        
+        completedTrackers = dataProvider.getAllRecords()
+        guard let indexPath = collectionView.indexPath(for: cell) else {return}
+        // Проверяем был ли выполнен трекер сегодня
+        if !checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id) {
+            completeTracker(cell)
+        } else {
+            removeCompletedTracker(cell)
+        }
+    }
+    
+    func completeTracker(_ cell: TrackerCollectionViewCell) {
+        //Тут проверяем является ли текущая дата меньше currentDate что бы не позволять пользователю отмечать будущие даты
+        let currentDateIsNotFuture = Calendar.current.compare(Date(), to: currentDate, toGranularity: .day) != .orderedAscending
+        guard let indexPath = collectionView.indexPath(for: cell),
+              currentDateIsNotFuture, let dataProvider else {return}
+        
+        let currentTracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+        let currentTrackerID = visibleCategories[indexPath.section].trackers[indexPath.row].id
+        
+        do {
+            try dataProvider.addNewRecord(tracker: currentTracker, trackerRecord: TrackerRecord(trackerID: currentTrackerID, dateOfCompletion: currentDate))
+            completedTrackers = dataProvider.getAllRecords()
+            
+            let trackerCount = getCurrentTrackerCompletedCount(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
+            let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: visibleCategories[indexPath.section].trackers[indexPath.row].id)
+            let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+            
+            cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
+        }
+        catch {
+            print("Не удалось сохранить TrackerRecord")
+        }
+        
+    }
+    
+    func removeCompletedTracker(_ cell: TrackerCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell),
+              let dataProvider else {return}
+        
+        let currentTracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+        let currentTrackerID = visibleCategories[indexPath.section].trackers[indexPath.row].id
+        
+        do {
+            try dataProvider.removeRecord(tracker: currentTracker, trackerRecord: TrackerRecord(trackerID: currentTrackerID, dateOfCompletion: currentDate))
+            completedTrackers = dataProvider.getAllRecords()
+            
+            let trackerCount = getCurrentTrackerCompletedCount(id: currentTrackerID)
+            let trackerCompletedToday = checkCompletionCurrentTrackerToday(id: currentTrackerID)
+            let trackerType = visibleCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty ? TrackerType.notRegularEvent : TrackerType.habit
+            
+            cell.trackerStateChange(days: trackerCount, trackerCompletedToday: trackerCompletedToday, trackerType: trackerType)
+        }
+        catch {
+            print("Не удалось удалить TrackerRecord")
+        }
+    }
+    
+    // Сколько раз(дней) трекер был выполнен
+    private func getCurrentTrackerCompletedCount(id: UUID) -> Int {
+        completedTrackers.reduce(0) { count, trackerRecord in
+            if trackerRecord.trackerID == id {
+                return count + 1
+            }
+            return count
+        }
+    }
+    // Проверяет был ли трекер выполнен сегодня
+    private func checkCompletionCurrentTrackerToday(id: UUID) -> Bool {
+        return completedTrackers.contains { tracker in
+            tracker.trackerID == id && Calendar.current.isDate(currentDate, inSameDayAs: tracker.dateOfCompletion)
+        }
+    }
 }
+
 //MARK: UICollectionViewDataSource func
+
 extension TrackerViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         visibleCategories.count
@@ -233,10 +250,10 @@ extension TrackerViewController: UICollectionViewDataSource {
         
         return cell ?? UICollectionViewCell()
     }
-    
-    
 }
+
 //MARK: UICollectionViewDelegate func
+
 extension TrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Тап по ячейки")
@@ -251,6 +268,7 @@ extension TrackerViewController: UICollectionViewDelegate {
 }
 
 //MARK: UICollectionViewFlowLayout func
+
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 19)
@@ -271,27 +289,18 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 //MARK: UISearchResultsUpdating func
+
 extension TrackerViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let searchText = searchController.searchBar.text ?? ""
+        //let searchText = searchController.searchBar.text ?? ""
     }
 }
 
 extension TrackerViewController: CreateHabitDelegate {
     func didCreateHabit(_ newTrackerCategory: TrackerCategory) {
-        print(newTrackerCategory)
-        if let index = categories.firstIndex(where: {$0.header == newTrackerCategory.header}) {
-            var newTrackers = categories[index].trackers
-            newTrackers.append(contentsOf: newTrackerCategory.trackers)
-            let newTrackerCategory = TrackerCategory(header: categories[index].header, trackers: newTrackers)
-            self.categories[index] = newTrackerCategory
-            updateVisibleCategories(from: currentDate)
-        }else {
-            var newCategories = categories
-            newCategories.append(newTrackerCategory)
-            categories = newCategories
-            updateVisibleCategories(from: currentDate)
-        }
+        guard let tracker = newTrackerCategory.trackers.first,
+        let dataProvider else {return}
+        dataProvider.addTracker(categoryHeader: newTrackerCategory.header, tracker: tracker)
     }
 }
 
@@ -302,18 +311,18 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
         case .habit:
             let creatingHabitViewController = CreatingHabitViewController(delegate: self)
             let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
-    
+            
             let textAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: UIColor.black,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
             ]
             navigationController.navigationBar.titleTextAttributes = textAttributes
             present(navigationController, animated: true)
-        
+            
         case .notRegularEvent:
             let creatingNotRegularEventViewController = CreatingNotRegularEventViewController(delegate: self)
             let navigationController = UINavigationController(rootViewController: creatingNotRegularEventViewController)
-    
+            
             let textAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: UIColor.black,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -324,7 +333,19 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
     }
 }
 
+//MARK: DataProviderDelegate
+
+extension TrackerViewController: DataProviderDelegate {
+    func didUpdate() {
+        guard let dataProvider,
+                let categoryIsExists = dataProvider.getAllTrackerCategory()else {return}
+        self.categories = categoryIsExists
+        updateVisibleCategories(from: currentDate)
+    }
+}
+
 //MARK: Configure UI
+
 private extension TrackerViewController {
     func configureUI() {
         view.backgroundColor = .white
