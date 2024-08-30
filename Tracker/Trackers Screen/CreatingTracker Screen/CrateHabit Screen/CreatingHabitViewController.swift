@@ -166,6 +166,7 @@ extension CreatingHabitViewController: UITableViewDelegate {
     }
 }
 //MARK: CollectionView DataSource
+
 extension CreatingHabitViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? HeaderSupplementaryView
@@ -205,6 +206,7 @@ extension CreatingHabitViewController: UICollectionViewDataSource {
 }
 
 //MARK: CollectionView Deleage
+
 extension CreatingHabitViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch collectionViewData[indexPath.section].type {
@@ -274,6 +276,7 @@ extension CreatingHabitViewController: UICollectionViewDelegateFlowLayout {
 
 
 //MARK: Configure UI
+
 private extension CreatingHabitViewController {
     func configureUI() {
         view.backgroundColor = .white
@@ -415,7 +418,7 @@ private extension CreatingHabitViewController {
     @objc func createButtonTapped() {
         self.dismiss(animated: true)
         
-        let header = "Категория 1"
+        let header = "Категория 22"
         let id = UUID()
         let schedule = selectedDays
         guard let name = nameTrackerTextField.text,

@@ -4,7 +4,7 @@ import UIKit
 
 final class ScheduleScreenViewController: UIViewController {
     
-     var completionHandler: (([DaysWeek]) -> Void)?
+    var completionHandler: (([DaysWeek]) -> Void)?
     
     private lazy var tableView = UITableView()
     private lazy var readyButton = UIButton(type: .system)
@@ -22,7 +22,7 @@ final class ScheduleScreenViewController: UIViewController {
         return height
     }()
     
-    let tableViewData = DaysWeek.allCases
+    private let tableViewData = DaysWeek.allCases
     private var selectedDays: [DaysWeek] = []
     
     init(selectedDays: [DaysWeek]) {
@@ -39,6 +39,8 @@ final class ScheduleScreenViewController: UIViewController {
         configureUI()
     }
 }
+
+//MARK: UITableViewDataSource func
 
 extension ScheduleScreenViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,9 +69,10 @@ extension ScheduleScreenViewController: UITableViewDataSource {
                 day == selectedDay
             }
         }
-        
     }
 }
+
+//MARK: UITableViewDelegate func
 
 extension ScheduleScreenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -93,6 +96,7 @@ extension ScheduleScreenViewController: UITableViewDelegate {
 }
 
 //MARK: Configure UI
+
 private extension ScheduleScreenViewController {
     func configureUI() {
         view.backgroundColor = .white

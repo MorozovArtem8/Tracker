@@ -4,12 +4,12 @@ import UIKit
 
 final class CreateTrackerCollectionViewColorCell: UICollectionViewCell {
     static let identifier: String = "createTrackerColorCell"
+    
     private lazy var colorView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
-        
     }
     
     override func prepareForReuse() {
@@ -32,6 +32,7 @@ final class CreateTrackerCollectionViewColorCell: UICollectionViewCell {
 }
 
 //MARK: Configure UI
+
 private extension CreateTrackerCollectionViewColorCell {
     func configureUI() {
         self.layer.masksToBounds = true

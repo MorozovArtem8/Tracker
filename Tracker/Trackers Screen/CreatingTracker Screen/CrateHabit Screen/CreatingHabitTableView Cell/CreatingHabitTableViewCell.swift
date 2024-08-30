@@ -4,6 +4,7 @@ import UIKit
 
 final class CreatingHabitTableViewCell: UITableViewCell {
     static let reuseIdentifier = "CreatingHabitTableViewCellReuseIdentifier"
+    
     private lazy var nameLabel = UILabel()
     private lazy var subLabel = UILabel()
     private lazy var stackView = UIStackView()
@@ -37,6 +38,7 @@ final class CreatingHabitTableViewCell: UITableViewCell {
 }
 
 //MARK: Configure UI
+
 private extension CreatingHabitTableViewCell {
     func configureUI() {
         configureNameLabelAndImage()
@@ -78,8 +80,5 @@ private extension CreatingHabitTableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
-    
-        
-        
     }
 }
