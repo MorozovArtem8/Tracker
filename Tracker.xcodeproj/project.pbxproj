@@ -15,7 +15,7 @@
 		AC14970A2C52F0A600BF80F8 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = AC1497092C52F0A600BF80F8 /* Base */; };
 		AC21C3682C91A1470089A6EB /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC21C3672C91A1470089A6EB /* OnboardingPageViewController.swift */; };
 		AC21C36A2C91A3D00089A6EB /* OnboardingScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC21C3692C91A3D00089A6EB /* OnboardingScreenViewController.swift */; };
-		AC21C38F2C91D1E60089A6EB /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC21C38E2C91D1E60089A6EB /* SplashScreenViewController.swift */; };
+		AC21C38F2C91D1E60089A6EB /* CustomContainerRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC21C38E2C91D1E60089A6EB /* CustomContainerRootViewController.swift */; };
 		AC2DC72D2C5AA16C00D4FE7B /* GeomitricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2DC72C2C5AA16C00D4FE7B /* GeomitricParams.swift */; };
 		AC38BA9E2C56629D00463933 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC38BA9D2C56629D00463933 /* Tracker.swift */; };
 		AC38BAA02C5664D400463933 /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC38BA9F2C5664D400463933 /* TrackerCategory.swift */; };
@@ -56,7 +56,7 @@
 		AC14970B2C52F0A600BF80F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC21C3672C91A1470089A6EB /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		AC21C3692C91A3D00089A6EB /* OnboardingScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenViewController.swift; sourceTree = "<group>"; };
-		AC21C38E2C91D1E60089A6EB /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		AC21C38E2C91D1E60089A6EB /* CustomContainerRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContainerRootViewController.swift; sourceTree = "<group>"; };
 		AC2DC72C2C5AA16C00D4FE7B /* GeomitricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeomitricParams.swift; sourceTree = "<group>"; };
 		AC38BA9D2C56629D00463933 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		AC38BA9F2C5664D400463933 /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 		AC21C38D2C91D1D10089A6EB /* Splash Screen */ = {
 			isa = PBXGroup;
 			children = (
-				AC21C38E2C91D1E60089A6EB /* SplashScreenViewController.swift */,
+				AC21C38E2C91D1E60089A6EB /* CustomContainerRootViewController.swift */,
 			);
 			path = "Splash Screen";
 			sourceTree = "<group>";
@@ -375,7 +375,7 @@
 				AC1497022C52F0A500BF80F8 /* TrackerViewController.swift in Sources */,
 				AC3AEE842C6558FD005A6A5F /* PaddedTextField.swift in Sources */,
 				AC59B1CC2C6773DD00C656D7 /* ScheduleScreenViewController.swift in Sources */,
-				AC21C38F2C91D1E60089A6EB /* SplashScreenViewController.swift in Sources */,
+				AC21C38F2C91D1E60089A6EB /* CustomContainerRootViewController.swift in Sources */,
 				AC59DD852C538416005A8E6C /* Color+Extension.swift in Sources */,
 				AC38BAA02C5664D400463933 /* TrackerCategory.swift in Sources */,
 				ACC7BAF02C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift in Sources */,

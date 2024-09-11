@@ -14,6 +14,7 @@ class OnboardingPageViewController: UIPageViewController {
         button.layer.cornerRadius = 16
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -27,14 +28,18 @@ class OnboardingPageViewController: UIPageViewController {
         return pageControl
     }()
     
+    private let dismissOnboarding: (() -> Void)
+    
     private lazy var pages: [UIViewController] = {
         let blueOnboardingScreen = OnboardingScreenViewController(image: UIImage(named: "1") ?? UIImage(), text: "Отслеживайте только то, что хотите")
         let redOnboardingScreen = OnboardingScreenViewController(image: UIImage(named: "2") ?? UIImage(), text: "Даже если это не литры воды и йога")
         return [blueOnboardingScreen, redOnboardingScreen]
     }()
     
-    init() {
+    init(dismissOnboarding: @escaping (() -> Void)) {
+        self.dismissOnboarding = dismissOnboarding
         super .init(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -44,6 +49,11 @@ class OnboardingPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+    }
+    
+    @objc private func continueButtonTapped() {
+        print(123)
+        dismissOnboarding()
     }
 }
 
