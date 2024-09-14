@@ -52,7 +52,6 @@ class OnboardingPageViewController: UIPageViewController {
     }
     
     @objc private func continueButtonTapped() {
-        print(123)
         dismissOnboarding()
     }
 }
