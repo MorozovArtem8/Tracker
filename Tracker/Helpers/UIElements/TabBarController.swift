@@ -20,7 +20,7 @@ final class TabBarController: UITabBarController {
         tabBar.barTintColor = .white
         tabBar.layer.borderWidth = 0.5
         tabBar.layer.borderColor = UIColor("AEAFB4").cgColor
-        setViewControllers([tabBarItem0, tabBarItem1], animated: true)
+        setViewControllers([tabBarItem0, tabBarItem1], animated: false)
     }
     
     private func configureNavigationController(rootViewController: UIViewController, title: String, image: UIImage?) -> UINavigationController {

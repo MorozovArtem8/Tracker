@@ -38,6 +38,12 @@ final class CreatingNotRegularEventViewController: UIViewController {
         }
     }
     
+    private var selectedCategoryTitle: String? {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
+    
     private var selectedColor: UIColor? {
         didSet {
             updateCreateButtonState()
@@ -48,7 +54,8 @@ final class CreatingNotRegularEventViewController: UIViewController {
         let nameTrackerTextFieldIsEmpty = nameTrackerTextField.text?.isEmpty ?? true
         let selectedEmojiIsEmpty = selectedEmoji == nil
         let selectedColorIsEmpry = selectedColor == nil
-        return !nameTrackerTextFieldIsEmpty && !selectedEmojiIsEmpty && !selectedColorIsEmpry
+        let selectedCategoriesTitleIsEmpty = selectedCategoryTitle == nil
+        return !nameTrackerTextFieldIsEmpty && !selectedEmojiIsEmpty && !selectedColorIsEmpry && !selectedCategoriesTitleIsEmpty
     }
     
     init(delegate: CreateHabitDelegate) {
@@ -103,7 +110,20 @@ extension CreatingNotRegularEventViewController: UITableViewDelegate {
         
         switch indexPath.row {
         case 0:
-            print("Тут будет открытие экрана создания категории")
+            let categoriesScreenViewController = CategoryScreenViewController(selectedCategory: selectedCategoryTitle)
+            categoriesScreenViewController.completionHandler = { [weak self] categoryTitle in
+                self?.selectedCategoryTitle = categoryTitle
+                self?.tableViewData[0].subTitle = categoryTitle
+                self?.tableView.reloadData()
+            }
+            let navigationController = UINavigationController(rootViewController: categoriesScreenViewController)
+            
+            let textAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+            ]
+            navigationController.navigationBar.titleTextAttributes = textAttributes
+            present(navigationController, animated: true)
         default:
             print("Неизвестная ячейка")
         }
