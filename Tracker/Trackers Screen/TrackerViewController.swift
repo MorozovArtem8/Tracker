@@ -372,7 +372,7 @@ private extension TrackerViewController {
     
     func addNavigationItems() {
         let plusButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(plusButtonTapped))
-        plusButton.tintColor = UIColor("#1A1B22")
+        plusButton.tintColor = UIColor(named: "CustomBackgroundColor")
         self.navigationItem.leftBarButtonItem = plusButton
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
         

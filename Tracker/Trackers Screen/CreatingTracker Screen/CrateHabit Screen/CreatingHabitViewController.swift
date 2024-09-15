@@ -41,6 +41,12 @@ final class CreatingHabitViewController: UIViewController {
         }
     }
     
+    private var selectedCategoryTitle: String? {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
+    
     private var selectedEmoji: String? {
         didSet {
             updateCreateButtonState()
@@ -56,9 +62,10 @@ final class CreatingHabitViewController: UIViewController {
     private var createButtonIsEnabled: Bool {
         let nameTrackerTextFieldIsEmpty = nameTrackerTextField.text?.isEmpty ?? true
         let selectedDaysIsEmpty = selectedDays.isEmpty
+        let selectedCategoriesTitleIsEmpty = selectedCategoryTitle == nil
         let selectedEmojiIsEmpty = selectedEmoji == nil
-        let selectedColorIsEmpry = selectedColor == nil
-        return !nameTrackerTextFieldIsEmpty && !selectedDaysIsEmpty && !selectedEmojiIsEmpty && !selectedColorIsEmpry
+        let selectedColorIsEmpty = selectedColor == nil
+        return !nameTrackerTextFieldIsEmpty && !selectedDaysIsEmpty && !selectedEmojiIsEmpty && !selectedColorIsEmpty && !selectedCategoriesTitleIsEmpty
     }
     
     init(delegate: CreateHabitDelegate) {
@@ -122,13 +129,24 @@ extension CreatingHabitViewController: UITableViewDelegate {
         
         switch indexPath.row {
         case 0:
-            print("Тут будет открытие экрана создания категории")
+            let categoriesScreenViewController = CategoryScreenViewController(selectedCategory: selectedCategoryTitle)
+            categoriesScreenViewController.completionHandler = { [weak self] categoryTitle in
+                self?.selectedCategoryTitle = categoryTitle
+                self?.tableViewData[0].subTitle = categoryTitle
+                self?.tableView.reloadData()
+            }
+            let navigationController = UINavigationController(rootViewController: categoriesScreenViewController)
+            
+            let textAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+            ]
+            navigationController.navigationBar.titleTextAttributes = textAttributes
+            present(navigationController, animated: true)
         case 1:
             let scheduleScreenViewController = ScheduleScreenViewController(selectedDays: selectedDays)
             scheduleScreenViewController.completionHandler = { [weak self] data in
                 self?.selectedDays = data
-                //TODO: сделать функцию для конвертации массива дней недели в строку для отображения subTitle
-                //Да! костыль!) подумаю как исправить)
                 self?.tableViewData[1].subTitle = self?.getScheduleCellString(daysWeek: data)
                 self?.tableView.reloadData()
             }
@@ -165,6 +183,7 @@ extension CreatingHabitViewController: UITableViewDelegate {
         75
     }
 }
+
 //MARK: CollectionView DataSource
 
 extension CreatingHabitViewController: UICollectionViewDataSource {
@@ -287,8 +306,6 @@ private extension CreatingHabitViewController {
         configureTableView()
         configureButtons()
         configureCollectionView()
-        
-        
     }
     
     func configureScrollView() {
@@ -418,14 +435,14 @@ private extension CreatingHabitViewController {
     @objc func createButtonTapped() {
         self.dismiss(animated: true)
         
-        let header = "Категория 22"
         let id = UUID()
         let schedule = selectedDays
         guard let name = nameTrackerTextField.text,
               let color = selectedColor,
-              let emoji = selectedEmoji
-              
-        else {return}
+              let emoji = selectedEmoji,
+              let header = selectedCategoryTitle
+              else {return}
+        
         let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)])
         delegate?.didCreateHabit(trackerCategory)
     }

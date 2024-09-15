@@ -31,7 +31,7 @@ final class TrackerCategoryStore: NSObject {
     
     private weak var delegate: DataProviderDelegate?
     
-    init(context: NSManagedObjectContext, delegate: DataProviderDelegate) {
+    init(context: NSManagedObjectContext, delegate: DataProviderDelegate? = nil) {
         self.context = context
         self.delegate = delegate
     }

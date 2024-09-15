@@ -107,7 +107,7 @@ private extension ScheduleScreenViewController {
     
     func configureReadyButton() {
         readyButton.translatesAutoresizingMaskIntoConstraints = false
-        readyButton.backgroundColor = UIColor("#1A1B22")
+        readyButton.backgroundColor = UIColor(named: "CustomBackgroundColor")
         readyButton.setTitle("Готово", for: .normal)
         readyButton.setTitleColor(.white, for: .normal)
         readyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
