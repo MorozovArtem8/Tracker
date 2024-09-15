@@ -3,7 +3,7 @@
 
 import UIKit
 
-class OnboardingScreenViewController: UIViewController {
+final class OnboardingScreenViewController: UIViewController {
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -16,12 +16,28 @@ class OnboardingScreenViewController: UIViewController {
         return label
     }()
     
+    private lazy var continueButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle("Вот это технологии!", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(named: "CustomBackgroundColor")
+        button.layer.cornerRadius = 16
+        button.clipsToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private weak var delegate: OnboardingScreenDelegate?
+    
     private let image: UIImage
     private let text: String
     
-    init(image: UIImage, text: String) {
+    init(image: UIImage, text: String, delegate: OnboardingScreenDelegate) {
         self.text = text
         self.image = image
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -34,6 +50,10 @@ class OnboardingScreenViewController: UIViewController {
         configureUI()
     }
     
+    @objc private func continueButtonTapped() {
+        delegate?.removeOnboarding()
+    }
+    
     private func configureUI() {
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
         backgroundImage.image = image
@@ -41,6 +61,7 @@ class OnboardingScreenViewController: UIViewController {
         view.addSubview(backgroundImage)
         
         view.addSubview(textLabel)
+        view.addSubview(continueButton)
         
         let screenHeight = UIScreen.main.bounds.height
         NSLayoutConstraint.activate([
@@ -48,6 +69,12 @@ class OnboardingScreenViewController: UIViewController {
             textLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: screenHeight / 1.9),
             textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            continueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            continueButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:20),
+            continueButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant:-20),
+            continueButton.heightAnchor.constraint(equalToConstant: 60)
+            
         ])
     }
 

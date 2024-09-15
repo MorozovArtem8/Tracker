@@ -1,6 +1,6 @@
 //  Created by Artem Morozov on 13.09.2024.
 
-import UIKit
+import Foundation
 
 typealias Binding<T> = (T) -> Void
 

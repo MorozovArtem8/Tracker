@@ -25,6 +25,10 @@ final class CategoriesTableViewSell: UITableViewCell {
             isActiveImage.image = cellIsActive ? UIImage(systemName: "checkmark") : nil
         }
     }
+    
+    func didTapCell(_ cellIsActive: Bool) {
+        isActiveImage.image = cellIsActive ? UIImage(systemName: "checkmark") : nil
+    }
 }
 
 //MARK: Configure UI
@@ -43,7 +47,10 @@ private extension CategoriesTableViewSell {
         nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         nameLabel.textColor = .black
         
-        stackView = UIStackView(arrangedSubviews: [nameLabel, isActiveImage])
+        let spacer = UIView()
+        spacer.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackView = UIStackView(arrangedSubviews: [nameLabel, spacer, isActiveImage])
         stackView.axis = .horizontal
         stackView.spacing = 10
         stackView.alignment = .center
@@ -54,7 +61,9 @@ private extension CategoriesTableViewSell {
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            spacer.widthAnchor.constraint(greaterThanOrEqualToConstant: 10)
         ])
     }
 }

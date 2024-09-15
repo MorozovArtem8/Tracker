@@ -80,7 +80,7 @@ private extension CreateCategoryScreenViewController {
             addCategoryButton.backgroundColor = UIColor("#AEAFB4")
             addCategoryButton.isEnabled = false
         } else {
-            addCategoryButton.backgroundColor = UIColor("#1A1B22")
+            addCategoryButton.backgroundColor = UIColor(named: "CustomBackgroundColor")
             addCategoryButton.isEnabled = true
         }
     }

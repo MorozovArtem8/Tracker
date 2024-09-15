@@ -3,20 +3,11 @@
 
 import UIKit
 
-class OnboardingPageViewController: UIPageViewController {
-    
-    private lazy var continueButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitle("Вот это технологии!", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor("#1A1B22")
-        button.layer.cornerRadius = 16
-        button.clipsToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
-        return button
-    }()
+protocol OnboardingScreenDelegate: AnyObject {
+    func removeOnboarding()
+}
+
+final class OnboardingPageViewController: UIPageViewController, OnboardingScreenDelegate {
     
     private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
@@ -31,8 +22,8 @@ class OnboardingPageViewController: UIPageViewController {
     private let dismissOnboarding: (() -> Void)
     
     private lazy var pages: [UIViewController] = {
-        let blueOnboardingScreen = OnboardingScreenViewController(image: UIImage(named: "1") ?? UIImage(), text: "Отслеживайте только то, что хотите")
-        let redOnboardingScreen = OnboardingScreenViewController(image: UIImage(named: "2") ?? UIImage(), text: "Даже если это не литры воды и йога")
+        let blueOnboardingScreen = OnboardingScreenViewController(image: UIImage(named: "1") ?? UIImage(), text: "Отслеживайте только то, что хотите", delegate: self)
+        let redOnboardingScreen = OnboardingScreenViewController(image: UIImage(named: "2") ?? UIImage(), text: "Даже если это не литры воды и йога", delegate: self)
         return [blueOnboardingScreen, redOnboardingScreen]
     }()
     
@@ -51,7 +42,7 @@ class OnboardingPageViewController: UIPageViewController {
         configureUI()
     }
     
-    @objc private func continueButtonTapped() {
+    func removeOnboarding() {
         dismissOnboarding()
     }
 }
@@ -59,7 +50,6 @@ class OnboardingPageViewController: UIPageViewController {
 //MARK: UIPageViewControllerDataSource, UIPageViewControllerDelegate
 
 extension OnboardingPageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
-    
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if let currentViewController = pageViewController.viewControllers?.first,
@@ -107,16 +97,10 @@ private extension OnboardingPageViewController {
     }
     
     func configureElements() {
-        view.addSubview(continueButton)
         view.addSubview(pageControl)
         NSLayoutConstraint.activate([
-            continueButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            continueButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            continueButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            continueButton.heightAnchor.constraint(equalToConstant: 60),
-            
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: continueButton.topAnchor, constant: -24)
+            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -134)
         ])
     }
 }

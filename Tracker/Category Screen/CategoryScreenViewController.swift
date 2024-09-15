@@ -44,7 +44,6 @@ final class CategoryScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        
         viewModel = CategoryViewModel()
         viewModel?.categoriesBinding = {[weak self] _ in
             self?.displayStubForEmptyTableView(displayStub: self?.viewModel?.trackerCategories.count == 0)
@@ -67,9 +66,7 @@ extension CategoryScreenViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CategoriesTableViewSell.reuseIdentifier, for: indexPath)
-        
         guard let categoriesTableViewCell = cell as? CategoriesTableViewSell else {return UITableViewCell()}
-        
         
         if let selectedCategory = selectCategoryHeader {
             let currentCellIsSelect = selectedCategory == viewModel?.trackerCategories[indexPath.row].header
@@ -158,7 +155,7 @@ private extension CategoryScreenViewController {
     
     func configureAddCategoryButton() {
         addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
-        addCategoryButton.backgroundColor = UIColor("#1A1B22")
+        addCategoryButton.backgroundColor = UIColor(named: "CustomBackgroundColor")
         addCategoryButton.setTitle("Добавить категорию", for: .normal)
         addCategoryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addCategoryButton.layer.cornerRadius = 16
