@@ -51,12 +51,17 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         switch trackerType {
             
         case .habit:
+            let daysString = String.localizedStringWithFormat(
+                NSLocalizedString("numberOfDays", comment: "Number of days"),
+                days
+            )
+            
             if trackerCompletedToday {
-                daysCountLabel.text = formateDays(days)
+                daysCountLabel.text = daysString //formateDays(days)
                 plusButton.setImage(UIImage(named: "Done"), for: .normal)
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
             } else {
-                daysCountLabel.text = formateDays(days)
+                daysCountLabel.text = daysString //formateDays(days)
                 plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
             }
@@ -71,24 +76,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
             }
         }
-    }
-    
-    private func formateDays(_ days: Int) -> String {
-        let remainder10 = days % 10
-        let remainder100 = days % 100
-        
-        let suffix: String
-        if remainder100 >= 11 && remainder100 <= 14 {
-            suffix = "дней"
-        } else if remainder10 == 1 {
-            suffix = "день"
-        } else if remainder10 >= 2 && remainder10 <= 4 {
-            suffix = "дня"
-        } else {
-            suffix = "дней"
-        }
-        
-        return "\(days) \(suffix)"
     }
 }
 
@@ -151,7 +138,6 @@ private extension TrackerCollectionViewCell {
         daysCountLabel.translatesAutoresizingMaskIntoConstraints = false
         daysCountLabel.font = UIFont.systemFont(ofSize: 14)
         daysCountLabel.textColor = .black
-        daysCountLabel.textAlignment = .left
         
         NSLayoutConstraint.activate([
             daysCountLabel.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),

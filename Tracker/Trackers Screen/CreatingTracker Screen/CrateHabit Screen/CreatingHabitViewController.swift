@@ -33,7 +33,7 @@ final class CreatingHabitViewController: UIViewController {
     private var tableViewData: [CellData] = [CellData(title: "Категория"), CellData(title: "Расписание")]
     private var collectionViewData: [CreateTrackerCollectionCellData] = [
         CreateTrackerCollectionCellData(header: "Emoji", type: .emoji(["😀", "😍", "😂","🫥", "🤢", "😾","🫵", "👶", "👚","🦋", "🐞", "🐺","🐭", "🐦", "🐋","🍀", "🍄", "🌪️"])),
-        CreateTrackerCollectionCellData(header: "Emoji1", type: .color([UIColor("#FD4C49"), UIColor("#FF881E"),UIColor("#007BFA"), UIColor("#6E44FE"),UIColor("#33CF69"),UIColor("#E66DD4"),UIColor("#F9D4D4"),UIColor("#34A7FE"),UIColor("#46E69D"),UIColor("#35347C"),UIColor("#FF674D"),UIColor("#FF99CC"),UIColor("#F6C48B"),UIColor("#7994F5"),UIColor("#832CF1"),UIColor("#AD56DA"),UIColor("#8D72E6"),UIColor("#2FD058")]))]
+        CreateTrackerCollectionCellData(header: "Цвет", type: .color([UIColor("#FD4C49"), UIColor("#FF881E"),UIColor("#007BFA"), UIColor("#6E44FE"),UIColor("#33CF69"),UIColor("#E66DD4"),UIColor("#F9D4D4"),UIColor("#34A7FE"),UIColor("#46E69D"),UIColor("#35347C"),UIColor("#FF674D"),UIColor("#FF99CC"),UIColor("#F6C48B"),UIColor("#7994F5"),UIColor("#832CF1"),UIColor("#AD56DA"),UIColor("#8D72E6"),UIColor("#2FD058")]))]
     
     private var selectedDays: [DaysWeek] = [] {
         didSet {
