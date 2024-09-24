@@ -11,6 +11,7 @@ class CreatingHabitViewController: UIViewController {
     private lazy var cancelButton = UIButton(type: .system)
     private lazy var createButton = UIButton(type: .system)
     private lazy var stackView = UIStackView()
+    private lazy var completedDaysLabel = UILabel()
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -30,8 +31,11 @@ class CreatingHabitViewController: UIViewController {
     
     private let delegate: CreateHabitDelegate?
     private let geometricParams: GeometricParams
-    //Если при инициализации передаем tracker значит редактируем уже существующий, если нет - создаем новый
+    
+    //Если при инициализации передаем tracker значит редактируем уже существующий (открываем экран редактирования), если нет - создаем новый (открываем экран создания)
     private let tracker: TrackerCategory?
+    private let daysCompleted: Int?
+    
     private var tableViewData: [CellData] = [CellData(title: "Категория"), CellData(title: "Расписание")]
     private let collectionViewData: [CreateTrackerCollectionCellData] = [
         CreateTrackerCollectionCellData(header: "Emoji", type: .emoji(["😀", "😍", "😂","🫥", "🤢", "😾","🫵", "👶", "👚","🦋", "🐞", "🐺","🐭", "🐦", "🐋","🍀", "🍄", "🌪️"])),
@@ -74,13 +78,15 @@ class CreatingHabitViewController: UIViewController {
         self.delegate = delegate
         self.geometricParams =  GeometricParams(cellCount: 6,leftInset: 18,rightInset: 18,cellSpacing: 5)
         self.tracker = nil
+        self.daysCompleted = nil
         super.init(nibName: nil, bundle: nil)
     }
     
-    init(delegate: CreateHabitDelegate, trackerCategory: TrackerCategory) {
+    init(delegate: CreateHabitDelegate, trackerCategory: TrackerCategory, daysCompleted: Int) {
         self.delegate = delegate
         self.geometricParams =  GeometricParams(cellCount: 6,leftInset: 18,rightInset: 18,cellSpacing: 5)
         self.tracker = trackerCategory
+        self.daysCompleted = daysCompleted
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -104,9 +110,8 @@ class CreatingHabitViewController: UIViewController {
             self.nameTrackerTextField.text = tracker.trackers[0].name
             self.tableViewData[0].subTitle = tracker.header
             self.tableViewData[1].subTitle = self.getScheduleCellString(daysWeek: tracker.trackers[0].schedule)
-            
-            
         }
+        
         configureUI()
         self.hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCreateButtonState), name: UITextField.textDidChangeNotification, object: nameTrackerTextField)
@@ -237,23 +242,27 @@ extension CreatingHabitViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreateTrackerCollectionViewEmojiCell.identifier, for: indexPath) as? CreateTrackerCollectionViewEmojiCell else {return UICollectionViewCell()}
             cell.prepareForReuse()
             cell.configureCell(emoji: emojis[indexPath.item])
+            
             if let tracker = tracker,
                tracker.trackers.count > 0,
                emojis[indexPath.row] == tracker.trackers[0].emoji {
                 cell.selectCell(select: true)
                 self.selectedEmojiIndexPath = indexPath
             }
+            
             return cell
         case .color(let colors):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreateTrackerCollectionViewColorCell.identifier, for: indexPath) as? CreateTrackerCollectionViewColorCell else {return UICollectionViewCell()}
             cell.prepareForReuse()
             cell.configureCell(colors[indexPath.row])
+            
             if let tracker = tracker,
                tracker.trackers.count > 0,
                colors[indexPath.row] == tracker.trackers[0].color {
                 cell.selectCell(select: true)
                 self.selectedColorIndexPath = indexPath
             }
+            
             return cell
         }
     }
@@ -337,6 +346,7 @@ private extension CreatingHabitViewController {
         self.title = "Новая привычка"
         
         configureScrollView()
+        configureCompletedDaysLabel()
         configureNameTrackerTextField()
         configureTableView()
         configureButtons()
@@ -364,7 +374,30 @@ private extension CreatingHabitViewController {
         ])
     }
     
+    func configureCompletedDaysLabel() {
+        guard let _ = tracker,
+                let daysCompleted = daysCompleted
+        else {return}
+        completedDaysLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(completedDaysLabel)
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: "Number of days"),
+            daysCompleted
+        )
+        completedDaysLabel.text = daysString
+        completedDaysLabel.textAlignment = .center
+        completedDaysLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+    
+        NSLayoutConstraint.activate([
+            completedDaysLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            completedDaysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            completedDaysLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+        ])
+    }
+    
     func configureNameTrackerTextField() {
+        let trackerInitialized = tracker != nil && daysCompleted != nil
+        
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.placeholder = "Введите название трекера"
         nameTrackerTextField.textColor = .black
@@ -376,7 +409,7 @@ private extension CreatingHabitViewController {
         contentView.addSubview(nameTrackerTextField)
         
         NSLayoutConstraint.activate([
-            nameTrackerTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            nameTrackerTextField.topAnchor.constraint(equalTo: trackerInitialized ? completedDaysLabel.bottomAnchor : contentView.topAnchor, constant: trackerInitialized ? 40 : 24),
             nameTrackerTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nameTrackerTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75)
@@ -494,7 +527,5 @@ private extension CreatingHabitViewController {
             let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: false, schedule: schedule)])
             delegate?.didCreateHabit(trackerCategory)
         }
-        
-        
     }
 }

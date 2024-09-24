@@ -131,7 +131,6 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
             }
             return filteredTrackers.isEmpty ? nil : TrackerCategory(header: category.header, trackers: filteredTrackers)
         }
-        
         displayStubForEmptyScrollView(displayStub: filteredCategories.count == 0 && isPinnedTrackers.count == 0, stubType: .emptyCollection)
         
         if !isPinnedTrackers.isEmpty {
@@ -291,21 +290,29 @@ extension TrackerViewController: UICollectionViewDelegate {
         let trackerIsPinned = filteredCategories[indexPath.section].trackers[indexPath.row].isPinned
         return UIContextMenuConfiguration(actionProvider:  { action in
             return UIMenu(children: [
+                
                 UIAction(title: trackerIsPinned ? "Открепить" : "Закрепить") { [weak self] _ in
                     guard let self = self else {return}
                     let id = self.filteredCategories[indexPath.section].trackers[indexPath.row].id
+                    
                     self.dataProvider?.pinnedTracker(id: id)
                     self.categories = self.dataProvider?.getAllTrackerCategory() ?? []
                     updateVisibleCategories(from: currentDate)
                 },
+                
                 UIAction(title: "Редактировать") { [weak self] _ in
                     guard let self = self else {return}
                     let currentTracker = filteredCategories[indexPath.section].trackers[indexPath.row]
                     let currentTrackerArray: [Tracker] = [currentTracker]
+                    // если в трекере есть расписание(schedule) - открываем экран привычек если нет - нерегулярное событие
+                    let openEditHabitViewController = !currentTracker.schedule.isEmpty
+                    //получение оригинального title через метод getCategoryTitleForTrackerId используется для корректного передачи title если трекер закреплен
                     guard let categoryTitle = dataProvider?.getCategoryTitleForTrackerId(id: currentTracker.id) else {return}
+                    
                     let currentTrackerCategory = TrackerCategory(header: categoryTitle, trackers: currentTrackerArray)
-                    let editHabitViewController = EditHabitViewController(delegate: self, trackerCategory: currentTrackerCategory)
-                    let navigationController = UINavigationController(rootViewController: editHabitViewController)
+                    let vc = openEditHabitViewController ?
+                    EditHabitViewController(delegate: self, trackerCategory: currentTrackerCategory, daysCompleted: getCurrentTrackerCompletedCount(id: currentTracker.id)) : EditNotRegularEventScreen(delegate: self, trackerCategory: currentTrackerCategory, trackerCompletedToday: checkCompletionCurrentTrackerToday(id: currentTracker.id))
+                    let navigationController = UINavigationController(rootViewController: vc)
                     
                     let textAttributes: [NSAttributedString.Key: Any] = [
                         .foregroundColor: UIColor.black,
@@ -315,8 +322,11 @@ extension TrackerViewController: UICollectionViewDelegate {
                     present(navigationController, animated: true)
                     
                 },
+                
                 UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
-                    print("Удалить")
+                    guard let self = self else {return}
+                    let currentTrackerId = filteredCategories[indexPath.section].trackers[indexPath.row].id
+                    dataProvider?.removeTracker(id: currentTrackerId)
                 }
             ])
         })

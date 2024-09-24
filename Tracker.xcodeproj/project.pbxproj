@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC12BA552CA32CD500A85A57 /* EditNotRegularEventScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC12BA542CA32CD500A85A57 /* EditNotRegularEventScreen.swift */; };
 		AC13C8BB2C73C31B00AF55C7 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AC13C8B92C73C31B00AF55C7 /* Model.xcdatamodeld */; };
 		AC1496FE2C52F0A500BF80F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1496FD2C52F0A500BF80F8 /* AppDelegate.swift */; };
 		AC1497002C52F0A500BF80F8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1496FF2C52F0A500BF80F8 /* SceneDelegate.swift */; };
@@ -55,6 +56,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AC12BA542CA32CD500A85A57 /* EditNotRegularEventScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNotRegularEventScreen.swift; sourceTree = "<group>"; };
 		AC13C8BA2C73C31B00AF55C7 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		AC1496FA2C52F0A500BF80F8 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC1496FD2C52F0A500BF80F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,6 +123,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC12BA532CA32CA600A85A57 /* Edit Not Regular Event Screen */ = {
+			isa = PBXGroup;
+			children = (
+				AC12BA542CA32CD500A85A57 /* EditNotRegularEventScreen.swift */,
+			);
+			path = "Edit Not Regular Event Screen";
+			sourceTree = "<group>";
+		};
 		AC1496F12C52F0A500BF80F8 = {
 			isa = PBXGroup;
 			children = (
@@ -146,8 +156,8 @@
 				AC7EA8E72C7CEF5E00D3FE30 /* Domain */,
 				AC80E5B02C7527EE005FB68B /* Store */,
 				AC38BA9C2C5661A900463933 /* Models */,
-				AC59DD812C537D95005A8E6C /* Statistics Screen */,
 				ACFDF1F42C537D2800371272 /* Trackers Screen */,
+				AC59DD812C537D95005A8E6C /* Statistics Screen */,
 				ACFDF1F02C537BDB00371272 /* Helpers */,
 				ACBA80E12C9B48D500F7D7E5 /* Resources */,
 				AC1496FD2C52F0A500BF80F8 /* AppDelegate.swift */,
@@ -368,6 +378,7 @@
 			children = (
 				AC1497012C52F0A500BF80F8 /* TrackerViewController.swift */,
 				AC9AD3BD2CA1F62400FFB2D4 /* Edit Habit Screen */,
+				AC12BA532CA32CA600A85A57 /* Edit Not Regular Event Screen */,
 				AC835BDA2C6387AE00D38AF5 /* CreatingTracker Screen */,
 				AC8861F52C5A934900569ABA /* TrackerCollectionViewHelpers */,
 			);
@@ -461,6 +472,7 @@
 				ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */,
 				AC80E5B62C752830005FB68B /* TrackerRecordStore.swift in Sources */,
 				AC1496FE2C52F0A500BF80F8 /* AppDelegate.swift in Sources */,
+				AC12BA552CA32CD500A85A57 /* EditNotRegularEventScreen.swift in Sources */,
 				AC3AEE862C655B2D005A6A5F /* CreatingHabitTableViewCell.swift in Sources */,
 				AC59B1CF2C6778FB00C656D7 /* ScheduleTableViewCell.swift in Sources */,
 				AC80E5B22C752800005FB68B /* TrackerStore.swift in Sources */,

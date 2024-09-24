@@ -8,6 +8,8 @@ protocol TrackerStoreProtocol: AnyObject {
     func getTrackerCoreDataForId(id: UUID) -> TrackerCoreData?
     func pinnedTracker(id: UUID)
     func getCategoryTitleForTrackerId(id: UUID) -> String?
+    func removeTrackerForI(id: UUID)
+    
 }
 
 final class TrackerStore {
@@ -22,6 +24,12 @@ final class TrackerStore {
 //MARK: TrackerStoreProtocol func
 
 extension TrackerStore: TrackerStoreProtocol {
+    func removeTrackerForI(id: UUID) {
+        guard let trackerCoreData = getTrackerCoreDataForId(id: id) else {return}
+        context.delete(trackerCoreData)
+        try? context.save()
+    }
+    
     func getCategoryTitleForTrackerId(id: UUID) -> String? {
         guard let trackerCoreData = getTrackerCoreDataForId(id: id) else {return nil}
         return trackerCoreData.category?.header

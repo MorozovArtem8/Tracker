@@ -10,6 +10,7 @@ protocol DataProviderDelegate: AnyObject {
 protocol DataProviderProtocol {
     func addTrackerCategory(categoryHeader: String)
     func addTracker(categoryHeader: String, tracker: Tracker)
+    func removeTracker(id: UUID)
     
     func getAllTrackerCategory() -> [TrackerCategory]?
     func pinnedTracker(id: UUID)
@@ -50,13 +51,16 @@ final class DataProvider: NSObject {
 // MARK: - DataProviderProtocol
 
 extension DataProvider: DataProviderProtocol {
+    func removeTracker(id: UUID) {
+        trackerStore.removeTrackerForI(id: id)
+    }
+    
     func getCategoryTitleForTrackerId(id: UUID) -> String? {
         return trackerStore.getCategoryTitleForTrackerId(id: id)
     }
     
     func pinnedTracker(id: UUID) {
         trackerStore.pinnedTracker(id: id)
-        delegate?.didUpdate()
     }
     
     func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws {
