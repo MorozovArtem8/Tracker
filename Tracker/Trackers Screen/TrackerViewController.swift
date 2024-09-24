@@ -105,9 +105,14 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     private func updateVisibleCategories(from date: Date, reloadData: Bool = true) {
         
         let dayOfWeek = DaysWeek(from: getDayOfWeek(from: date))
+        var isPinnedTrackers: [Tracker] = []
         
-        let filteredCategories = categories.compactMap { category in
+        var filteredCategories = categories.compactMap { category in
             let filteredTrackers = category.trackers.filter { tracker in
+                if tracker.isPinned {
+                    isPinnedTrackers.append(tracker)
+                    return false
+                }
                 let matchesSchedule = tracker.schedule.contains(where: {$0 == dayOfWeek})
                 let firstCompletedTracker = completedTrackers.first { trackerRecord in
                     trackerRecord.trackerID == tracker.id && tracker.schedule.isEmpty
@@ -127,8 +132,15 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
             return filteredTrackers.isEmpty ? nil : TrackerCategory(header: category.header, trackers: filteredTrackers)
         }
         
-        displayStubForEmptyScrollView(displayStub: filteredCategories.count == 0, stubType: .emptyCollection)
-        self.visibleCategories = filteredCategories
+        displayStubForEmptyScrollView(displayStub: filteredCategories.count == 0 && isPinnedTrackers.count == 0, stubType: .emptyCollection)
+        
+        if !isPinnedTrackers.isEmpty {
+            let isPinnedTrackersCategory = TrackerCategory(header: "Закрепленные", trackers: isPinnedTrackers)
+            filteredCategories.insert(isPinnedTrackersCategory, at: 0)
+            self.visibleCategories = filteredCategories
+        } else {
+            self.visibleCategories = filteredCategories
+        }
         
         if reloadData {
             collectionView.reloadData()
@@ -248,7 +260,8 @@ extension TrackerViewController: UICollectionViewDataSource {
         let cellName = filteredCategories[indexPath.section].trackers[indexPath.row].name
         let cellEmoji = filteredCategories[indexPath.section].trackers[indexPath.row].emoji
         let cellColor = filteredCategories[indexPath.section].trackers[indexPath.row].color
-        cell?.configureCell(name: cellName, emoji: cellEmoji, color: cellColor, delegate: self)
+        let cellIsPinned = filteredCategories[indexPath.section].trackers[indexPath.row].isPinned
+        cell?.configureCell(name: cellName, emoji: cellEmoji, color: cellColor, delegate: self, trackerIsPin: cellIsPinned)
         
         if checkCompletionCurrentTrackerToday(id: filteredCategories[indexPath.section].trackers[indexPath.row].id) {
             let trackerCount = getCurrentTrackerCompletedCount(id: filteredCategories[indexPath.section].trackers[indexPath.row].id)
@@ -271,6 +284,44 @@ extension TrackerViewController: UICollectionViewDataSource {
 //MARK: UICollectionViewDelegate func
 
 extension TrackerViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPaths.count > 0 else {return nil}
+        
+        let indexPath = indexPaths[0]
+        let trackerIsPinned = filteredCategories[indexPath.section].trackers[indexPath.row].isPinned
+        return UIContextMenuConfiguration(actionProvider:  { action in
+            return UIMenu(children: [
+                UIAction(title: trackerIsPinned ? "Открепить" : "Закрепить") { [weak self] _ in
+                    guard let self = self else {return}
+                    let id = self.filteredCategories[indexPath.section].trackers[indexPath.row].id
+                    self.dataProvider?.pinnedTracker(id: id)
+                    self.categories = self.dataProvider?.getAllTrackerCategory() ?? []
+                    updateVisibleCategories(from: currentDate)
+                },
+                UIAction(title: "Редактировать") { [weak self] _ in
+                    guard let self = self else {return}
+                    let currentTracker = filteredCategories[indexPath.section].trackers[indexPath.row]
+                    let currentTrackerArray: [Tracker] = [currentTracker]
+                    guard let categoryTitle = dataProvider?.getCategoryTitleForTrackerId(id: currentTracker.id) else {return}
+                    let currentTrackerCategory = TrackerCategory(header: categoryTitle, trackers: currentTrackerArray)
+                    let editHabitViewController = EditHabitViewController(delegate: self, trackerCategory: currentTrackerCategory)
+                    let navigationController = UINavigationController(rootViewController: editHabitViewController)
+                    
+                    let textAttributes: [NSAttributedString.Key: Any] = [
+                        .foregroundColor: UIColor.black,
+                        .font: UIFont.systemFont(ofSize: 16, weight: .medium)
+                    ]
+                    navigationController.navigationBar.titleTextAttributes = textAttributes
+                    present(navigationController, animated: true)
+                    
+                },
+                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                    print("Удалить")
+                }
+            ])
+        })
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Тап по ячейки")
     }

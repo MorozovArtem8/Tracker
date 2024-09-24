@@ -2,7 +2,7 @@
 
 import UIKit
 
-final class CreatingHabitViewController: UIViewController {
+class CreatingHabitViewController: UIViewController {
     
     private lazy var scrollView = UIScrollView()
     private let contentView = UIView()
@@ -30,8 +30,10 @@ final class CreatingHabitViewController: UIViewController {
     
     private let delegate: CreateHabitDelegate?
     private let geometricParams: GeometricParams
+    //Если при инициализации передаем tracker значит редактируем уже существующий, если нет - создаем новый
+    private let tracker: TrackerCategory?
     private var tableViewData: [CellData] = [CellData(title: "Категория"), CellData(title: "Расписание")]
-    private var collectionViewData: [CreateTrackerCollectionCellData] = [
+    private let collectionViewData: [CreateTrackerCollectionCellData] = [
         CreateTrackerCollectionCellData(header: "Emoji", type: .emoji(["😀", "😍", "😂","🫥", "🤢", "😾","🫵", "👶", "👚","🦋", "🐞", "🐺","🐭", "🐦", "🐋","🍀", "🍄", "🌪️"])),
         CreateTrackerCollectionCellData(header: "Цвет", type: .color([UIColor("#FD4C49"), UIColor("#FF881E"),UIColor("#007BFA"), UIColor("#6E44FE"),UIColor("#33CF69"),UIColor("#E66DD4"),UIColor("#F9D4D4"),UIColor("#34A7FE"),UIColor("#46E69D"),UIColor("#35347C"),UIColor("#FF674D"),UIColor("#FF99CC"),UIColor("#F6C48B"),UIColor("#7994F5"),UIColor("#832CF1"),UIColor("#AD56DA"),UIColor("#8D72E6"),UIColor("#2FD058")]))]
     
@@ -71,6 +73,14 @@ final class CreatingHabitViewController: UIViewController {
     init(delegate: CreateHabitDelegate) {
         self.delegate = delegate
         self.geometricParams =  GeometricParams(cellCount: 6,leftInset: 18,rightInset: 18,cellSpacing: 5)
+        self.tracker = nil
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(delegate: CreateHabitDelegate, trackerCategory: TrackerCategory) {
+        self.delegate = delegate
+        self.geometricParams =  GeometricParams(cellCount: 6,leftInset: 18,rightInset: 18,cellSpacing: 5)
+        self.tracker = trackerCategory
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -81,12 +91,26 @@ final class CreatingHabitViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let tracker = tracker,
+           tracker.trackers.count > 0 {
+            self.selectedDays = tracker.trackers[0].schedule
+            self.selectedCategoryTitle = tracker.header
+            self.selectedEmoji = tracker.trackers[0].emoji
+            self.selectedColor = tracker.trackers[0].color
+            
+            self.nameTrackerTextField.text = tracker.trackers[0].name
+            self.tableViewData[0].subTitle = tracker.header
+            self.tableViewData[1].subTitle = self.getScheduleCellString(daysWeek: tracker.trackers[0].schedule)
+            
+            
+        }
         configureUI()
         self.hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(updateCreateButtonState), name: UITextField.textDidChangeNotification, object: nameTrackerTextField)
+        updateCreateButtonState()
     }
     
     @objc private func updateCreateButtonState() {
@@ -207,18 +231,29 @@ extension CreatingHabitViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-       
         
         switch collectionViewData[indexPath.section].type {
         case .emoji(let emojis):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreateTrackerCollectionViewEmojiCell.identifier, for: indexPath) as? CreateTrackerCollectionViewEmojiCell else {return UICollectionViewCell()}
             cell.prepareForReuse()
             cell.configureCell(emoji: emojis[indexPath.item])
+            if let tracker = tracker,
+               tracker.trackers.count > 0,
+               emojis[indexPath.row] == tracker.trackers[0].emoji {
+                cell.selectCell(select: true)
+                self.selectedEmojiIndexPath = indexPath
+            }
             return cell
         case .color(let colors):
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CreateTrackerCollectionViewColorCell.identifier, for: indexPath) as? CreateTrackerCollectionViewColorCell else {return UICollectionViewCell()}
             cell.prepareForReuse()
             cell.configureCell(colors[indexPath.row])
+            if let tracker = tracker,
+               tracker.trackers.count > 0,
+               colors[indexPath.row] == tracker.trackers[0].color {
+                cell.selectCell(select: true)
+                self.selectedColorIndexPath = indexPath
+            }
             return cell
         }
     }
@@ -300,7 +335,7 @@ private extension CreatingHabitViewController {
     func configureUI() {
         view.backgroundColor = .white
         self.title = "Новая привычка"
-    
+        
         configureScrollView()
         configureNameTrackerTextField()
         configureTableView()
@@ -435,15 +470,31 @@ private extension CreatingHabitViewController {
     @objc func createButtonTapped() {
         self.dismiss(animated: true)
         
-        let id = UUID()
-        let schedule = selectedDays
-        guard let name = nameTrackerTextField.text,
-              let color = selectedColor,
-              let emoji = selectedEmoji,
-              let header = selectedCategoryTitle
-              else {return}
+        if let tracker = tracker,
+           tracker.trackers.count > 0 {
+            let id = tracker.trackers[0].id
+            let schedule = selectedDays
+            guard let name = nameTrackerTextField.text,
+                  let color = selectedColor,
+                  let emoji = selectedEmoji,
+                  let header = selectedCategoryTitle
+            else {return}
+            
+            let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: tracker.trackers[0].isPinned, schedule: schedule)])
+            delegate?.didCreateHabit(trackerCategory)
+        } else {
+            let id = UUID()
+            let schedule = selectedDays
+            guard let name = nameTrackerTextField.text,
+                  let color = selectedColor,
+                  let emoji = selectedEmoji,
+                  let header = selectedCategoryTitle
+            else {return}
+            
+            let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: false, schedule: schedule)])
+            delegate?.didCreateHabit(trackerCategory)
+        }
         
-        let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule)])
-        delegate?.didCreateHabit(trackerCategory)
+        
     }
 }

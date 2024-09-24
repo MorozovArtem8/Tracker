@@ -6,6 +6,8 @@ import CoreData
 protocol TrackerStoreProtocol: AnyObject {
     func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws
     func getTrackerCoreDataForId(id: UUID) -> TrackerCoreData?
+    func pinnedTracker(id: UUID)
+    func getCategoryTitleForTrackerId(id: UUID) -> String?
 }
 
 final class TrackerStore {
@@ -20,17 +22,42 @@ final class TrackerStore {
 //MARK: TrackerStoreProtocol func
 
 extension TrackerStore: TrackerStoreProtocol {
+    func getCategoryTitleForTrackerId(id: UUID) -> String? {
+        guard let trackerCoreData = getTrackerCoreDataForId(id: id) else {return nil}
+        return trackerCoreData.category?.header
+    }
+    
     func addNewTracker(category: TrackerCategoryCoreData, tracker: Tracker) throws {
-        let trackerCoreData = TrackerCoreData(context: context)
-        
-        let schedule = tracker.schedule as NSObject
-        trackerCoreData.name = tracker.name
-        trackerCoreData.id = tracker.id
-        trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.color = colorMarshalling.hexString(from: tracker.color)
-        trackerCoreData.schedule = schedule
-        trackerCoreData.category = category
-        try context.save()
+        if let trackerCoreDataAlreadyExist = getTrackerCoreDataForId(id: tracker.id) {
+            let schedule = tracker.schedule as NSObject
+            trackerCoreDataAlreadyExist.name = tracker.name
+            trackerCoreDataAlreadyExist.id = tracker.id
+            trackerCoreDataAlreadyExist.emoji = tracker.emoji
+            trackerCoreDataAlreadyExist.color = colorMarshalling.hexString(from: tracker.color)
+            trackerCoreDataAlreadyExist.schedule = schedule
+            trackerCoreDataAlreadyExist.isPinned = tracker.isPinned
+            trackerCoreDataAlreadyExist.category = category
+            do{
+                try context.save()
+                print("Отредактировали трекер")
+            }catch {
+                print("Ошибка редактирования")
+            }
+            
+            return
+            
+        } else {
+            let trackerCoreData = TrackerCoreData(context: context)
+            
+            let schedule = tracker.schedule as NSObject
+            trackerCoreData.name = tracker.name
+            trackerCoreData.id = tracker.id
+            trackerCoreData.emoji = tracker.emoji
+            trackerCoreData.color = colorMarshalling.hexString(from: tracker.color)
+            trackerCoreData.schedule = schedule
+            trackerCoreData.category = category
+            try context.save()
+        }
     }
     
     func getTrackerCoreDataForId(id: UUID) -> TrackerCoreData? {
@@ -40,5 +67,17 @@ extension TrackerStore: TrackerStoreProtocol {
             $0.id == id
         })
         return currentTracker
+    }
+    
+    func pinnedTracker(id: UUID) {
+       let trackerCoreData = getTrackerCoreDataForId(id: id)
+        guard let trackerIsPinned = trackerCoreData?.isPinned else {return}
+        trackerCoreData?.isPinned = !trackerIsPinned
+        do {
+            try context.save()
+            print("Удалось закрепить трекер \(!trackerIsPinned)")
+        } catch {
+            return
+        }
     }
 }

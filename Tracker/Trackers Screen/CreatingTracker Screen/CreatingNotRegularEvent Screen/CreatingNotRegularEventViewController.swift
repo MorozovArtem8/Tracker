@@ -386,14 +386,13 @@ private extension CreatingNotRegularEventViewController {
     @objc func createButtonTapped() {
         self.dismiss(animated: true)
         
-        let header = "Категория 1"
         let id = UUID()
         guard let name = nameTrackerTextField.text,
               let color = selectedColor,
-              let emoji = selectedEmoji
-                
+              let emoji = selectedEmoji,
+              let header = selectedCategoryTitle
         else {return}
-        let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, schedule: [])])
+        let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: false, schedule: [])])
         delegate?.didCreateHabit(trackerCategory)
     }
 }

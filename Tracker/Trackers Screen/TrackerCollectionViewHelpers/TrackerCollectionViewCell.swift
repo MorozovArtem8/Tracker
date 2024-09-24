@@ -15,6 +15,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private lazy var nameLabel: UILabel = UILabel()
     private lazy var emojiView: UIView = UIView()
     private lazy var emojiLabel: UILabel = UILabel()
+    private lazy var pinSquare: UIImageView = UIImageView()
     
     private let plusButton: UIButton = UIButton()
     private var daysCountLabel: UILabel = UILabel()
@@ -31,19 +32,21 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         emojiView.backgroundColor = .clear
         plusButton.setBackgroundImage(nil, for: .normal)
         daysCountLabel.text = nil
+        pinSquare.image = nil
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell(name: String, emoji: String, color: UIColor, delegate: TrackerCollectionViewCellDelegate) {
+    func configureCell(name: String, emoji: String, color: UIColor, delegate: TrackerCollectionViewCellDelegate, trackerIsPin: Bool) {
         self.nameLabel.text = name
         self.emojiLabel.text = emoji
         self.colorView.backgroundColor = color
         self.emojiView.backgroundColor = .white.withAlphaComponent(0.3)
         self.plusButton.backgroundColor = color
         self.delegate = delegate
+        self.pinSquare.image = trackerIsPin ? UIImage(named: "pinSquare") : nil
         
     }
     
@@ -91,6 +94,7 @@ private extension TrackerCollectionViewCell {
         configureDaysCountLabel()
         configureEmojiView()
         configureNameLabel()
+        configurePinSquare()
     }
     
     func configureColorView() {
@@ -183,6 +187,22 @@ private extension TrackerCollectionViewCell {
             nameLabel.trailingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: -12),
             nameLabel.bottomAnchor.constraint(equalTo: colorView.bottomAnchor, constant: -12),
             nameLabel.topAnchor.constraint(greaterThanOrEqualTo: emojiView.bottomAnchor)
+        ])
+    }
+    
+    func configurePinSquare() {
+        pinSquare.contentMode = .center
+        pinSquare.image = UIImage(named: "pinSquare")
+        pinSquare.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        contentView.addSubview(pinSquare)
+        
+        NSLayoutConstraint.activate([
+            pinSquare.heightAnchor.constraint(equalToConstant: 24),
+            pinSquare.widthAnchor.constraint(equalToConstant: 24),
+            pinSquare.trailingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: -4),
+            pinSquare.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor)
         ])
     }
 }

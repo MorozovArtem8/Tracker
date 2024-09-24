@@ -40,6 +40,7 @@
 		AC85763B2C958A4500F13F87 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC85763A2C958A4500F13F87 /* CategoryCell.swift */; };
 		AC8861F42C5A901400569ABA /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */; };
 		AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */; };
+		AC9AD3BF2CA1F65100FFB2D4 /* EditHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9AD3BE2CA1F65100FFB2D4 /* EditHabitViewController.swift */; };
 		ACA5A6DF2CA033FE00CA7ADE /* StubType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA5A6DE2CA033FE00CA7ADE /* StubType.swift */; };
 		ACA8F9312C80755E00D4C572 /* CustomValueTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */; };
 		ACB235612C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */; };
@@ -89,6 +90,7 @@
 		AC85763A2C958A4500F13F87 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		AC8861F32C5A901400569ABA /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		AC8861F62C5A938100569ABA /* HeaderSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSupplementaryView.swift; sourceTree = "<group>"; };
+		AC9AD3BE2CA1F65100FFB2D4 /* EditHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditHabitViewController.swift; sourceTree = "<group>"; };
 		ACA5A6DE2CA033FE00CA7ADE /* StubType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubType.swift; sourceTree = "<group>"; };
 		ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomValueTransformer.swift; sourceTree = "<group>"; };
 		ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewColorCell.swift; sourceTree = "<group>"; };
@@ -306,6 +308,14 @@
 			path = TrackerCollectionViewHelpers;
 			sourceTree = "<group>";
 		};
+		AC9AD3BD2CA1F62400FFB2D4 /* Edit Habit Screen */ = {
+			isa = PBXGroup;
+			children = (
+				AC9AD3BE2CA1F65100FFB2D4 /* EditHabitViewController.swift */,
+			);
+			path = "Edit Habit Screen";
+			sourceTree = "<group>";
+		};
 		ACBA80E12C9B48D500F7D7E5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -357,6 +367,7 @@
 			isa = PBXGroup;
 			children = (
 				AC1497012C52F0A500BF80F8 /* TrackerViewController.swift */,
+				AC9AD3BD2CA1F62400FFB2D4 /* Edit Habit Screen */,
 				AC835BDA2C6387AE00D38AF5 /* CreatingTracker Screen */,
 				AC8861F52C5A934900569ABA /* TrackerCollectionViewHelpers */,
 			);
@@ -440,6 +451,7 @@
 				AC7EA8E92C7CEF7100D3FE30 /* DataProvider.swift in Sources */,
 				AC1497022C52F0A500BF80F8 /* TrackerViewController.swift in Sources */,
 				AC3AEE842C6558FD005A6A5F /* PaddedTextField.swift in Sources */,
+				AC9AD3BF2CA1F65100FFB2D4 /* EditHabitViewController.swift in Sources */,
 				AC59B1CC2C6773DD00C656D7 /* ScheduleScreenViewController.swift in Sources */,
 				AC21C38F2C91D1E60089A6EB /* CustomContainerRootViewController.swift in Sources */,
 				AC59DD852C538416005A8E6C /* Color+Extension.swift in Sources */,

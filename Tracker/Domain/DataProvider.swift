@@ -12,6 +12,8 @@ protocol DataProviderProtocol {
     func addTracker(categoryHeader: String, tracker: Tracker)
     
     func getAllTrackerCategory() -> [TrackerCategory]?
+    func pinnedTracker(id: UUID)
+    func getCategoryTitleForTrackerId(id: UUID) -> String?
     
     func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws
     func getAllRecords() -> [TrackerRecord]
@@ -48,6 +50,15 @@ final class DataProvider: NSObject {
 // MARK: - DataProviderProtocol
 
 extension DataProvider: DataProviderProtocol {
+    func getCategoryTitleForTrackerId(id: UUID) -> String? {
+        return trackerStore.getCategoryTitleForTrackerId(id: id)
+    }
+    
+    func pinnedTracker(id: UUID) {
+        trackerStore.pinnedTracker(id: id)
+        delegate?.didUpdate()
+    }
+    
     func addNewRecord(tracker: Tracker, trackerRecord: TrackerRecord) throws {
         if let trackerCoreDataIsExist = trackerStore.getTrackerCoreDataForId(id: tracker.id) {
             try? trackerRecordStore.addNewRecord(trackerCoreData: trackerCoreDataIsExist, trackerRecord: trackerRecord)
@@ -74,10 +85,11 @@ extension DataProvider: DataProviderProtocol {
         if let categoryIsExist = trackerCategoryStore.checkCategoryExistence(categoryHeader: categoryHeader) {
             do {
                 try trackerStore.addNewTracker(category: categoryIsExist, tracker: tracker)
-                print("Новая категория и трекер добавлены")
+                print("Трекер добавлен в существующую категорию")
             } catch {
                 print("Не удалось добавить трекер к категории")
             }
+            delegate?.didUpdate()
             return
         } else {
             // Иначе создаем новую
@@ -91,6 +103,7 @@ extension DataProvider: DataProviderProtocol {
                 print("Не удалось добавить трекер к категории")
             }
         }
+        
     }
     
     func getAllTrackerCategory() -> [TrackerCategory]? {
