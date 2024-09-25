@@ -69,7 +69,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
             }
         case .notRegularEvent:
-            if trackerCompletedToday {
+            if trackerCompletedToday || days > 0 {
                 daysCountLabel.text = "Выполнено"
                 plusButton.setImage(UIImage(named: "Done"), for: .normal)
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)

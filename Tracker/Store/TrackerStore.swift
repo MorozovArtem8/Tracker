@@ -9,7 +9,7 @@ protocol TrackerStoreProtocol: AnyObject {
     func pinnedTracker(id: UUID)
     func getCategoryTitleForTrackerId(id: UUID) -> String?
     func removeTrackerForI(id: UUID)
-    
+    func getAllTrackers() -> [Tracker]?
 }
 
 final class TrackerStore {
@@ -24,6 +24,30 @@ final class TrackerStore {
 //MARK: TrackerStoreProtocol func
 
 extension TrackerStore: TrackerStoreProtocol {
+    func getAllTrackers() -> [Tracker]? {
+        let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        
+        do {
+            let trackersCoreData = try context.fetch(fetchRequest)
+            let trackers: [Tracker] = trackersCoreData.compactMap {
+                guard let id = $0.id,
+                      let emoji = $0.emoji,
+                      let name = $0.name,
+                      let schedule = $0.schedule as? [DaysWeek] 
+                else {return nil}
+                        
+                let isPinned = $0.isPinned
+                let color = colorMarshalling.color(from: $0.color ?? "")
+                
+                return Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: isPinned, schedule: schedule)
+            }
+            return trackers
+        }
+        catch {
+            return nil
+        }
+    }
+    
     func removeTrackerForI(id: UUID) {
         guard let trackerCoreData = getTrackerCoreDataForId(id: id) else {return}
         context.delete(trackerCoreData)

@@ -169,6 +169,15 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         
         completedTrackers = dataProvider.getAllRecords()
         guard let indexPath = collectionView.indexPath(for: cell) else {return}
+        
+        //Проверяем является ли трекер НЕрегулярным событием и если ранее событие уже было выполнено убираем выполнение и выходим
+        //Данная проверка нужна для кейса с закрепленными нерегулярными событиями
+        let thisTrackerIsNotRegularEvent = filteredCategories[indexPath.section].trackers[indexPath.row].schedule.isEmpty
+        if thisTrackerIsNotRegularEvent, getCurrentTrackerCompletedCount(id: filteredCategories[indexPath.section].trackers[indexPath.row].id) > 0 {
+            removeCompletedTracker(cell)
+            return
+        }
+        
         // Проверяем был ли выполнен трекер сегодня
         if !checkCompletionCurrentTrackerToday(id: filteredCategories[indexPath.section].trackers[indexPath.row].id) {
             completeTracker(cell)
@@ -325,8 +334,20 @@ extension TrackerViewController: UICollectionViewDelegate {
                 
                 UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
                     guard let self = self else {return}
-                    let currentTrackerId = filteredCategories[indexPath.section].trackers[indexPath.row].id
-                    dataProvider?.removeTracker(id: currentTrackerId)
+                    
+                    let alert = UIAlertController(title: nil, message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
+                    let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { action in
+                        let currentTrackerId = self.filteredCategories[indexPath.section].trackers[indexPath.row].id
+                        self.dataProvider?.removeTracker(id: currentTrackerId)
+                       }
+                    let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { action in
+                            print("Нажата кнопка Отмена")
+                        }
+                    alert.addAction(deleteAction)
+                    alert.addAction(cancelAction)
+                    self.present(alert, animated: true, completion: nil)
+                    
+                    
                 }
             ])
         })
@@ -341,7 +362,6 @@ extension TrackerViewController: UICollectionViewDelegate {
         view?.titleLabel.text = filteredCategories[indexPath.section].header
         return view ?? UICollectionReusableView()
     }
-    
 }
 
 //MARK: UICollectionViewFlowLayout func
@@ -416,7 +436,6 @@ extension TrackerViewController: UISearchResultsUpdating {
         } else {
             updateVisibleCategories(from: currentDate)
         }
-        
     }
 }
 

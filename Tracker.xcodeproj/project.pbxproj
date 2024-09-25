@@ -50,8 +50,11 @@
 		ACBA80EB2C9B4FC300F7D7E5 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = ACBA80E92C9B4FC300F7D7E5 /* Localizable.stringsdict */; };
 		ACC7BAF02C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */; };
 		ACC7BAF22C6FF163007F35AE /* CreateTrackerCollectionCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7BAF12C6FF163007F35AE /* CreateTrackerCollectionCellData.swift */; };
+		ACCBBE8C2CA4977700046516 /* StatisticViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCBBE8B2CA4977700046516 /* StatisticViewModel.swift */; };
 		ACE87ED52C68AF6300CFB0DF /* CellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE87ED42C68AF6300CFB0DF /* CellData.swift */; };
 		ACF009372C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */; };
+		ACF2C8192CA4741200CD90E8 /* StatisticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF2C8182CA4741200CD90E8 /* StatisticTableViewCell.swift */; };
+		ACF2C81B2CA47E7600CD90E8 /* GradientBoarderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF2C81A2CA47E7600CD90E8 /* GradientBoarderView.swift */; };
 		ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFDF1F22C537C0500371272 /* TabBarController.swift */; };
 /* End PBXBuildFile section */
 
@@ -107,8 +110,11 @@
 		ACBA80ED2C9B501A00F7D7E5 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		ACC7BAEF2C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewEmojiCell.swift; sourceTree = "<group>"; };
 		ACC7BAF12C6FF163007F35AE /* CreateTrackerCollectionCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionCellData.swift; sourceTree = "<group>"; };
+		ACCBBE8B2CA4977700046516 /* StatisticViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewModel.swift; sourceTree = "<group>"; };
 		ACE87ED42C68AF6300CFB0DF /* CellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellData.swift; sourceTree = "<group>"; };
 		ACF009362C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatingNotRegularEventViewController.swift; sourceTree = "<group>"; };
+		ACF2C8182CA4741200CD90E8 /* StatisticTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTableViewCell.swift; sourceTree = "<group>"; };
+		ACF2C81A2CA47E7600CD90E8 /* GradientBoarderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientBoarderView.swift; sourceTree = "<group>"; };
 		ACFDF1F22C537C0500371272 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -241,6 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				AC59DD822C537DD1005A8E6C /* StatisticViewController.swift */,
+				ACCBBE8B2CA4977700046516 /* StatisticViewModel.swift */,
+				ACF2C8182CA4741200CD90E8 /* StatisticTableViewCell.swift */,
 			);
 			path = "Statistics Screen";
 			sourceTree = "<group>";
@@ -369,6 +377,7 @@
 			children = (
 				ACFDF1F22C537C0500371272 /* TabBarController.swift */,
 				AC3AEE832C6558FD005A6A5F /* PaddedTextField.swift */,
+				ACF2C81A2CA47E7600CD90E8 /* GradientBoarderView.swift */,
 			);
 			path = UIElements;
 			sourceTree = "<group>";
@@ -479,8 +488,11 @@
 				AC13C8BB2C73C31B00AF55C7 /* Model.xcdatamodeld in Sources */,
 				AC38BAA22C56651900463933 /* TrackerRecord.swift in Sources */,
 				ACA5A6DF2CA033FE00CA7ADE /* StubType.swift in Sources */,
+				ACF2C81B2CA47E7600CD90E8 /* GradientBoarderView.swift in Sources */,
+				ACF2C8192CA4741200CD90E8 /* StatisticTableViewCell.swift in Sources */,
 				AC21C36A2C91A3D00089A6EB /* OnboardingScreenViewController.swift in Sources */,
 				AC59DD832C537DD1005A8E6C /* StatisticViewController.swift in Sources */,
+				ACCBBE8C2CA4977700046516 /* StatisticViewModel.swift in Sources */,
 				AC835BDC2C6387D200D38AF5 /* CreatingTrackerViewController.swift in Sources */,
 				AC2DC72D2C5AA16C00D4FE7B /* GeomitricParams.swift in Sources */,
 				AC8861F72C5A938100569ABA /* HeaderSupplementaryView.swift in Sources */,

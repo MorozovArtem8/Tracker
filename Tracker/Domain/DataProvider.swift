@@ -11,6 +11,7 @@ protocol DataProviderProtocol {
     func addTrackerCategory(categoryHeader: String)
     func addTracker(categoryHeader: String, tracker: Tracker)
     func removeTracker(id: UUID)
+    func getAllTrackers() -> [Tracker]
     
     func getAllTrackerCategory() -> [TrackerCategory]?
     func pinnedTracker(id: UUID)
@@ -51,6 +52,10 @@ final class DataProvider: NSObject {
 // MARK: - DataProviderProtocol
 
 extension DataProvider: DataProviderProtocol {
+    func getAllTrackers() -> [Tracker] {
+        return trackerStore.getAllTrackers() ?? []
+    }
+    
     func removeTracker(id: UUID) {
         trackerStore.removeTrackerForI(id: id)
     }
