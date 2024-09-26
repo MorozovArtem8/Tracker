@@ -45,6 +45,7 @@
 		ACA5A6DF2CA033FE00CA7ADE /* StubType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA5A6DE2CA033FE00CA7ADE /* StubType.swift */; };
 		ACA8F9312C80755E00D4C572 /* CustomValueTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */; };
 		ACB235612C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */; };
+		ACB5BECA2CA5C2E200F7C3E1 /* StatisticService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB5BEC92CA5C2E200F7C3E1 /* StatisticService.swift */; };
 		ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */; };
 		ACBA80E42C9B48EE00F7D7E5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ACBA80E22C9B48EE00F7D7E5 /* Localizable.strings */; };
 		ACBA80EB2C9B4FC300F7D7E5 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = ACBA80E92C9B4FC300F7D7E5 /* Localizable.stringsdict */; };
@@ -99,6 +100,7 @@
 		ACA5A6DE2CA033FE00CA7ADE /* StubType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubType.swift; sourceTree = "<group>"; };
 		ACA8F9302C80755E00D4C572 /* CustomValueTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomValueTransformer.swift; sourceTree = "<group>"; };
 		ACB235602C71D12B00766A96 /* CreateTrackerCollectionViewColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerCollectionViewColorCell.swift; sourceTree = "<group>"; };
+		ACB5BEC92CA5C2E200F7C3E1 /* StatisticService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticService.swift; sourceTree = "<group>"; };
 		ACBA7FDA2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HideKeyboardWhenTappedAround+Extension.swift"; sourceTree = "<group>"; };
 		ACBA80E32C9B48EE00F7D7E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		ACBA80E52C9B490800F7D7E5 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -156,11 +158,10 @@
 		AC1496FC2C52F0A500BF80F8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				ACB5BEC82CA5C29100F7C3E1 /* Services */,
 				AC724D392C942C25009A9169 /* Category Screen */,
 				AC21C38D2C91D1D10089A6EB /* Splash Screen */,
 				AC21C3662C91A1140089A6EB /* Onboarding Screen */,
-				AC7EA8E72C7CEF5E00D3FE30 /* Domain */,
-				AC80E5B02C7527EE005FB68B /* Store */,
 				AC38BA9C2C5661A900463933 /* Models */,
 				ACFDF1F42C537D2800371272 /* Trackers Screen */,
 				AC59DD812C537D95005A8E6C /* Statistics Screen */,
@@ -334,6 +335,16 @@
 			path = "Edit Habit Screen";
 			sourceTree = "<group>";
 		};
+		ACB5BEC82CA5C29100F7C3E1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AC80E5B02C7527EE005FB68B /* Store */,
+				AC7EA8E72C7CEF5E00D3FE30 /* Domain */,
+				ACB5BEC92CA5C2E200F7C3E1 /* StatisticService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		ACBA80E12C9B48D500F7D7E5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +491,7 @@
 				ACC7BAF02C6FEC1C007F35AE /* CreateTrackerCollectionViewEmojiCell.swift in Sources */,
 				ACFDF1F32C537C0500371272 /* TabBarController.swift in Sources */,
 				AC80E5B62C752830005FB68B /* TrackerRecordStore.swift in Sources */,
+				ACB5BECA2CA5C2E200F7C3E1 /* StatisticService.swift in Sources */,
 				AC1496FE2C52F0A500BF80F8 /* AppDelegate.swift in Sources */,
 				AC12BA552CA32CD500A85A57 /* EditNotRegularEventScreen.swift in Sources */,
 				AC3AEE862C655B2D005A6A5F /* CreatingHabitTableViewCell.swift in Sources */,

@@ -5,12 +5,25 @@ import UIKit
 class StatisticViewController: UIViewController {
     
     private lazy var tableView = UITableView()
+    private lazy var emptyTrackerImage: UIImageView = {
+        let imageView = UIImageView()
+        return imageView
+    }()
+    
+    private lazy var emptyTrackerLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 12)
+        return label
+    }()
+    
     private let viewModel: StatisticViewModel = StatisticViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureUI()
+        displayStubForEmptyView(displayStub: viewModel.cellData.isEmpty)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -18,6 +31,12 @@ class StatisticViewController: UIViewController {
         
         viewModel.reloadAllData()
         tableView.reloadData()
+        displayStubForEmptyView(displayStub: viewModel.cellData.isEmpty)
+    }
+    
+    private func displayStubForEmptyView(displayStub: Bool) {
+        emptyTrackerImage.image = displayStub ? UIImage(named: "emptyStatistic") : nil
+        emptyTrackerLabel.isHidden = !displayStub
     }
 }
 
@@ -47,6 +66,7 @@ private extension StatisticViewController {
     
     func configureUI() {
         configureTableView()
+        configureEmptyTrackerImageAndLabel()
     }
     
     func configureTableView() {
@@ -65,6 +85,21 @@ private extension StatisticViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+    
+    func configureEmptyTrackerImageAndLabel() {
+        emptyTrackerImage.translatesAutoresizingMaskIntoConstraints = false
+        emptyTrackerLabel.translatesAutoresizingMaskIntoConstraints = false
+        emptyTrackerLabel.text = "Анализировать пока нечего"
+        view.addSubview(emptyTrackerImage)
+        view.addSubview(emptyTrackerLabel)
+        
+        NSLayoutConstraint.activate([
+            emptyTrackerImage.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            emptyTrackerImage.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            emptyTrackerLabel.topAnchor.constraint(equalTo: emptyTrackerImage.bottomAnchor, constant: 8),
+            emptyTrackerLabel.centerXAnchor.constraint(equalTo: emptyTrackerImage.centerXAnchor)
         ])
     }
 }

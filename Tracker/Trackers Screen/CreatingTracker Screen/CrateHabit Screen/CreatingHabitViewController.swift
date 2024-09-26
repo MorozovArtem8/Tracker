@@ -9,7 +9,7 @@ class CreatingHabitViewController: UIViewController {
     private lazy var nameTrackerTextField = PaddedTextField()
     private lazy var tableView = UITableView()
     private lazy var cancelButton = UIButton(type: .system)
-    private lazy var createButton = UIButton(type: .system)
+    lazy var createButton = UIButton(type: .system)
     private lazy var stackView = UIStackView()
     private lazy var completedDaysLabel = UILabel()
     

@@ -3,75 +3,38 @@
 
 import Foundation
 
-final class StatisticViewModel: DataProviderDelegate {
-    func didUpdate() {
-        
-    }
+
+final class StatisticViewModel {
     
-    private lazy var dataProvider: DataProviderProtocol? = {
-        do {
-            try dataProvider = DataProvider(delegate: self)
-            return dataProvider
-        }
-        catch {
-            print("Не удалось инициализировать dataProvider")
-            return nil
-        }
-    }()
-    
-    private var trackers: [Tracker] = []
-    private  var allTrackerRecords: [TrackerRecord] = []
-    var cellData: [CellData] = []
+    private let statisticService: StatisticService = StatisticServiceImplementation()
+
+    private(set) var cellData: [CellData] = []
     
     init() {
-        self.trackers = dataProvider?.getAllTrackers() ?? []
-        self.allTrackerRecords = dataProvider?.getAllRecords() ?? []
+        guard statisticService.bestPeriod > 0 || statisticService.perfectDays > 0 || statisticService.trackersCompleted > 0 || statisticService.averageValue > 0 else {
+            cellData = []
+            return
+        }
         cellData = [
-            CellData(title: "\(getBestPeriod())", subTitle: "Лучший период"),
-            CellData(title: "\(allTrackerRecords.count)", subTitle: "Трекеров завершено"),
+            CellData(title: "\(statisticService.bestPeriod)", subTitle: "Лучший период"),
+            CellData(title: "\(statisticService.perfectDays)", subTitle: "Идеальные дни"),
+            CellData(title: "\(statisticService.trackersCompleted)", subTitle: "Трекеров завершено"),
+            CellData(title: "\(statisticService.averageValue)", subTitle: "Лучший период")
         ]
     }
     
     func reloadAllData() {
-        self.trackers = dataProvider?.getAllTrackers() ?? []
-        self.allTrackerRecords = dataProvider?.getAllRecords() ?? []
+        guard statisticService.bestPeriod > 0 || statisticService.perfectDays > 0 || statisticService.trackersCompleted > 0 || statisticService.averageValue > 0 else {
+            cellData = []
+            return
+        }
         cellData = [
-            CellData(title: "\(getBestPeriod())", subTitle: "Лучший период"),
-            CellData(title: "\(allTrackerRecords.count)", subTitle: "Трекеров завершено"),
+            CellData(title: "\(statisticService.bestPeriod)", subTitle: "Лучший период"),
+            CellData(title: "\(statisticService.perfectDays)", subTitle: "Идеальные дни"),
+            CellData(title: "\(statisticService.trackersCompleted)", subTitle: "Трекеров завершено"),
+            CellData(title: "\(String(format: "%.1f", statisticService.averageValue))", subTitle: "Среднее значение")
         ]
     }
-    
-    func getBestPeriod() -> Int {
-        guard !trackers.isEmpty && !allTrackerRecords.isEmpty else {return 0}
-        var maxStreak = 0
-        
-        
-        for tracker in trackers {
-            let allTrackersRecords = allTrackerRecords.filter {
-                tracker.id == $0.trackerID
-            }.sorted { $0.dateOfCompletion < $1.dateOfCompletion }
-            
-            if allTrackersRecords.count < 2 {
-                continue
-            }
-            
-            var currentStreak = 1
-            
-            for i in 1..<allTrackersRecords.count {
-                let previousDate = allTrackersRecords[i - 1].dateOfCompletion
-                let currentDate = allTrackersRecords[i].dateOfCompletion
-                
-                if Calendar.current.isDate(currentDate, inSameDayAs: Calendar.current.date(byAdding: .day, value: 1, to: previousDate)!) {
-                    currentStreak += 1
-                } else {
-                    maxStreak = max(maxStreak, currentStreak)
-                    currentStreak = 1
-                }
-            }
-            
-            maxStreak = max(maxStreak, currentStreak)
-        }
-        
-        return maxStreak
-    }
+
 }
+

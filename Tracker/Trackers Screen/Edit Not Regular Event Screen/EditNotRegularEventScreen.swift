@@ -8,5 +8,6 @@ final class EditNotRegularEventScreen: CreatingNotRegularEventViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Редактирование события"
+        createButton.setTitle("Сохранить", for: .normal)
     }
 }

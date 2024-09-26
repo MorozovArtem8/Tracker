@@ -58,15 +58,24 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         return label
     }()
     
+    private let statisticService: StatisticService = StatisticServiceImplementation()
     private let colorMarshalling = UIColorMarshalling()
-    private var categories: [TrackerCategory] = []
+    private var categories: [TrackerCategory] = [] {
+        didSet {
+            statisticService.store(allTrackerCategories: categories, allTrackerRecords: completedTrackers)
+        }
+    }
     private var visibleCategories: [TrackerCategory] = [] {
         didSet {
             filteredCategories = visibleCategories
         }
     }
     private var filteredCategories: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
+    private var completedTrackers: [TrackerRecord] = [] {
+        didSet {
+            statisticService.store(allTrackerCategories: categories, allTrackerRecords: completedTrackers)
+        }
+    }
     private var currentDate = Date()
     private lazy var dataProvider: DataProviderProtocol? = {
         do {
@@ -482,6 +491,8 @@ extension TrackerViewController: DataProviderDelegate {
     func didUpdate() {
         guard let dataProvider,
               let categoryIsExists = dataProvider.getAllTrackerCategory()else {return}
+        
+        self.completedTrackers = dataProvider.getAllRecords()
         self.categories = categoryIsExists
         updateVisibleCategories(from: currentDate)
     }

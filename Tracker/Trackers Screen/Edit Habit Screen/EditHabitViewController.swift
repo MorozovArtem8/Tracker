@@ -8,5 +8,6 @@ final class EditHabitViewController: CreatingHabitViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Редактирование привычки"
+        createButton.setTitle("Сохранить", for: .normal)
     }
 }
