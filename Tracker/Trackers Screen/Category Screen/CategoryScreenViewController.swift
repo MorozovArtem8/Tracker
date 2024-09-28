@@ -89,12 +89,13 @@ extension CategoryScreenViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let viewModel else {return}
         
         cell.layer.masksToBounds = false
         cell.layer.cornerRadius = 0
         cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
-        if viewModel?.trackerCategories.count == 1 {
+        if viewModel.trackerCategories.count == 1 {
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1000)
@@ -107,7 +108,7 @@ extension CategoryScreenViewController: UITableViewDelegate {
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
         
-        if indexPath.row == (viewModel?.trackerCategories.count)! - 1 {
+        if indexPath.row == (viewModel.trackerCategories.count) - 1 {
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1000)

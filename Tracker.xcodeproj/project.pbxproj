@@ -28,6 +28,9 @@
 		AC59B1CF2C6778FB00C656D7 /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC59B1CE2C6778FB00C656D7 /* ScheduleTableViewCell.swift */; };
 		AC59DD832C537DD1005A8E6C /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC59DD822C537DD1005A8E6C /* StatisticViewController.swift */; };
 		AC59DD852C538416005A8E6C /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC59DD842C538416005A8E6C /* Color+Extension.swift */; };
+		AC6452F12CA7334A0037D503 /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6452F02CA7334A0037D503 /* FiltersViewController.swift */; };
+		AC6452F32CA7351B0037D503 /* FiltersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6452F22CA7351B0037D503 /* FiltersViewModel.swift */; };
+		AC6452F52CA759FA0037D503 /* FilterStateSavingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6452F42CA759FA0037D503 /* FilterStateSavingService.swift */; };
 		AC724D3B2C942C4D009A9169 /* CategoryScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC724D3A2C942C4D009A9169 /* CategoryScreenViewController.swift */; };
 		AC724D3E2C94397D009A9169 /* CategoriesTableViewSell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC724D3D2C94397D009A9169 /* CategoriesTableViewSell.swift */; };
 		AC724D402C944F98009A9169 /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC724D3F2C944F98009A9169 /* CategoryViewModel.swift */; };
@@ -83,6 +86,9 @@
 		AC59B1CE2C6778FB00C656D7 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		AC59DD822C537DD1005A8E6C /* StatisticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewController.swift; sourceTree = "<group>"; };
 		AC59DD842C538416005A8E6C /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		AC6452F02CA7334A0037D503 /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
+		AC6452F22CA7351B0037D503 /* FiltersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewModel.swift; sourceTree = "<group>"; };
+		AC6452F42CA759FA0037D503 /* FilterStateSavingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStateSavingService.swift; sourceTree = "<group>"; };
 		AC724D3A2C942C4D009A9169 /* CategoryScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryScreenViewController.swift; sourceTree = "<group>"; };
 		AC724D3D2C94397D009A9169 /* CategoriesTableViewSell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewSell.swift; sourceTree = "<group>"; };
 		AC724D3F2C944F98009A9169 /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
@@ -159,7 +165,6 @@
 			isa = PBXGroup;
 			children = (
 				ACB5BEC82CA5C29100F7C3E1 /* Services */,
-				AC724D392C942C25009A9169 /* Category Screen */,
 				AC21C38D2C91D1D10089A6EB /* Splash Screen */,
 				AC21C3662C91A1140089A6EB /* Onboarding Screen */,
 				AC38BA9C2C5661A900463933 /* Models */,
@@ -254,6 +259,15 @@
 			path = "Statistics Screen";
 			sourceTree = "<group>";
 		};
+		AC6452EF2CA733230037D503 /* Filters Screen */ = {
+			isa = PBXGroup;
+			children = (
+				AC6452F02CA7334A0037D503 /* FiltersViewController.swift */,
+				AC6452F22CA7351B0037D503 /* FiltersViewModel.swift */,
+			);
+			path = "Filters Screen";
+			sourceTree = "<group>";
+		};
 		AC724D392C942C25009A9169 /* Category Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +355,7 @@
 				AC80E5B02C7527EE005FB68B /* Store */,
 				AC7EA8E72C7CEF5E00D3FE30 /* Domain */,
 				ACB5BEC92CA5C2E200F7C3E1 /* StatisticService.swift */,
+				AC6452F42CA759FA0037D503 /* FilterStateSavingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -397,6 +412,8 @@
 			isa = PBXGroup;
 			children = (
 				AC1497012C52F0A500BF80F8 /* TrackerViewController.swift */,
+				AC6452EF2CA733230037D503 /* Filters Screen */,
+				AC724D392C942C25009A9169 /* Category Screen */,
 				AC9AD3BD2CA1F62400FFB2D4 /* Edit Habit Screen */,
 				AC12BA532CA32CA600A85A57 /* Edit Not Regular Event Screen */,
 				AC835BDA2C6387AE00D38AF5 /* CreatingTracker Screen */,
@@ -482,6 +499,7 @@
 				AC7EA8E92C7CEF7100D3FE30 /* DataProvider.swift in Sources */,
 				AC1497022C52F0A500BF80F8 /* TrackerViewController.swift in Sources */,
 				AC3AEE842C6558FD005A6A5F /* PaddedTextField.swift in Sources */,
+				AC6452F52CA759FA0037D503 /* FilterStateSavingService.swift in Sources */,
 				AC9AD3BF2CA1F65100FFB2D4 /* EditHabitViewController.swift in Sources */,
 				AC59B1CC2C6773DD00C656D7 /* ScheduleScreenViewController.swift in Sources */,
 				AC21C38F2C91D1E60089A6EB /* CustomContainerRootViewController.swift in Sources */,
@@ -501,6 +519,7 @@
 				AC38BAA22C56651900463933 /* TrackerRecord.swift in Sources */,
 				ACA5A6DF2CA033FE00CA7ADE /* StubType.swift in Sources */,
 				ACF2C81B2CA47E7600CD90E8 /* GradientBoarderView.swift in Sources */,
+				AC6452F32CA7351B0037D503 /* FiltersViewModel.swift in Sources */,
 				ACF2C8192CA4741200CD90E8 /* StatisticTableViewCell.swift in Sources */,
 				AC21C36A2C91A3D00089A6EB /* OnboardingScreenViewController.swift in Sources */,
 				AC59DD832C537DD1005A8E6C /* StatisticViewController.swift in Sources */,
@@ -523,6 +542,7 @@
 				AC1497002C52F0A500BF80F8 /* SceneDelegate.swift in Sources */,
 				AC724D402C944F98009A9169 /* CategoryViewModel.swift in Sources */,
 				AC38BA9E2C56629D00463933 /* Tracker.swift in Sources */,
+				AC6452F12CA7334A0037D503 /* FiltersViewController.swift in Sources */,
 				ACBA7FDB2C6A99460052F6C0 /* HideKeyboardWhenTappedAround+Extension.swift in Sources */,
 				ACF009372C6AAFE000F7CAB2 /* CreatingNotRegularEventViewController.swift in Sources */,
 			);
