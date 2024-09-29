@@ -9,6 +9,8 @@ final class StatisticTableViewCell: UITableViewCell {
     private lazy var countLabel = UILabel()
     private lazy var textInfoLabel = UILabel()
     
+    private let color = Colors()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
@@ -29,7 +31,7 @@ final class StatisticTableViewCell: UITableViewCell {
 
 private extension StatisticTableViewCell {
     func configureUI() {
-        self.backgroundColor = .white
+        self.backgroundColor = color.viewBackgroundColor
         configureCustomContentView()
         configureLabels()
     }
@@ -56,8 +58,8 @@ private extension StatisticTableViewCell {
         textInfoLabel.translatesAutoresizingMaskIntoConstraints = false
         countLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         textInfoLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        countLabel.textColor = .black
-        textInfoLabel.textColor = .black
+        countLabel.textColor = color.textColor
+        textInfoLabel.textColor = color.textColor
         
         customContentView.addSubview(countLabel)
         customContentView.addSubview(textInfoLabel)

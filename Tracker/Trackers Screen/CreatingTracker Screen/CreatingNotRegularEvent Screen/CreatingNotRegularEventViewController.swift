@@ -14,7 +14,7 @@ class CreatingNotRegularEventViewController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = color.viewBackgroundColor
         collectionView.alwaysBounceVertical = true
         collectionView.allowsMultipleSelection = true
         collectionView.isScrollEnabled = false
@@ -24,6 +24,7 @@ class CreatingNotRegularEventViewController: UIViewController {
         return collectionView
     }()
     
+    private let color = Colors()
     //IndexPath переменные для хранения 2-х выбранных ячеек одной CollectionView emoji и color
     private var selectedEmojiIndexPath: IndexPath?
     private var selectedColorIndexPath: IndexPath?
@@ -104,7 +105,7 @@ class CreatingNotRegularEventViewController: UIViewController {
     
     @objc private func updateCreateButtonState() {
         if createButtonIsEnabled {
-            createButton.backgroundColor = .black
+            createButton.backgroundColor = color.textColor
             createButton.isEnabled = true
         } else {
             createButton.backgroundColor = UIColor("#AEAFB4")
@@ -291,7 +292,7 @@ extension CreatingNotRegularEventViewController: UICollectionViewDelegateFlowLay
 
 private extension CreatingNotRegularEventViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = color.viewBackgroundColor
         self.title = "Новое нерегулярное событие"
         
         configureScrollView()
@@ -345,7 +346,7 @@ private extension CreatingNotRegularEventViewController {
         let trackerInitialized = tracker != nil && trackerCompletedToday != nil
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.placeholder = "Введите название трекера"
-        nameTrackerTextField.textColor = .black
+        nameTrackerTextField.textColor = color.textColor
         nameTrackerTextField.backgroundColor = UIColor("#E6E8EB", alpha: 0.3)
         nameTrackerTextField.textAlignment = .left
         nameTrackerTextField.layer.cornerRadius = 16
@@ -368,6 +369,7 @@ private extension CreatingNotRegularEventViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.isScrollEnabled = false
+        tableView.backgroundColor = color.viewBackgroundColor
         tableView.separatorStyle = .none
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
@@ -420,6 +422,7 @@ private extension CreatingNotRegularEventViewController {
         createButton.setTitleColor(.white, for: .normal)
         createButton.setTitle("Создать", for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        createButton.setTitleColor(color.totalBlackAndWhite, for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.clipsToBounds = true
         createButton.isEnabled = false

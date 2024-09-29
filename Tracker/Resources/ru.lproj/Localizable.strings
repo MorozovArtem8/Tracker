@@ -5,3 +5,11 @@
   Created by Artem Morozov on 18.09.2024.
   
 */
+
+"trackerScreenTitle" = "Трекеры";
+"filtersButtonTitle" = "Фильтры";
+"statisticScreenTitle" = "Статистика";
+"filterEmptyResultStubText" = "Ничего не найдено";
+"emptyTrackersStubText" = "Что будем отслеживать?";
+"emptyStatisticStubText" = "Анализировать пока нечего";
+

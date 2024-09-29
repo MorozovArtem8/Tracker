@@ -22,6 +22,7 @@ final class ScheduleScreenViewController: UIViewController {
         return height
     }()
     
+    private let color = Colors()
     private let tableViewData = DaysWeek.allCases
     private var selectedDays: [DaysWeek] = []
     
@@ -99,7 +100,7 @@ extension ScheduleScreenViewController: UITableViewDelegate {
 
 private extension ScheduleScreenViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = color.viewBackgroundColor
         self.title = "Расписание"
         configureReadyButton()
         configureTableView()
@@ -109,7 +110,7 @@ private extension ScheduleScreenViewController {
         readyButton.translatesAutoresizingMaskIntoConstraints = false
         readyButton.backgroundColor = UIColor(named: "CustomBackgroundColor")
         readyButton.setTitle("Готово", for: .normal)
-        readyButton.setTitleColor(.white, for: .normal)
+        readyButton.setTitleColor(color.totalBlackAndWhite, for: .normal)
         readyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         readyButton.layer.cornerRadius = 16
         readyButton.clipsToBounds = true
@@ -137,6 +138,8 @@ private extension ScheduleScreenViewController {
         tableView.allowsSelection = false
         tableView.dataSource = self
         tableView.isScrollEnabled = false
+        tableView.separatorColor = UIColor("#AEAFB4")
+        tableView.backgroundColor = color.viewBackgroundColor
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 0.1))
         

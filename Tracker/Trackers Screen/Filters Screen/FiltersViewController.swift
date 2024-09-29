@@ -11,8 +11,8 @@ final class FiltersViewController: UIViewController {
     
     private lazy var tableView = UITableView()
     
+    private let color = Colors()
     private var viewModel = FiltersViewModel()
-    
     var completionHandler: (Int) -> Void
     
     init(completionHandler: @escaping (Int) -> Void) {
@@ -94,7 +94,7 @@ extension FiltersViewController: UITableViewDelegate {
 
 private extension FiltersViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = color.viewBackgroundColor
         self.title = "Фильтры"
         configureTableView()
     }
@@ -104,8 +104,10 @@ private extension FiltersViewController {
         tableView.register(CategoriesTableViewSell.self, forCellReuseIdentifier: CategoriesTableViewSell.reuseIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = color.viewBackgroundColor
         tableView.isScrollEnabled = true
         tableView.showsVerticalScrollIndicator = false
+        tableView.separatorColor = UIColor("#AEAFB4")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.tableHeaderView = UIView()
         

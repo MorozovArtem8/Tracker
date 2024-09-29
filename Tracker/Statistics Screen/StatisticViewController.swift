@@ -17,6 +17,7 @@ class StatisticViewController: UIViewController {
         return label
     }()
     
+    private let color = Colors()
     private let viewModel: StatisticViewModel = StatisticViewModel()
     
     override func viewDidLoad() {
@@ -65,6 +66,7 @@ extension StatisticViewController: UITableViewDelegate {
 private extension StatisticViewController {
     
     func configureUI() {
+        view.backgroundColor = color.viewBackgroundColor
         configureTableView()
         configureEmptyTrackerImageAndLabel()
     }
@@ -77,6 +79,7 @@ private extension StatisticViewController {
         tableView.separatorStyle = .none
         tableView.isScrollEnabled = false
         tableView.allowsSelection = false
+        tableView.backgroundColor = color.viewBackgroundColor
         
         view.addSubview(tableView)
         
@@ -89,9 +92,10 @@ private extension StatisticViewController {
     }
     
     func configureEmptyTrackerImageAndLabel() {
+        let emptyStatisticStubText = NSLocalizedString("emptyStatisticStubText", comment: "emptyStatisticStubText")
         emptyTrackerImage.translatesAutoresizingMaskIntoConstraints = false
         emptyTrackerLabel.translatesAutoresizingMaskIntoConstraints = false
-        emptyTrackerLabel.text = "Анализировать пока нечего"
+        emptyTrackerLabel.text = emptyStatisticStubText
         view.addSubview(emptyTrackerImage)
         view.addSubview(emptyTrackerLabel)
         

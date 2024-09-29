@@ -9,6 +9,7 @@ protocol TrackerCollectionViewCellDelegate: AnyObject {
 final class TrackerCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "trackerCell"
     
+    private let color = Colors()
     weak var delegate: TrackerCollectionViewCellDelegate?
     
     private lazy var colorView: UIView = UIView()
@@ -117,10 +118,9 @@ private extension TrackerCollectionViewCell {
     
     func configurePlusButton() {
         plusButton.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.backgroundColor = UIColor("7994F5")
         plusButton.layer.masksToBounds = true
         plusButton.layer.cornerRadius = 17
-        plusButton.tintColor = .white
+        plusButton.tintColor = color.viewBackgroundColor
         plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
         plusButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         contentView.addSubview(plusButton)
@@ -141,7 +141,7 @@ private extension TrackerCollectionViewCell {
         contentView.addSubview(daysCountLabel)
         daysCountLabel.translatesAutoresizingMaskIntoConstraints = false
         daysCountLabel.font = UIFont.systemFont(ofSize: 14)
-        daysCountLabel.textColor = .black
+        daysCountLabel.textColor = color.textColor
         
         NSLayoutConstraint.activate([
             daysCountLabel.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),

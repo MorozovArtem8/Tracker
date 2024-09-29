@@ -16,7 +16,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         collectionView.contentInsetAdjustmentBehavior = .always
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = colors.viewBackgroundColor
         collectionView.alwaysBounceVertical = true
         collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
         collectionView.register(HeaderSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
@@ -43,7 +43,6 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Поиск"
         return searchController
     }()
     
@@ -61,6 +60,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     private lazy var filterButton = UIButton()
     
+    private let colors = Colors()
     private let statisticService: StatisticService = StatisticServiceImplementation()
     private let filterStateSavingService: FilterStateSavingService = FilterStateSavingServiceImplementation()
     private let colorMarshalling = UIColorMarshalling()
@@ -188,7 +188,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     private func displayFilterButton(for currentDate: Date) {
         let currentFilterState = filterStateSavingService.currentFilterState
-        filterButton.setTitleColor((1...3).contains(currentFilterState) ? .systemRed : .white, for: .normal)
+        filterButton.backgroundColor =  (1...3).contains(currentFilterState) ? .systemPink : UIColor("#3772E7")
         let dayOfWeek = DaysWeek(from: getDayOfWeek(from: currentDate))
         var trackers: [Tracker] = []
         
@@ -208,15 +208,18 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     }
     
     private func displayStubForEmptyScrollView(displayStub: Bool, stubType: StubType) {
+        let filterEmptyResultStubText = NSLocalizedString("filterEmptyResultStubText", comment: "filter result")
+        let emptyTrackersStubText = NSLocalizedString("emptyTrackersStubText", comment: "tab Trackers")
+        
         emptyTrackerImage.isHidden = !displayStub
         emptyTrackerLabel.isHidden = !displayStub
         switch stubType {
         case .emptySearchResult:
             emptyTrackerImage.image = UIImage(named: "emptySearchResult")
-            emptyTrackerLabel.text = "Ничего не найдено"
+            emptyTrackerLabel.text = filterEmptyResultStubText
         case .emptyCollection:
             emptyTrackerImage.image = UIImage(named: "emptyTracker")
-            emptyTrackerLabel.text = "Что будем отслеживать?"
+            emptyTrackerLabel.text = emptyTrackersStubText
         }
     }
     
@@ -384,7 +387,7 @@ extension TrackerViewController: UICollectionViewDelegate {
                     let navigationController = UINavigationController(rootViewController: vc)
                     
                     let textAttributes: [NSAttributedString.Key: Any] = [
-                        .foregroundColor: UIColor.black,
+                        .foregroundColor: colors.textColor,
                         .font: UIFont.systemFont(ofSize: 16, weight: .medium)
                     ]
                     navigationController.navigationBar.titleTextAttributes = textAttributes
@@ -516,7 +519,7 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
             let navigationController = UINavigationController(rootViewController: creatingHabitViewController)
             
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: UIColor.black,
+                .foregroundColor: colors.textColor,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
             ]
             navigationController.navigationBar.titleTextAttributes = textAttributes
@@ -527,7 +530,7 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
             let navigationController = UINavigationController(rootViewController: creatingNotRegularEventViewController)
             
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: UIColor.black,
+                .foregroundColor: colors.textColor,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
             ]
             navigationController.navigationBar.titleTextAttributes = textAttributes
@@ -568,7 +571,7 @@ extension TrackerViewController {
 
 private extension TrackerViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = colors.viewBackgroundColor
         addNavigationItems()
         configureCollectionView()
         configureEmptyTrackerImageAndLabel()
@@ -605,7 +608,7 @@ private extension TrackerViewController {
         let navigationController = UINavigationController(rootViewController: creatingTrackerViewController)
         
         let textAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.black,
+            .foregroundColor: colors.textColor,
             .font: UIFont.systemFont(ofSize: 16, weight: .medium)
         ]
         navigationController.navigationBar.titleTextAttributes = textAttributes
@@ -642,9 +645,9 @@ private extension TrackerViewController {
     }
     
     func configureFilterButton() {
+        let filterStateText = NSLocalizedString("filtersButtonTitle", comment: "filter title")
         filterButton.translatesAutoresizingMaskIntoConstraints = false
-        filterButton.backgroundColor = UIColor("#3772E7")
-        filterButton.setTitle("Фильтры", for: .normal)
+        filterButton.setTitle(filterStateText, for: .normal)
         filterButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         filterButton.layer.cornerRadius = 16
         filterButton.clipsToBounds = true
@@ -669,7 +672,7 @@ private extension TrackerViewController {
         let navigationController = UINavigationController(rootViewController: filterViewController)
         
         let textAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.black,
+            .foregroundColor: colors.textColor,
             .font: UIFont.systemFont(ofSize: 16, weight: .medium)
         ]
         navigationController.navigationBar.titleTextAttributes = textAttributes

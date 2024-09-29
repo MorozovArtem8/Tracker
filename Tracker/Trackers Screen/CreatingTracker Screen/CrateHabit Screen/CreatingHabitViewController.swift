@@ -15,7 +15,7 @@ class CreatingHabitViewController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = color.viewBackgroundColor
         collectionView.alwaysBounceVertical = true
         collectionView.allowsMultipleSelection = true
         collectionView.isScrollEnabled = false
@@ -25,6 +25,7 @@ class CreatingHabitViewController: UIViewController {
         return collectionView
     }()
     
+    private let color = Colors()
     //IndexPath переменные для хранения 2-х выбранных ячеек одной CollectionView emoji и color
     private var selectedEmojiIndexPath: IndexPath?
     private var selectedColorIndexPath: IndexPath?
@@ -120,7 +121,7 @@ class CreatingHabitViewController: UIViewController {
     
     @objc private func updateCreateButtonState() {
         if createButtonIsEnabled {
-            createButton.backgroundColor = .black
+            createButton.backgroundColor = color.textColor
             createButton.isEnabled = true
         } else {
             createButton.backgroundColor = UIColor("#AEAFB4")
@@ -167,7 +168,7 @@ extension CreatingHabitViewController: UITableViewDelegate {
             let navigationController = UINavigationController(rootViewController: categoriesScreenViewController)
             
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: UIColor.black,
+                .foregroundColor: color.textColor,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
             ]
             navigationController.navigationBar.titleTextAttributes = textAttributes
@@ -183,7 +184,7 @@ extension CreatingHabitViewController: UITableViewDelegate {
             let navigationController = UINavigationController(rootViewController: scheduleScreenViewController)
             
             let textAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: UIColor.black,
+                .foregroundColor: color.textColor,
                 .font: UIFont.systemFont(ofSize: 16, weight: .medium)
             ]
             navigationController.navigationBar.titleTextAttributes = textAttributes
@@ -342,7 +343,7 @@ extension CreatingHabitViewController: UICollectionViewDelegateFlowLayout {
 
 private extension CreatingHabitViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = color.viewBackgroundColor
         self.title = "Новая привычка"
         
         configureScrollView()
@@ -356,6 +357,7 @@ private extension CreatingHabitViewController {
     func configureScrollView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        scrollView.backgroundColor = color.viewBackgroundColor
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -400,7 +402,7 @@ private extension CreatingHabitViewController {
         
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.placeholder = "Введите название трекера"
-        nameTrackerTextField.textColor = .black
+        nameTrackerTextField.textColor = color.textColor
         nameTrackerTextField.backgroundColor = UIColor("#E6E8EB", alpha: 0.3)
         nameTrackerTextField.textAlignment = .left
         nameTrackerTextField.layer.cornerRadius = 16
@@ -422,6 +424,8 @@ private extension CreatingHabitViewController {
         tableView.register(CreatingHabitTableViewCell.self, forCellReuseIdentifier: CreatingHabitTableViewCell.reuseIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = color.viewBackgroundColor
+        tableView.separatorColor = UIColor("#AEAFB4")
         tableView.isScrollEnabled = false
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
@@ -474,6 +478,7 @@ private extension CreatingHabitViewController {
         createButton.isEnabled = false
         createButton.setTitleColor(.white, for: .normal)
         createButton.setTitle("Создать", for: .normal)
+        createButton.setTitleColor(color.totalBlackAndWhite, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.layer.cornerRadius = 16
         createButton.clipsToBounds = true
