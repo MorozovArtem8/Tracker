@@ -62,7 +62,6 @@ extension FiltersViewController: UITableViewDelegate {
         cell.layer.cornerRadius = 0
         cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
-        
         if viewModel.cellData.count == 1 {
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
@@ -110,7 +109,6 @@ private extension FiltersViewController {
         tableView.separatorColor = UIColor("#AEAFB4")
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.tableHeaderView = UIView()
-        
         
         view.addSubview(tableView)
         

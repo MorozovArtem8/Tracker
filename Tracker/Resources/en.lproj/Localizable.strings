@@ -12,3 +12,7 @@
 "filterEmptyResultStubText" = "Nothing found";
 "emptyTrackersStubText" = "What will we track?";
 "emptyStatisticStubText" = "Nothing to analyze yet";
+"toFix" = "Fix";
+"edit" = "Edit";
+"delete" = "Delete";
+"unpin" = "Unpin";

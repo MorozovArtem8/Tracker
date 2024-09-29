@@ -159,6 +159,5 @@ final class StatisticServiceImplementation: StatisticService {
         
         let dayOfWeek = dateFormatter.string(from: date)
         return DaysWeek(from: dayOfWeek)
-        
     }
 }

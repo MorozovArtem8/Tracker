@@ -112,7 +112,6 @@ extension DataProvider: DataProviderProtocol {
                 print("Не удалось добавить трекер к категории")
             }
         }
-        
     }
     
     func getAllTrackerCategory() -> [TrackerCategory]? {

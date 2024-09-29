@@ -5,8 +5,6 @@ import UIKit
 
 final class EditHabitViewController: CreatingHabitViewController {
     
-    let color = Colors()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Редактирование привычки"

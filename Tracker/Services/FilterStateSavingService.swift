@@ -10,7 +10,7 @@ protocol FilterStateSavingService {
 }
 
 final class FilterStateSavingServiceImplementation: FilterStateSavingService{
-   
+    
     private let userDefaults = UserDefaults.standard
     
     var currentFilterState: Int {

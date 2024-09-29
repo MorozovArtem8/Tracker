@@ -12,4 +12,7 @@
 "filterEmptyResultStubText" = "Ничего не найдено";
 "emptyTrackersStubText" = "Что будем отслеживать?";
 "emptyStatisticStubText" = "Анализировать пока нечего";
-
+"toFix" = "Закрепить";
+"edit" = "Редактировать";
+"delete" = "Удалить";
+"unpin" = "Открепить";

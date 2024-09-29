@@ -35,7 +35,7 @@ extension TrackerStore: TrackerStoreProtocol {
                       let name = $0.name,
                       let schedule = $0.schedule as? [DaysWeek] 
                 else {return nil}
-                        
+                
                 let isPinned = $0.isPinned
                 let color = colorMarshalling.color(from: $0.color ?? "")
                 
@@ -102,7 +102,7 @@ extension TrackerStore: TrackerStoreProtocol {
     }
     
     func pinnedTracker(id: UUID) {
-       let trackerCoreData = getTrackerCoreDataForId(id: id)
+        let trackerCoreData = getTrackerCoreDataForId(id: id)
         guard let trackerIsPinned = trackerCoreData?.isPinned else {return}
         trackerCoreData?.isPinned = !trackerIsPinned
         do {

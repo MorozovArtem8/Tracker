@@ -60,6 +60,8 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     private lazy var filterButton = UIButton()
     
+    private lazy var analyticsService = AnalyticsService()
+    
     private let colors = Colors()
     private let statisticService: StatisticService = StatisticServiceImplementation()
     private let filterStateSavingService: FilterStateSavingService = FilterStateSavingServiceImplementation()
@@ -115,6 +117,16 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         configureUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.report(event: "closed_Screen", params: ["event" : "close", "screen" : "Main"])
+    }
+    
     private func updateVisibleCategories(from date: Date) {
         
         let currentFilterState = filterStateSavingService.currentFilterState
@@ -123,7 +135,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         var isPinnedTrackers: [Tracker] = []
         
         displayFilterButton(for: date)
-    
+        
         var filteredCategories = categories.compactMap { category in
             let filteredTrackers = category.trackers.filter { tracker in
                 if tracker.isPinned {
@@ -255,6 +267,8 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         guard let indexPath = collectionView.indexPath(for: cell),
               currentDateIsNotFuture, let dataProvider else {return}
         
+        analyticsService.report(event: "trackerCompletedButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "track"])
+        
         let currentTracker = filteredCategories[indexPath.section].trackers[indexPath.row]
         let currentTrackerID = filteredCategories[indexPath.section].trackers[indexPath.row].id
         
@@ -360,10 +374,16 @@ extension TrackerViewController: UICollectionViewDelegate {
         
         let indexPath = indexPaths[0]
         let trackerIsPinned = filteredCategories[indexPath.section].trackers[indexPath.row].isPinned
+        
+        let fixButtonStateText = NSLocalizedString("toFix", comment: "toFix tracker")
+        let unpinButtonStateText = NSLocalizedString("unpin", comment: "toFix tracker")
+        let editButtonStateText = NSLocalizedString("edit", comment: "edit tracker")
+        let deleteButtonStateText = NSLocalizedString("delete", comment: "delete tracker")
+        
         return UIContextMenuConfiguration(actionProvider:  { action in
             return UIMenu(children: [
                 
-                UIAction(title: trackerIsPinned ? "Открепить" : "Закрепить") { [weak self] _ in
+                UIAction(title: trackerIsPinned ? unpinButtonStateText : fixButtonStateText) { [weak self] _ in
                     guard let self = self else {return}
                     let id = self.filteredCategories[indexPath.section].trackers[indexPath.row].id
                     
@@ -372,8 +392,11 @@ extension TrackerViewController: UICollectionViewDelegate {
                     updateVisibleCategories(from: currentDate)
                 },
                 
-                UIAction(title: "Редактировать") { [weak self] _ in
+                UIAction(title: editButtonStateText) { [weak self] _ in
                     guard let self = self else {return}
+                    
+                    analyticsService.report(event: "editButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "edit"])
+                    
                     let currentTracker = filteredCategories[indexPath.section].trackers[indexPath.row]
                     let currentTrackerArray: [Tracker] = [currentTracker]
                     // если в трекере есть расписание(schedule) - открываем экран привычек если нет - нерегулярное событие
@@ -395,22 +418,22 @@ extension TrackerViewController: UICollectionViewDelegate {
                     
                 },
                 
-                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                UIAction(title: deleteButtonStateText, attributes: .destructive) { [weak self] _ in
                     guard let self = self else {return}
+                    
+                    analyticsService.report(event: "delateButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "delete"])
                     
                     let alert = UIAlertController(title: nil, message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
                     let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { action in
                         let currentTrackerId = self.filteredCategories[indexPath.section].trackers[indexPath.row].id
                         self.dataProvider?.removeTracker(id: currentTrackerId)
-                       }
+                    }
                     let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { action in
-                            print("Нажата кнопка Отмена")
-                        }
+                        print("Нажата кнопка Отмена")
+                    }
                     alert.addAction(deleteAction)
                     alert.addAction(cancelAction)
                     self.present(alert, animated: true, completion: nil)
-                    
-                    
                 }
             ])
         })
@@ -544,7 +567,9 @@ extension TrackerViewController: TrackerTypeSelectionDelegate {
 extension TrackerViewController: DataProviderDelegate {
     func didUpdate() {
         guard let dataProvider,
-              let categoryIsExists = dataProvider.getAllTrackerCategory()else {return}
+              let categoryIsExists = dataProvider.getAllTrackerCategory() else {
+            return
+        }
         
         self.completedTrackers = dataProvider.getAllRecords()
         self.categories = categoryIsExists
@@ -613,6 +638,7 @@ private extension TrackerViewController {
         ]
         navigationController.navigationBar.titleTextAttributes = textAttributes
         present(navigationController, animated: true)
+        analyticsService.report(event: "addTrackerButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "add_track"])
     }
     
     func configureEmptyTrackerImageAndLabel() {
@@ -677,5 +703,6 @@ private extension TrackerViewController {
         ]
         navigationController.navigationBar.titleTextAttributes = textAttributes
         present(navigationController, animated: true)
+        analyticsService.report(event: "filterButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "filter"])
     }
 }

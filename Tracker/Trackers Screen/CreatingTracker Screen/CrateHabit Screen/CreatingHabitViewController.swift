@@ -378,7 +378,7 @@ private extension CreatingHabitViewController {
     
     func configureCompletedDaysLabel() {
         guard let _ = tracker,
-                let daysCompleted = daysCompleted
+              let daysCompleted = daysCompleted
         else {return}
         completedDaysLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(completedDaysLabel)
@@ -389,7 +389,7 @@ private extension CreatingHabitViewController {
         completedDaysLabel.text = daysString
         completedDaysLabel.textAlignment = .center
         completedDaysLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-    
+        
         NSLayoutConstraint.activate([
             completedDaysLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
             completedDaysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -415,7 +415,6 @@ private extension CreatingHabitViewController {
             nameTrackerTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nameTrackerTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75)
-            
         ])
     }
     
@@ -519,6 +518,7 @@ private extension CreatingHabitViewController {
             else {return}
             
             let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: tracker.trackers[0].isPinned, schedule: schedule)])
+            
             delegate?.didCreateHabit(trackerCategory)
         } else {
             let id = UUID()
@@ -530,6 +530,7 @@ private extension CreatingHabitViewController {
             else {return}
             
             let trackerCategory = TrackerCategory(header: header, trackers: [Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: false, schedule: schedule)])
+            
             delegate?.didCreateHabit(trackerCategory)
         }
     }

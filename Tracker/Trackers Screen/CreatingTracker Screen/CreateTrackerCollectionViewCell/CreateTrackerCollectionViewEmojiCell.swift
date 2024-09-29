@@ -47,7 +47,6 @@ private extension CreateTrackerCollectionViewEmojiCell {
         NSLayoutConstraint.activate([
             emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            
         ])
     }
 }
