@@ -15,8 +15,8 @@ final class TabBarController: UITabBarController {
         let trackerViewController = TrackerViewController()
         let statisticViewController = StatisticViewController()
         
-        let trackersStateText = NSLocalizedString("trackerScreenTitle", comment: "tab Trackers")
-        let statisticStateText = NSLocalizedString("statisticScreenTitle", comment: "tab Statistic")
+        let trackersStateText = NSLocalizedString("tracker.mainScreen.trackerScreenTitle", comment: "tab Trackers")
+        let statisticStateText = NSLocalizedString("tracker.mainScreen.statisticScreenTitle", comment: "tab Statistic")
         
         let tabBarItem0 = configureNavigationController(rootViewController: trackerViewController, title: trackersStateText, image: UIImage(named: "TrackerIconNotActive"))
         let tabBarItem1 = configureNavigationController(rootViewController: statisticViewController, title: statisticStateText, image: UIImage(named: "StatisticIconNotActive"))

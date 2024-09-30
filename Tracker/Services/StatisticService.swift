@@ -154,8 +154,8 @@ final class StatisticServiceImplementation: StatisticService {
     
     private func getDayOfWeek(from date: Date) -> DaysWeek? {
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_En") // Устанавливаем локаль на русский
-        dateFormatter.dateFormat = "EEEE" // Формат дня недели
+        dateFormatter.locale = Locale(identifier: "en_En")
+        dateFormatter.dateFormat = "EEEE"
         
         let dayOfWeek = dateFormatter.string(from: date)
         return DaysWeek(from: dayOfWeek)

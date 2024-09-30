@@ -92,7 +92,7 @@ private extension StatisticViewController {
     }
     
     func configureEmptyTrackerImageAndLabel() {
-        let emptyStatisticStubText = NSLocalizedString("emptyStatisticStubText", comment: "emptyStatisticStubText")
+        let emptyStatisticStubText = NSLocalizedString("tracker.mainScreen.emptyStatisticStubText", comment: "emptyStatisticStubText")
         emptyTrackerImage.translatesAutoresizingMaskIntoConstraints = false
         emptyTrackerLabel.translatesAutoresizingMaskIntoConstraints = false
         emptyTrackerLabel.text = emptyStatisticStubText

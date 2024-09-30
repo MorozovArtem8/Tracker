@@ -10,24 +10,24 @@ final class TrackerTests: XCTestCase {
     func testTrackerViewControllerLight() {
         let vc = TrackerViewController()
         vc.overrideUserInterfaceStyle = .light
-        assertSnapshot(matching: vc, as: .image)
+        assertSnapshot(of: vc, as: .image)
     }
     
     func testTrackerViewControllerBlack() {
         let vc = TrackerViewController()
         vc.overrideUserInterfaceStyle = .dark
-        assertSnapshot(matching: vc, as: .image)
+        assertSnapshot(of: vc, as: .image)
     }
     
-    func testStatisticViewControllerLigt() {
+    func testStatisticViewControllerLight() {
         let vc = StatisticViewController()
         vc.overrideUserInterfaceStyle = .light
-        assertSnapshot(matching: vc, as: .image)
+        assertSnapshot(of: vc, as: .image)
     }
     
     func testStatisticViewControllerBlack() {
         let vc = StatisticViewController()
         vc.overrideUserInterfaceStyle = .dark
-        assertSnapshot(matching: vc, as: .image)
+        assertSnapshot(of: vc, as: .image)
     }
 }

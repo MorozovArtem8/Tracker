@@ -6,13 +6,13 @@
   
 */
 
-"trackerScreenTitle" = "Трекеры";
-"filtersButtonTitle" = "Фильтры";
-"statisticScreenTitle" = "Статистика";
-"filterEmptyResultStubText" = "Ничего не найдено";
-"emptyTrackersStubText" = "Что будем отслеживать?";
-"emptyStatisticStubText" = "Анализировать пока нечего";
-"toFix" = "Закрепить";
-"edit" = "Редактировать";
-"delete" = "Удалить";
-"unpin" = "Открепить";
+"tracker.mainScreen.trackerScreenTitle" = "Трекеры";
+"tracker.mainScreen.filtersButtonTitle" = "Фильтры";
+"tracker.mainScreen.statisticScreenTitle" = "Статистика";
+"tracker.mainScreen.filterEmptyResultStubText" = "Ничего не найдено";
+"tracker.mainScreen.emptyTrackersStubText" = "Что будем отслеживать?";
+"tracker.mainScreen.emptyStatisticStubText" = "Анализировать пока нечего";
+"tracker.mainScreen.pin" = "Закрепить";
+"tracker.mainScreen.edit" = "Редактировать";
+"tracker.mainScreen.delete" = "Удалить";
+"tracker.mainScreen.unpin" = "Открепить";

@@ -60,8 +60,6 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     private lazy var filterButton = UIButton()
     
-    private lazy var analyticsService = AnalyticsService()
-    
     private let colors = Colors()
     private let statisticService: StatisticService = StatisticServiceImplementation()
     private let filterStateSavingService: FilterStateSavingService = FilterStateSavingServiceImplementation()
@@ -119,12 +117,12 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        AnalyticsService.report(event: "open_Screen", params: ["event" : "open", "screen" : "Main"])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        analyticsService.report(event: "closed_Screen", params: ["event" : "close", "screen" : "Main"])
+        AnalyticsService.report(event: "closed_Screen", params: ["event" : "close", "screen" : "Main"])
     }
     
     private func updateVisibleCategories(from date: Date) {
@@ -166,12 +164,8 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
                     }))
                     
                 default:
-                    return
-                    // - Показываем трекеры расписание которых соответствует выбранному дню,
-                    matchesSchedule ||
-                    // - Выполненные трекеры (нерегулярные события (без расписания) показываем только для даты выполнения)
+                    return matchesSchedule ||
                     (firstCompletedTracker != nil && currentStartOfDay == firstCompletedTrackerStartOfDay) ||
-                    // - Пустые нерегулярные события которые еще не выполнены показываем для всех дней
                     (firstCompletedTracker == nil && tracker.schedule.isEmpty)
                 }
             }
@@ -220,8 +214,8 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
     }
     
     private func displayStubForEmptyScrollView(displayStub: Bool, stubType: StubType) {
-        let filterEmptyResultStubText = NSLocalizedString("filterEmptyResultStubText", comment: "filter result")
-        let emptyTrackersStubText = NSLocalizedString("emptyTrackersStubText", comment: "tab Trackers")
+        let filterEmptyResultStubText = NSLocalizedString("tracker.mainScreen.filterEmptyResultStubText", comment: "filter result")
+        let emptyTrackersStubText = NSLocalizedString("tracker.mainScreen.emptyTrackersStubText", comment: "tab Trackers")
         
         emptyTrackerImage.isHidden = !displayStub
         emptyTrackerLabel.isHidden = !displayStub
@@ -267,7 +261,7 @@ class TrackerViewController: UIViewController, TrackerCollectionViewCellDelegate
         guard let indexPath = collectionView.indexPath(for: cell),
               currentDateIsNotFuture, let dataProvider else {return}
         
-        analyticsService.report(event: "trackerCompletedButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "track"])
+        AnalyticsService.report(event: "trackerCompletedButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "track"])
         
         let currentTracker = filteredCategories[indexPath.section].trackers[indexPath.row]
         let currentTrackerID = filteredCategories[indexPath.section].trackers[indexPath.row].id
@@ -375,10 +369,10 @@ extension TrackerViewController: UICollectionViewDelegate {
         let indexPath = indexPaths[0]
         let trackerIsPinned = filteredCategories[indexPath.section].trackers[indexPath.row].isPinned
         
-        let fixButtonStateText = NSLocalizedString("toFix", comment: "toFix tracker")
-        let unpinButtonStateText = NSLocalizedString("unpin", comment: "toFix tracker")
-        let editButtonStateText = NSLocalizedString("edit", comment: "edit tracker")
-        let deleteButtonStateText = NSLocalizedString("delete", comment: "delete tracker")
+        let fixButtonStateText = NSLocalizedString("tracker.mainScreen.pin", comment: "toFix tracker")
+        let unpinButtonStateText = NSLocalizedString("tracker.mainScreen.unpin", comment: "toFix tracker")
+        let editButtonStateText = NSLocalizedString("tracker.mainScreen.edit", comment: "edit tracker")
+        let deleteButtonStateText = NSLocalizedString("tracker.mainScreen.delete", comment: "delete tracker")
         
         return UIContextMenuConfiguration(actionProvider:  { action in
             return UIMenu(children: [
@@ -395,7 +389,7 @@ extension TrackerViewController: UICollectionViewDelegate {
                 UIAction(title: editButtonStateText) { [weak self] _ in
                     guard let self = self else {return}
                     
-                    analyticsService.report(event: "editButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "edit"])
+                    AnalyticsService.report(event: "editButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "edit"])
                     
                     let currentTracker = filteredCategories[indexPath.section].trackers[indexPath.row]
                     let currentTrackerArray: [Tracker] = [currentTracker]
@@ -421,7 +415,7 @@ extension TrackerViewController: UICollectionViewDelegate {
                 UIAction(title: deleteButtonStateText, attributes: .destructive) { [weak self] _ in
                     guard let self = self else {return}
                     
-                    analyticsService.report(event: "delateButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "delete"])
+                    AnalyticsService.report(event: "delateButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "delete"])
                     
                     let alert = UIAlertController(title: nil, message: "Уверены что хотите удалить трекер?", preferredStyle: .actionSheet)
                     let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { action in
@@ -612,8 +606,8 @@ private extension TrackerViewController {
     
     func getDayOfWeek(from date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_En") // Устанавливаем локаль на русский
-        dateFormatter.dateFormat = "EEEE" // Формат дня недели
+        dateFormatter.locale = Locale(identifier: "en_En")
+        dateFormatter.dateFormat = "EEEE"
         
         let dayOfWeek = dateFormatter.string(from: date)
         return dayOfWeek
@@ -638,7 +632,7 @@ private extension TrackerViewController {
         ]
         navigationController.navigationBar.titleTextAttributes = textAttributes
         present(navigationController, animated: true)
-        analyticsService.report(event: "addTrackerButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "add_track"])
+        AnalyticsService.report(event: "addTrackerButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "add_track"])
     }
     
     func configureEmptyTrackerImageAndLabel() {
@@ -671,7 +665,7 @@ private extension TrackerViewController {
     }
     
     func configureFilterButton() {
-        let filterStateText = NSLocalizedString("filtersButtonTitle", comment: "filter title")
+        let filterStateText = NSLocalizedString("tracker.mainScreen.filtersButtonTitle", comment: "filter title")
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         filterButton.setTitle(filterStateText, for: .normal)
         filterButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
@@ -703,6 +697,6 @@ private extension TrackerViewController {
         ]
         navigationController.navigationBar.titleTextAttributes = textAttributes
         present(navigationController, animated: true)
-        analyticsService.report(event: "filterButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "filter"])
+        AnalyticsService.report(event: "filterButton_tapped", params: ["event" : "click", "screen" : "Main", "item" : "filter"])
     }
 }

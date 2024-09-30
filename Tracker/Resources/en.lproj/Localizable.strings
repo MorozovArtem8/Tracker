@@ -6,13 +6,13 @@
   
 */
 
-"trackerScreenTitle" = "Trackers";
-"filtersButtonTitle" = "Filters";
-"statisticScreenTitle" = "Statistics";
-"filterEmptyResultStubText" = "Nothing found";
-"emptyTrackersStubText" = "What will we track?";
-"emptyStatisticStubText" = "Nothing to analyze yet";
-"toFix" = "Fix";
-"edit" = "Edit";
-"delete" = "Delete";
-"unpin" = "Unpin";
+"tracker.mainScreen.trackerScreenTitle" = "Trackers";
+"tracker.mainScreen.filtersButtonTitle" = "Filters";
+"tracker.mainScreen.statisticScreenTitle" = "Statistics";
+"tracker.mainScreen.filterEmptyResultStubText" = "Nothing found";
+"tracker.mainScreen.emptyTrackersStubText" = "What will we track?";
+"tracker.mainScreen.emptyStatisticStubText" = "Nothing to analyze yet";
+"tracker.mainScreen.pin" = "Fix";
+"tracker.mainScreen.edit" = "Edit";
+"tracker.mainScreen.delete" = "Delete";
+"tracker.mainScreen.unpin" = "Unpin";
