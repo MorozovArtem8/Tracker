@@ -10,6 +10,8 @@ final class CategoriesTableViewSell: UITableViewCell {
     private lazy var isActiveImage = UIImageView()
     private lazy var stackView = UIStackView()
     
+    private let color = Colors()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
@@ -36,7 +38,7 @@ final class CategoriesTableViewSell: UITableViewCell {
 private extension CategoriesTableViewSell {
     func configureUI() {
         configureLabel()
-        self.backgroundColor = UIColor("#E6E8EB", alpha: 0.3)
+        self.backgroundColor = color.tableViewCellColor
     }
     
     func configureLabel() {
@@ -45,7 +47,7 @@ private extension CategoriesTableViewSell {
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        nameLabel.textColor = .black
+        nameLabel.textColor = color.textColor
         
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false

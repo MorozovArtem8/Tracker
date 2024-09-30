@@ -54,7 +54,8 @@ final class TrackerCategoryStore: NSObject {
                 
                 
                 let color = colorMarshalling.color(from: $0.color ?? "")
-                return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: schedule )
+                let isPinned = $0.isPinned
+                return Tracker(id: id, name: name, color: color, emoji: emoji, isPinned: isPinned, schedule: schedule )
             }
             return TrackerCategory(header: header, trackers: trackers)
         }

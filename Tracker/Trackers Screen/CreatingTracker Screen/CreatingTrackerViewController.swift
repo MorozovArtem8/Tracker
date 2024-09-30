@@ -11,6 +11,7 @@ final class CreatingTrackerViewController: UIViewController {
     private let addHabit: UIButton = UIButton()
     private let notRegularEvent: UIButton = UIButton()
     
+    private let color = Colors()
     private weak var delegate: TrackerTypeSelectionDelegate?
     
     init(delegate: TrackerTypeSelectionDelegate) {
@@ -32,7 +33,7 @@ final class CreatingTrackerViewController: UIViewController {
 
 private extension CreatingTrackerViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = color.viewBackgroundColor
         self.title = "Создание трекера"
         configureButtons()
     }
@@ -41,6 +42,7 @@ private extension CreatingTrackerViewController {
         addHabit.translatesAutoresizingMaskIntoConstraints = false
         addHabit.backgroundColor = UIColor(named: "CustomBackgroundColor")
         addHabit.setTitle("Привычка", for: .normal)
+        addHabit.setTitleColor(color.totalBlackAndWhite, for: .normal)
         addHabit.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addHabit.layer.cornerRadius = 16
         addHabit.clipsToBounds = true
@@ -49,6 +51,7 @@ private extension CreatingTrackerViewController {
         notRegularEvent.translatesAutoresizingMaskIntoConstraints = false
         notRegularEvent.backgroundColor = UIColor(named: "CustomBackgroundColor")
         notRegularEvent.setTitle("Нерегулярное cобытие", for: .normal)
+        notRegularEvent.setTitleColor(color.totalBlackAndWhite, for: .normal)
         notRegularEvent.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         notRegularEvent.layer.cornerRadius = 16
         notRegularEvent.clipsToBounds = true

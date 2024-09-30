@@ -9,6 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var persistentContainer: NSPersistentContainer?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        AnalyticsService.activate()
         initializePersistentContainer()
         ValueTransformer.setValueTransformer(CustomValueTransformer(), forName: NSValueTransformerName("CustomValueTransformer"))
         return true
@@ -53,7 +54,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
-    
 }
 

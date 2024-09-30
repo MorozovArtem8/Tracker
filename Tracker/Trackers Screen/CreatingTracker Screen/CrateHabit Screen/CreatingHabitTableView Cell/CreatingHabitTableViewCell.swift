@@ -9,6 +9,8 @@ final class CreatingHabitTableViewCell: UITableViewCell {
     private lazy var subLabel = UILabel()
     private lazy var stackView = UIStackView()
     
+    private let color = Colors()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
@@ -42,7 +44,7 @@ final class CreatingHabitTableViewCell: UITableViewCell {
 private extension CreatingHabitTableViewCell {
     func configureUI() {
         configureNameLabelAndImage()
-        self.backgroundColor = UIColor("#E6E8EB", alpha: 0.3)
+        self.backgroundColor = color.tableViewCellColor
     }
     
     func configureNameLabelAndImage() {
@@ -54,7 +56,7 @@ private extension CreatingHabitTableViewCell {
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        nameLabel.textColor = .black
+        nameLabel.textColor = color.textColor
         
         subLabel.translatesAutoresizingMaskIntoConstraints = false
         subLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)

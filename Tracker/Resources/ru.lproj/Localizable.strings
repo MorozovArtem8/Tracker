@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Artem Morozov on 18.09.2024.
+  
+*/
+
+"tracker.mainScreen.trackerScreenTitle" = "Трекеры";
+"tracker.mainScreen.filtersButtonTitle" = "Фильтры";
+"tracker.mainScreen.statisticScreenTitle" = "Статистика";
+"tracker.mainScreen.filterEmptyResultStubText" = "Ничего не найдено";
+"tracker.mainScreen.emptyTrackersStubText" = "Что будем отслеживать?";
+"tracker.mainScreen.emptyStatisticStubText" = "Анализировать пока нечего";
+"tracker.mainScreen.pin" = "Закрепить";
+"tracker.mainScreen.edit" = "Редактировать";
+"tracker.mainScreen.delete" = "Удалить";
+"tracker.mainScreen.unpin" = "Открепить";

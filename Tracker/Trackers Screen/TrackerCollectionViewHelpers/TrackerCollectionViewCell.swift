@@ -9,12 +9,14 @@ protocol TrackerCollectionViewCellDelegate: AnyObject {
 final class TrackerCollectionViewCell: UICollectionViewCell {
     static let identifier: String = "trackerCell"
     
+    private let color = Colors()
     weak var delegate: TrackerCollectionViewCellDelegate?
     
     private lazy var colorView: UIView = UIView()
     private lazy var nameLabel: UILabel = UILabel()
     private lazy var emojiView: UIView = UIView()
     private lazy var emojiLabel: UILabel = UILabel()
+    private lazy var pinSquare: UIImageView = UIImageView()
     
     private let plusButton: UIButton = UIButton()
     private var daysCountLabel: UILabel = UILabel()
@@ -31,19 +33,21 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         emojiView.backgroundColor = .clear
         plusButton.setBackgroundImage(nil, for: .normal)
         daysCountLabel.text = nil
+        pinSquare.image = nil
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell(name: String, emoji: String, color: UIColor, delegate: TrackerCollectionViewCellDelegate) {
+    func configureCell(name: String, emoji: String, color: UIColor, delegate: TrackerCollectionViewCellDelegate, trackerIsPin: Bool) {
         self.nameLabel.text = name
         self.emojiLabel.text = emoji
         self.colorView.backgroundColor = color
         self.emojiView.backgroundColor = .white.withAlphaComponent(0.3)
         self.plusButton.backgroundColor = color
         self.delegate = delegate
+        self.pinSquare.image = trackerIsPin ? UIImage(named: "pinSquare") : nil
         
     }
     
@@ -51,17 +55,22 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         switch trackerType {
             
         case .habit:
+            let daysString = String.localizedStringWithFormat(
+                NSLocalizedString("numberOfDays", comment: "Number of days"),
+                days
+            )
+            
             if trackerCompletedToday {
-                daysCountLabel.text = formateDays(days)
+                daysCountLabel.text = daysString //formateDays(days)
                 plusButton.setImage(UIImage(named: "Done"), for: .normal)
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
             } else {
-                daysCountLabel.text = formateDays(days)
+                daysCountLabel.text = daysString //formateDays(days)
                 plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
             }
         case .notRegularEvent:
-            if trackerCompletedToday {
+            if trackerCompletedToday || days > 0 {
                 daysCountLabel.text = "Выполнено"
                 plusButton.setImage(UIImage(named: "Done"), for: .normal)
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(0.3)
@@ -71,24 +80,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 plusButton.backgroundColor = plusButton.backgroundColor?.withAlphaComponent(1)
             }
         }
-    }
-    
-    private func formateDays(_ days: Int) -> String {
-        let remainder10 = days % 10
-        let remainder100 = days % 100
-        
-        let suffix: String
-        if remainder100 >= 11 && remainder100 <= 14 {
-            suffix = "дней"
-        } else if remainder10 == 1 {
-            suffix = "день"
-        } else if remainder10 >= 2 && remainder10 <= 4 {
-            suffix = "дня"
-        } else {
-            suffix = "дней"
-        }
-        
-        return "\(days) \(suffix)"
     }
 }
 
@@ -104,6 +95,7 @@ private extension TrackerCollectionViewCell {
         configureDaysCountLabel()
         configureEmojiView()
         configureNameLabel()
+        configurePinSquare()
     }
     
     func configureColorView() {
@@ -126,10 +118,9 @@ private extension TrackerCollectionViewCell {
     
     func configurePlusButton() {
         plusButton.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.backgroundColor = UIColor("7994F5")
         plusButton.layer.masksToBounds = true
         plusButton.layer.cornerRadius = 17
-        plusButton.tintColor = .white
+        plusButton.tintColor = color.viewBackgroundColor
         plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
         plusButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         contentView.addSubview(plusButton)
@@ -150,8 +141,7 @@ private extension TrackerCollectionViewCell {
         contentView.addSubview(daysCountLabel)
         daysCountLabel.translatesAutoresizingMaskIntoConstraints = false
         daysCountLabel.font = UIFont.systemFont(ofSize: 14)
-        daysCountLabel.textColor = .black
-        daysCountLabel.textAlignment = .left
+        daysCountLabel.textColor = color.textColor
         
         NSLayoutConstraint.activate([
             daysCountLabel.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
@@ -197,6 +187,22 @@ private extension TrackerCollectionViewCell {
             nameLabel.trailingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: -12),
             nameLabel.bottomAnchor.constraint(equalTo: colorView.bottomAnchor, constant: -12),
             nameLabel.topAnchor.constraint(greaterThanOrEqualTo: emojiView.bottomAnchor)
+        ])
+    }
+    
+    func configurePinSquare() {
+        pinSquare.contentMode = .center
+        pinSquare.image = UIImage(named: "pinSquare")
+        pinSquare.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        contentView.addSubview(pinSquare)
+        
+        NSLayoutConstraint.activate([
+            pinSquare.heightAnchor.constraint(equalToConstant: 24),
+            pinSquare.widthAnchor.constraint(equalToConstant: 24),
+            pinSquare.trailingAnchor.constraint(equalTo: colorView.trailingAnchor, constant: -4),
+            pinSquare.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor)
         ])
     }
 }

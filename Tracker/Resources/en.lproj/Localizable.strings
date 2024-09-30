@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Artem Morozov on 18.09.2024.
+  
+*/
+
+"tracker.mainScreen.trackerScreenTitle" = "Trackers";
+"tracker.mainScreen.filtersButtonTitle" = "Filters";
+"tracker.mainScreen.statisticScreenTitle" = "Statistics";
+"tracker.mainScreen.filterEmptyResultStubText" = "Nothing found";
+"tracker.mainScreen.emptyTrackersStubText" = "What will we track?";
+"tracker.mainScreen.emptyStatisticStubText" = "Nothing to analyze yet";
+"tracker.mainScreen.pin" = "Fix";
+"tracker.mainScreen.edit" = "Edit";
+"tracker.mainScreen.delete" = "Delete";
+"tracker.mainScreen.unpin" = "Unpin";

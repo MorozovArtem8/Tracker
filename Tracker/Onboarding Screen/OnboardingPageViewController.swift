@@ -30,7 +30,6 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingScreen
     init(dismissOnboarding: @escaping (() -> Void)) {
         self.dismissOnboarding = dismissOnboarding
         super .init(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        
     }
     
     required init?(coder: NSCoder) {

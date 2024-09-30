@@ -27,7 +27,6 @@ extension TrackerRecordStore: TrackerRecordStoreProtocol {
         trackerRecordCoreData.dateOfCompletion = trackerRecord.dateOfCompletion
         trackerRecordCoreData.tracker = trackerCoreData
         try? context.save()
-        
     }
     
     func getAllRecords() -> [TrackerRecord]? {

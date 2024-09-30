@@ -8,7 +8,6 @@ protocol CreateNewCategoryDelegate: AnyObject {
 }
 
 final class CategoryScreenViewController: UIViewController {
-    private var viewModel: CategoryViewModelProtocol?
     
     private lazy var tableView = UITableView()
     private let addCategoryButton: UIButton = UIButton()
@@ -28,6 +27,8 @@ final class CategoryScreenViewController: UIViewController {
         return label
     }()
     
+    private let color = Colors()
+    private var viewModel: CategoryViewModelProtocol?
     private var selectCategoryHeader: String?
     
     var completionHandler: ((String?) -> Void)?
@@ -89,12 +90,13 @@ extension CategoryScreenViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let viewModel else {return}
         
         cell.layer.masksToBounds = false
         cell.layer.cornerRadius = 0
         cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         
-        if viewModel?.trackerCategories.count == 1 {
+        if viewModel.trackerCategories.count == 1 {
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1000)
@@ -107,7 +109,7 @@ extension CategoryScreenViewController: UITableViewDelegate {
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         }
         
-        if indexPath.row == (viewModel?.trackerCategories.count)! - 1 {
+        if indexPath.row == (viewModel.trackerCategories.count) - 1 {
             cell.layer.masksToBounds = true
             cell.layer.cornerRadius = 16
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 1000)
@@ -132,7 +134,7 @@ extension CategoryScreenViewController: CreateNewCategoryDelegate {
 
 private extension CategoryScreenViewController {
     func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = color.viewBackgroundColor
         self.title = "Категория"
         configureAddCategoryButton()
         configureTableView()
@@ -157,6 +159,7 @@ private extension CategoryScreenViewController {
         addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
         addCategoryButton.backgroundColor = UIColor(named: "CustomBackgroundColor")
         addCategoryButton.setTitle("Добавить категорию", for: .normal)
+        addCategoryButton.setTitleColor(color.totalBlackAndWhite, for: .normal)
         addCategoryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addCategoryButton.layer.cornerRadius = 16
         addCategoryButton.clipsToBounds = true
@@ -168,7 +171,6 @@ private extension CategoryScreenViewController {
             addCategoryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             addCategoryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             addCategoryButton.heightAnchor.constraint(equalToConstant: 60)
-            
         ])
     }
     
@@ -190,6 +192,8 @@ private extension CategoryScreenViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.isScrollEnabled = true
+        tableView.backgroundColor = color.viewBackgroundColor
+        tableView.separatorColor = UIColor("#AEAFB4")
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         

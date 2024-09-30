@@ -5,11 +5,13 @@ import UIKit
 final class HeaderSupplementaryView: UICollectionReusableView {
     let titleLabel = UILabel()
     
+    private let color = Colors()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.textColor = .black
+        titleLabel.textColor = color.textColor
         titleLabel.font = UIFont.boldSystemFont(ofSize: 19)
         
         NSLayoutConstraint.activate([
